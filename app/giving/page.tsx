@@ -26,6 +26,16 @@ export default function GivingPage() {
     { id: "youth", label: "Adventist Youth & Pathfinders", accountName: "Youth Ministry", category: "Local Church", amount: 0 },
   ]);
 
+  // Pledge Form State
+  const [pledgeData, setPledgeData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    frequency: "Monthly",
+    amount: "",
+    cause: "Church Building / Renovation",
+  });
+  const [pledgeStatus, setPledgeStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
   // Automatically calculate 10% tithe and suggested offerings on gross income change
   const handleGrossChange = (val: string) => {
     setGrossIncome(val);
@@ -56,6 +66,24 @@ export default function GivingPage() {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2500);
+  };
+
+  const handlePledgeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPledgeStatus("submitting");
+
+    try {
+      const res = await fetch("/api/pledges", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pledgeData),
+      });
+
+      if (!res.ok) throw new Error("Pledge submission failed");
+      setPledgeStatus("success");
+    } catch {
+      setPledgeStatus("error");
+    }
   };
 
   return (
@@ -119,10 +147,16 @@ export default function GivingPage() {
             >
               {copiedKey === "paybill" ? "Copied! ✓" : "Copy Paybill"}
             </button>
+            <a
+              href="#digital-pledge-card"
+              className="bg-white/15 hover:bg-white/25 active:scale-95 text-amber-300 border border-amber-300/30 font-bold text-xs uppercase px-4 py-2.5 rounded-xl transition cursor-pointer shadow"
+            >
+              Make a Pledge ↓
+            </a>
           </div>
         </div>
 
-        {/* 2-Column Interface: Calculator & Summary */}
+        {/* 2-Column Interface: Calculator & Summary / Pledge Card */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Offering Calculator Form */}
@@ -201,8 +235,10 @@ export default function GivingPage() {
             </div>
           </div>
 
-          {/* Right Column: Envelope Receipt & M-PESA Prompt */}
+          {/* Right Column: Envelope Receipt, Pledge Card & Treasury Contact */}
           <div className="lg:col-span-5 space-y-6">
+            
+            {/* Envelope Summary Card */}
             <div className="bg-[#001737] rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-white/10 space-y-6">
               <div className="border-b border-white/10 pb-4">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 block font-bold">
@@ -279,6 +315,142 @@ export default function GivingPage() {
                   <li>Enter your M-PESA PIN and press Send</li>
                 </ol>
               </div>
+            </div>
+
+            {/* DIGITAL PLEDGE CARD SECTION */}
+            <div id="digital-pledge-card" className="bg-[#0b1e3b] rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-amber-400/30 space-y-5 scroll-mt-24">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 block font-bold">
+                  Stewardship Commitment
+                </span>
+                <h3 className="text-xl font-bold font-serif text-white mt-1">
+                  Digital Pledge Card
+                </h3>
+                <p className="text-xs text-slate-300 font-serif mt-1">
+                  Record your intentional pledge towards church projects. All entries go straight to the treasury records.
+                </p>
+              </div>
+
+              {pledgeStatus === "success" ? (
+                <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-xl font-bold">
+                    ✓
+                  </div>
+                  <h4 className="text-sm font-bold text-emerald-300 font-serif">Pledge Recorded!</h4>
+                  <p className="text-xs text-slate-300">
+                    Thank you for committing to God’s work. May the Lord abundantly bless your stewardship.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPledgeStatus("idle");
+                      setPledgeData({
+                        fullName: "",
+                        phoneNumber: "",
+                        frequency: "Monthly",
+                        amount: "",
+                        cause: "Church Building / Renovation",
+                      });
+                    }}
+                    className="mt-2 text-xs bg-emerald-600 hover:bg-emerald-500 font-bold px-4 py-2 rounded-xl transition"
+                  >
+                    Submit Another Pledge
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handlePledgeSubmit} className="space-y-4 text-left">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. Samuel Otieno"
+                      value={pledgeData.fullName}
+                      onChange={(e) => setPledgeData({ ...pledgeData, fullName: e.target.value })}
+                      className="w-full bg-[#001737] border border-white/20 rounded-xl px-3.5 py-2 text-xs font-serif text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Phone Number (M-PESA)
+                    </label>
+                    <input
+                      required
+                      type="tel"
+                      placeholder="0712345678"
+                      value={pledgeData.phoneNumber}
+                      onChange={(e) => setPledgeData({ ...pledgeData, phoneNumber: e.target.value })}
+                      className="w-full bg-[#001737] border border-white/20 rounded-xl px-3.5 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                        Frequency
+                      </label>
+                      <select
+                        value={pledgeData.frequency}
+                        onChange={(e) => setPledgeData({ ...pledgeData, frequency: e.target.value })}
+                        className="w-full bg-[#001737] border border-white/20 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      >
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="One-Time">One-Time</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                        Amount (KES)
+                      </label>
+                      <input
+                        required
+                        type="number"
+                        min="50"
+                        placeholder="1,000"
+                        value={pledgeData.amount}
+                        onChange={(e) => setPledgeData({ ...pledgeData, amount: e.target.value })}
+                        className="w-full bg-[#001737] border border-white/20 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      Target Project / Fund
+                    </label>
+                    <select
+                      value={pledgeData.cause}
+                      onChange={(e) => setPledgeData({ ...pledgeData, cause: e.target.value })}
+                      className="w-full bg-[#001737] border border-white/20 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                    >
+                      <option value="Church Building / Renovation">Church Building &amp; Renovation</option>
+                      <option value="Local Church Budget">Local Church Budget</option>
+                      <option value="Camp Meeting Expense">Camp Meeting Expense</option>
+                      <option value="Evangelism / VOP">Evangelism / VOP</option>
+                      <option value="Youth & Pathfinders">Youth &amp; Pathfinders</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={pledgeStatus === "submitting"}
+                    className="w-full mt-2 bg-[#c99700] hover:bg-[#b08400] active:scale-95 text-[#001737] font-black text-xs uppercase py-2.5 rounded-xl transition cursor-pointer shadow disabled:opacity-50"
+                  >
+                    {pledgeStatus === "submitting" ? "Submitting Pledge..." : "Commit Pledge →"}
+                  </button>
+
+                  {pledgeStatus === "error" && (
+                    <p className="text-[11px] text-rose-400 text-center">
+                      Failed to record pledge. Please verify your connection or try again.
+                    </p>
+                  )}
+                </form>
+              )}
             </div>
 
             {/* Treasury Support Contact */}
