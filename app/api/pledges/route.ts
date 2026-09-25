@@ -6,14 +6,14 @@ export async function POST(req: Request) {
 
     const webhookUrl = process.env.PLEDGE_SHEET_WEBHOOK_URL;
     if (!webhookUrl) {
-      console.error("Missing PLEDGE_SHEET_WEBHOOK_URL in environment");
+      console.error("Missing PLEDGE_SHEET_WEBHOOK_URL");
       return NextResponse.json(
-        { success: false, error: "Webhook URL not configured" },
+        { success: false, error: "Webhook not configured" },
         { status: 500 }
       );
     }
 
-    // Google Apps Script processes text/plain without parser rejection
+    // Google Apps Script requires text/plain and following redirects
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
@@ -24,17 +24,7 @@ export async function POST(req: Request) {
       cache: "no-store",
     });
 
-    // Google Apps Script redirect returns either 200 or 302
-    if (!response.ok && response.status !== 302) {
-      const errText = await response.text();
-      console.error(`Google Script failed with status ${response.status}:`, errText);
-      return NextResponse.json(
-        { success: false, error: `Google Script error: ${response.status}` },
-        { status: 502 }
-      );
-    }
-
-    return NextResponse.json({ success: true, message: "Pledge recorded successfully" });
+    return NextResponse.json({ success: true, message: "Pledge saved" });
   } catch (error) {
     console.error("Pledge submission error:", error);
     return NextResponse.json(
