@@ -106,195 +106,156 @@ export default function HomePage() {
       : publications.filter((p) => p.category === pubFilter);
 
   return (
-    <main className="bg-slate-50 pb-36 relative z-0">
+    <main className="bg-[#fcfbf9] text-stone-900 pb-32">
       <FloatingAnnouncementBanner />
 
-      {/* 1. DIGITAL HERO */}
-      <section className="relative bg-gradient-to-br from-[#001737] via-[#002f6c] to-[#001433] text-white pt-36 sm:pt-40 pb-16 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0c_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0c_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none" />
-
-        <div className="max-w-6xl mx-auto text-center space-y-6 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-amber-300 border border-amber-300/30 text-[11px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-md">
-            <AdventistLogo className="w-4 h-4 text-amber-300" />
-            <span>Jericho Seventh-day Adventist Church • Nairobi</span>
+      {/* 1. HERO - Warm, reverent, and focused */}
+      <section className="relative bg-[#001f44] text-white pt-36 sm:pt-44 pb-20 px-6">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <div className="inline-flex items-center gap-2 text-stone-300 text-xs tracking-wider uppercase">
+            <AdventistLogo className="w-4 h-4 text-amber-400" />
+            <span>Jericho Seventh-day Adventist Church &bull; Nairobi</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black font-serif text-white tracking-tight max-w-4xl mx-auto leading-tight drop-shadow-md">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-normal tracking-tight leading-[1.15] text-stone-50">
             A Christ-Centered Sanctuary in the Heart of Jericho
           </h1>
 
-          <p className="text-blue-100 text-sm md:text-base font-serif max-w-2xl mx-auto leading-relaxed">
+          <blockquote className="text-stone-300 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1">
             &ldquo;Come unto me, all ye that labour and are heavy laden, and I will give you rest.&rdquo;
-            <span className="block text-xs font-sans font-bold text-amber-300 mt-1">
-              — Matthew 11:28
-            </span>
-          </p>
+            <cite className="block text-xs not-italic font-sans font-medium text-amber-300/90 mt-1.5">
+              &mdash; Matthew 11:28
+            </cite>
+          </blockquote>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+          {/* Clean Primary vs Secondary Action Hierarchy */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <Link
               href="/giving"
-              className="bg-[#c99700] hover:bg-[#b58700] text-[#00224f] font-black px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-amber-500/20 active:scale-95"
+              className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold px-6 py-3 rounded-lg text-sm transition-all shadow-sm"
             >
-              Online Giving / M-PESA
+              Online Giving &amp; Pledges
             </Link>
 
             <Link
               href="/care"
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider transition backdrop-blur active:scale-95"
+              className="bg-white/10 hover:bg-white/15 text-stone-100 border border-white/20 font-medium px-6 py-3 rounded-lg text-sm transition"
             >
-              Request Prayer or Counselling
+              Pastoral Care &amp; Prayer
             </Link>
 
             <a
               href={liveStreamUrl || "https://www.youtube.com/@JerichoSDANairobi"}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg active:scale-95 cursor-pointer"
+              className="text-stone-300 hover:text-white font-medium text-sm px-3 py-3 transition inline-flex items-center gap-1.5"
             >
-              <span>▶</span>
-              <span>YouTube Archive</span>
-              <span className="bg-white text-red-600 text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm">
-                Subscribe
-              </span>
+              <span>Watch Sermons</span>
+              <span className="text-xs">&rarr;</span>
             </a>
-
-            <Link
-              href="#events"
-              className="inline-flex items-center gap-2 bg-[#001737] hover:bg-black text-blue-200 hover:text-white border border-white/10 font-bold px-5 py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow"
-            >
-              <span>📅 Annual Calendar</span>
-            </Link>
           </div>
         </div>
 
-        {/* Schedule Strip */}
-        <div className="max-w-5xl mx-auto mt-14 pt-8 border-t border-white/10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center divide-y-0 divide-x-0 md:divide-x divide-white/10">
-            <div className="px-2">
-              <span className="text-[10px] font-bold tracking-widest text-blue-200/80 uppercase">
+        {/* Sabbath Worship Times Strip */}
+        <div className="max-w-4xl mx-auto mt-16 pt-8 border-t border-white/15">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <span className="text-[11px] uppercase tracking-wider text-stone-400 block">
                 Sabbath School
               </span>
-              <h3 className="text-xl font-black text-white mt-1 font-mono">08:00 AM</h3>
-              <p className="text-[11px] text-blue-200/70">Study &amp; Song Service</p>
+              <p className="text-xl font-medium text-stone-100 mt-0.5">08:00 AM</p>
+              <p className="text-xs text-stone-400 mt-0.5">Study &amp; Song</p>
             </div>
 
-            <div className="px-2">
-              <span className="text-[10px] font-bold tracking-widest text-amber-300 uppercase">
+            <div className="border-l border-white/15">
+              <span className="text-[11px] uppercase tracking-wider text-amber-300 block font-semibold">
                 Divine Service
               </span>
-              <h3 className="text-xl font-black text-[#c99700] mt-1 font-mono">11:00 AM</h3>
-              <p className="text-[11px] text-blue-200/70">Main Worship Hour</p>
+              <p className="text-xl font-semibold text-amber-300 mt-0.5">11:00 AM</p>
+              <p className="text-xs text-stone-400 mt-0.5">Worship Hour</p>
             </div>
 
-            <div className="px-2">
-              <span className="text-[10px] font-bold tracking-widest text-blue-200/80 uppercase">
+            <div className="border-l-0 md:border-l border-white/15">
+              <span className="text-[11px] uppercase tracking-wider text-stone-400 block">
                 Youth Fellowship
               </span>
-              <h3 className="text-xl font-black text-white mt-1 font-mono">02:00 PM</h3>
-              <p className="text-[11px] text-blue-200/70">Adventist Youth (AY)</p>
+              <p className="text-xl font-medium text-stone-100 mt-0.5">02:00 PM</p>
+              <p className="text-xs text-stone-400 mt-0.5">AY Ministry</p>
             </div>
 
-            <div className="px-2">
-              <span className="text-[10px] font-bold tracking-widest text-blue-200/80 uppercase">
+            <div className="border-l border-white/15">
+              <span className="text-[11px] uppercase tracking-wider text-stone-400 block">
                 Missionary Visit
               </span>
-              <h3 className="text-xl font-black text-white mt-1 font-mono">04:00 PM</h3>
-              <p className="text-[11px] text-blue-200/70">Community &amp; Hospital</p>
+              <p className="text-xl font-medium text-stone-100 mt-0.5">04:00 PM</p>
+              <p className="text-xs text-stone-400 mt-0.5">Community Outreach</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. QUICK ACTION PORTALS */}
-      <section className="max-w-6xl mx-auto px-6 -mt-8 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* 2. QUICK ACTION TILES */}
+      <section className="max-w-5xl mx-auto px-6 -mt-6 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/care"
-            className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-200 flex items-start gap-3.5 group"
+            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
           >
-            <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#002f6c] group-hover:bg-[#002f6c] group-hover:text-white transition flex items-center justify-center text-xl shrink-0">
-              🏡
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-[#b08400] tracking-wider block">
-                Pastoral Care
-              </span>
-              <h3 className="font-bold text-slate-800 group-hover:text-[#002f6c] transition text-sm">
-                Request Visit
-              </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
-                Home, hospital, or virtual pastoral prayer.
-              </p>
-            </div>
+            <span className="text-xs font-semibold text-amber-700 block">Pastoral Care</span>
+            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
+              Request Visit &rarr;
+            </h2>
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Home, hospital, or virtual prayer with pastors and elders.
+            </p>
           </Link>
 
           <Link
             href="/estates"
-            className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-200 flex items-start gap-3.5 group"
+            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
           >
-            <div className="w-11 h-11 rounded-xl bg-amber-50 text-[#b08400] group-hover:bg-[#c99700] group-hover:text-[#00224f] transition flex items-center justify-center text-xl shrink-0">
-              📍
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-[#b08400] tracking-wider block">
-                Fellowship
-              </span>
-              <h3 className="font-bold text-slate-800 group-hover:text-[#002f6c] transition text-sm">
-                Prayer Cells
-              </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
-                Midweek small groups in Nairobi Eastlands.
-              </p>
-            </div>
+            <span className="text-xs font-semibold text-amber-700 block">Community</span>
+            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
+              Prayer Cells &rarr;
+            </h2>
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Find midweek small groups across Nairobi Eastlands.
+            </p>
           </Link>
 
           <Link
             href="/leadership"
-            className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-200 flex items-start gap-3.5 group"
+            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
           >
-            <div className="w-11 h-11 rounded-xl bg-slate-100 text-[#002f6c] group-hover:bg-[#002f6c] group-hover:text-white transition flex items-center justify-center text-xl shrink-0">
-              👥
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-[#b08400] tracking-wider block">
-                Directory
-              </span>
-              <h3 className="font-bold text-slate-800 group-hover:text-[#002f6c] transition text-sm">
-                Church Officers
-              </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
-                Elders, Secretariat, Deacons &amp; Directors.
-              </p>
-            </div>
+            <span className="text-xs font-semibold text-amber-700 block">Leadership</span>
+            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
+              Officers Directory &rarr;
+            </h2>
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Pastoral team, elders, secretariat, and department heads.
+            </p>
           </Link>
 
           <Link
             href="/camp-meeting"
-            className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-lg hover:shadow-xl hover:-translate-y-1 transition duration-200 flex items-start gap-3.5 group"
+            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
           >
-            <div className="w-11 h-11 rounded-xl bg-slate-100 text-[#002f6c] group-hover:bg-[#002f6c] group-hover:text-white transition flex items-center justify-center text-xl shrink-0">
-              🏕️
-            </div>
-            <div>
-              <span className="text-[10px] uppercase font-bold text-[#b08400] tracking-wider block">
-                Annual Feast
-              </span>
-              <h3 className="font-bold text-slate-800 group-hover:text-[#002f6c] transition text-sm">
-                Camp Meeting
-              </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
-                August 2026 theme recaps &amp; photo gallery.
-              </p>
-            </div>
+            <span className="text-xs font-semibold text-amber-700 block">Annual Feast</span>
+            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
+              Camp Meeting &rarr;
+            </h2>
+            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+              Theme guides, daily recordings, and camp memories.
+            </p>
           </Link>
         </div>
       </section>
 
-      {/* 3. ONE VOICE 27 MISSION BANNER */}
+      {/* 3. ANNOUNCEMENT / MISSION SPOTLIGHT */}
       {currentAnnouncement?.active && (
-        <section className="max-w-6xl mx-auto px-6 mt-16">
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 min-h-[520px] flex items-center bg-[#001737]">
-            <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <section className="max-w-5xl mx-auto px-6 mt-16">
+          <div className="relative rounded-2xl overflow-hidden shadow-lg bg-[#001737] text-white">
+            <div className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
               <video
                 autoPlay
                 loop
@@ -306,50 +267,49 @@ export default function HomePage() {
               >
                 <source src="/onevoice27.mp4" type="video/mp4" />
               </video>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#001026]/95 via-[#001737]/85 to-[#002f6c]/65" />
             </div>
 
-            <div className="relative z-10 p-8 sm:p-12 md:p-16 max-w-2xl space-y-5 text-white">
-              <div className="flex items-center gap-2">
-                <span className="bg-amber-400 text-[#001737] font-mono font-black text-[10px] uppercase tracking-widest px-3 py-1 rounded-md shadow">
+            <div className="relative z-10 p-8 sm:p-12 max-w-2xl space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="bg-amber-400 text-[#001737] font-semibold text-xs uppercase tracking-wider px-2.5 py-1 rounded">
                   {currentAnnouncement.badge}
                 </span>
-                <span className="text-xs font-mono text-blue-200">
+                <span className="text-xs text-stone-300">
                   {currentAnnouncement.dateOrQuarter}
                 </span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-black tracking-tight leading-tight drop-shadow-md">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-normal tracking-tight text-white leading-tight">
                 {currentAnnouncement.title}
               </h2>
 
-              <p className="text-sm sm:text-base text-blue-100 font-serif leading-relaxed">
+              <p className="text-sm text-stone-200 font-serif leading-relaxed">
                 {currentAnnouncement.subtitle}
               </p>
 
-              <ul className="space-y-2 pt-1 text-xs sm:text-sm font-serif text-blue-100">
+              <ul className="space-y-1.5 pt-1 text-xs text-stone-200">
                 {currentAnnouncement.highlightPoints?.map((point, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5">
-                    <span className="text-amber-400 font-bold">✓</span>
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-amber-400 font-semibold">&bull;</span>
                     <span>{point}</span>
                   </li>
                 ))}
               </ul>
 
-              <div className="pt-4 flex flex-wrap gap-4 items-center">
+              <div className="pt-3 flex flex-wrap gap-3 items-center">
                 <Link
                   href={currentAnnouncement.ctaLink || "/departments/adventist-youth"}
-                  className="bg-amber-400 hover:bg-amber-300 text-[#001737] font-black text-xs uppercase tracking-wider py-3.5 px-6 rounded-xl transition shadow-lg hover:scale-105 active:scale-95"
+                  className="bg-amber-400 hover:bg-amber-300 text-[#001737] font-semibold text-xs uppercase tracking-wider py-3 px-5 rounded-lg transition"
                 >
-                  {currentAnnouncement.ctaLabel || "Read Mission Plan"} →
+                  {currentAnnouncement.ctaLabel || "Read Mission Plan"} &rarr;
                 </Link>
                 <a
                   href="/one-voice-cover.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl transition backdrop-blur"
+                  className="bg-white/10 hover:bg-white/20 text-white font-medium text-xs uppercase tracking-wider py-3 px-4 rounded-lg transition"
                 >
-                  View High-Res Poster
+                  View Poster
                 </a>
               </div>
             </div>
@@ -357,31 +317,28 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* 4. DIGITAL PUBLICATIONS SHELF */}
-      <section className="max-w-6xl mx-auto px-6 pt-20">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      {/* 4. PUBLICATIONS SHELF */}
+      <section className="max-w-5xl mx-auto px-6 pt-20">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-8 pb-3 border-b border-stone-200 gap-4">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-2">
-              Digital E-Library &amp; Media
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#002f6c] tracking-tight">
-              Publications &amp; Church Magazines
+            <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44]">
+              Publications &amp; Bulletins
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-serif mt-1">
-              Download weekly church bulletins, quarterly reflections, and study guides directly to your device.
+            <p className="text-xs sm:text-sm text-stone-500 mt-1 font-serif">
+              Download weekly service programs, study guides, and church periodicals.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {["All", "Magazine", "Weekly Bulletin", "Camp Guide"].map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setPubFilter(cat)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition uppercase tracking-wider cursor-pointer ${
+                className={`px-3 py-1 rounded text-xs font-medium transition cursor-pointer ${
                   pubFilter === cat
-                    ? "bg-[#002f6c] text-white shadow"
-                    : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+                    ? "bg-[#001f44] text-white"
+                    : "bg-white text-stone-600 hover:bg-stone-100 border border-stone-200"
                 }`}
               >
                 {cat}
@@ -390,74 +347,60 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredPubs.map((pub) => (
             <div
               key={pub.id}
-              className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              className="bg-white rounded-xl overflow-hidden border border-stone-200/80 shadow-sm flex flex-col justify-between"
             >
               <div>
-                <div className="relative aspect-[3/4] overflow-hidden bg-slate-900 block">
+                <div className="relative aspect-[3/4] overflow-hidden bg-stone-900">
                   <img
                     src={pub.coverImage}
                     alt={pub.title}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-3 left-3 bg-[#001737]/90 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md backdrop-blur">
+                  <span className="absolute top-2.5 left-2.5 bg-black/75 text-amber-300 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded">
                     {pub.category}
                   </span>
-                  <div className="absolute bottom-3 inset-x-3 text-white">
-                    <p className="text-[10px] font-mono text-amber-300 font-bold uppercase">
-                      {pub.issue}
-                    </p>
-                    <p className="text-xs text-slate-200 line-clamp-1">
-                      {pub.quarter}
-                    </p>
-                  </div>
                 </div>
 
-                <div className="p-5">
-                  <h3 className="font-bold font-serif text-slate-900 leading-snug">
+                <div className="p-4">
+                  <span className="text-[10px] font-medium text-stone-400 block uppercase">
+                    {pub.issue}
+                  </span>
+                  <h3 className="font-serif font-semibold text-stone-900 text-sm mt-1 leading-snug">
                     {pub.title}
                   </h3>
-                  <p className="text-xs text-slate-500 font-serif mt-2 line-clamp-3 leading-relaxed">
+                  <p className="text-xs text-stone-500 mt-1.5 line-clamp-2 leading-relaxed">
                     {pub.description}
                   </p>
                 </div>
               </div>
 
-              <div className="p-5 pt-0">
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <div className="p-4 pt-0">
+                <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
                   {pub.pageUrl && pub.pageUrl !== "#" ? (
                     <Link
                       href={pub.pageUrl}
-                      className="text-xs font-bold text-[#002f6c] hover:underline"
+                      className="text-xs font-semibold text-[#001f44] hover:underline"
                     >
-                      View Page ↗
+                      Read More &rarr;
                     </Link>
                   ) : (
-                    <span className="text-[11px] font-mono text-slate-400 font-bold">
+                    <span className="text-[11px] text-stone-400">
                       {pub.size}
                     </span>
                   )}
 
-                  {pub.pdfUrl && pub.pdfUrl !== "#" ? (
+                  {pub.pdfUrl && pub.pdfUrl !== "#" && (
                     <a
                       href={pub.pdfUrl}
                       download
-                      className="bg-[#002f6c] hover:bg-[#001f49] text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition inline-flex items-center gap-1.5 shadow-sm cursor-pointer"
+                      className="bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium px-3 py-1.5 rounded transition"
                     >
-                      <span>PDF</span>
-                      <span>📥</span>
+                      Download PDF
                     </a>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => alert(`Opening ${pub.title}...`)}
-                      className="bg-blue-50 hover:bg-[#002f6c] text-[#002f6c] hover:text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition cursor-pointer"
-                    >
-                      Download 📥
-                    </button>
                   )}
                 </div>
               </div>
@@ -466,236 +409,169 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. CAMP MEETING RETROSPECTIVE SLIDER */}
-      <section className="max-w-6xl mx-auto px-6 pt-20">
-        <div
-          onTouchStart={(e) => {
-            const touchDown = e.touches[0].clientX;
-            (e.currentTarget as HTMLElement & { touchDown?: number }).touchDown = touchDown;
-          }}
-          onTouchEnd={(e) => {
-            const el = e.currentTarget as HTMLElement & { touchDown?: number };
-            const touchDown = el.touchDown;
-            if (!touchDown) return;
-            const touchUp = e.changedTouches[0].clientX;
-            const diff = touchDown - touchUp;
-            if (diff > 50) nextSlide();
-            if (diff < -50) prevSlide();
-          }}
-          className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-950 text-white min-h-[460px] sm:min-h-[500px] flex flex-col justify-between p-6 sm:p-8 select-none"
-        >
-          <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+      {/* 5. CAMP RETROSPECTIVE */}
+      <section className="max-w-5xl mx-auto px-6 pt-20">
+        <div className="relative rounded-2xl overflow-hidden shadow-md bg-stone-900 text-white min-h-[440px] flex flex-col justify-between p-6 sm:p-8">
+          <div className="absolute inset-0 w-full h-full pointer-events-none">
             {Array.isArray(campMeetingSlides) && campMeetingSlides.length > 0 && (
               <img
                 src={campMeetingSlides[slideIdx]?.image || "/church-1.jpg"}
                 alt={campMeetingSlides[slideIdx]?.title || "Camp Slide"}
-                className="w-full h-full object-cover object-center transition-opacity duration-500"
+                className="w-full h-full object-cover object-center"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#001026]/95 via-transparent to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
           </div>
 
-          <div className="relative z-30 flex items-center justify-between gap-3 pointer-events-auto">
-            <span className="bg-[#001737]/90 backdrop-blur text-amber-300 border border-amber-300/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow">
-              August {campMeetingYear} Camp Retrospective
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-xs text-amber-300 font-medium tracking-wide uppercase">
+              Camp Retrospective &bull; {campMeetingYear}
             </span>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={prevSlide}
-                aria-label="Previous Slide"
-                className="w-12 h-12 rounded-full bg-black/80 hover:bg-black active:bg-amber-400 active:text-[#001737] text-white flex items-center justify-center transition border border-white/30 cursor-pointer text-2xl font-bold touch-manipulation shadow-2xl"
+                aria-label="Previous"
+                className="w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-lg border border-white/20 transition cursor-pointer"
               >
-                ‹
+                &lsaquo;
               </button>
-              <span className="text-xs font-mono text-blue-100 font-bold px-2.5 py-1 rounded bg-black/70 border border-white/20">
-                {slideIdx + 1}/{campMeetingSlides?.length || 1}
-              </span>
               <button
                 type="button"
                 onClick={nextSlide}
-                aria-label="Next Slide"
-                className="w-12 h-12 rounded-full bg-black/80 hover:bg-black active:bg-amber-400 active:text-[#001737] text-white flex items-center justify-center transition border border-white/30 cursor-pointer text-2xl font-bold touch-manipulation shadow-2xl"
+                aria-label="Next"
+                className="w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-lg border border-white/20 transition cursor-pointer"
               >
-                ›
+                &rsaquo;
               </button>
             </div>
           </div>
 
-          <div className="relative z-20 max-w-2xl space-y-3 pt-6 pointer-events-auto">
-            {Array.isArray(campMeetingSlides) && campMeetingSlides.length > 0 && (
-              <div className="space-y-1.5">
-                <span className="text-amber-300 text-[10px] font-bold uppercase tracking-widest block font-sans">
-                  Theme: &ldquo;{campMeetingTheme}&rdquo;
-                </span>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-serif text-white tracking-tight drop-shadow-md">
-                  {campMeetingSlides[slideIdx]?.title}
-                </h2>
-                <p className="text-xs sm:text-sm text-blue-100/90 font-serif leading-relaxed line-clamp-2">
-                  {campMeetingSlides[slideIdx]?.caption}
-                </p>
-              </div>
-            )}
-
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-white/15">
+          <div className="relative z-10 max-w-xl space-y-2 pt-6">
+            <span className="text-xs text-stone-300 uppercase tracking-wider block">
+              Theme: &ldquo;{campMeetingTheme}&rdquo;
+            </span>
+            <h2 className="text-xl sm:text-2xl font-serif text-white">
+              {campMeetingSlides[slideIdx]?.title}
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-200 font-serif leading-relaxed line-clamp-2">
+              {campMeetingSlides[slideIdx]?.caption}
+            </p>
+            <div className="pt-2">
               <Link
                 href="/camp-meeting"
-                className="bg-[#c99700] hover:bg-[#b08400] text-[#001737] font-black px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg active:scale-95"
+                className="text-xs text-amber-300 hover:text-amber-200 font-semibold underline underline-offset-4"
               >
-                View Full Story &amp; Photos ↗
+                View Full Story &amp; Photos &rarr;
               </Link>
-
-              <div className="flex items-center gap-1.5">
-                {campMeetingSlides?.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setSlideIdx(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                      slideIdx === i ? "bg-amber-400 w-7" : "bg-white/40 w-2.5"
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* 6. MINISTRIES */}
-      <section id="departments" className="max-w-6xl mx-auto px-6 pt-24">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4 border-b border-slate-200">
+      <section id="departments" className="max-w-5xl mx-auto px-6 pt-20">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-8 pb-3 border-b border-stone-200 gap-4">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-2">
-              Total Member Involvement
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#002f6c] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44]">
               Church Ministries &amp; Departments
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-serif mt-1">
-              Active departmental fellowships serving children, youth, families, and special needs.
+            <p className="text-xs sm:text-sm text-stone-500 mt-1 font-serif">
+              Engage with our fellowships serving children, youth, families, and community outreach.
             </p>
           </div>
 
           <Link
             href="/ministries"
-            className="text-xs font-bold uppercase tracking-wider text-[#002f6c] hover:text-[#001737] flex items-center gap-1.5 shrink-0"
+            className="text-xs font-semibold text-[#001f44] hover:underline shrink-0"
           >
-            <span>All 17 Ministries</span>
-            <span>→</span>
+            All 17 Ministries &rarr;
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {departments.slice(0, 6).map((dept) => (
             <Link
               key={dept.slug}
               href={`/departments/${dept.slug}`}
-              className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-[#002f6c]/40 transition flex flex-col justify-between space-y-4 group"
+              className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition flex flex-col justify-between group"
             >
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 group-hover:bg-blue-50 flex items-center justify-center text-2xl transition">
-                    {dept.emoji}
-                  </div>
+                  <span className="text-xs font-semibold text-stone-400">
+                    {dept.leader}
+                  </span>
                   {dept.featured && (
-                    <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-[#b08400] px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">
                       Featured
                     </span>
                   )}
                 </div>
 
-                <div>
-                  <h3 className="font-bold text-base font-serif text-slate-900 group-hover:text-[#002f6c] transition">
-                    {dept.name}
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                    Led by {dept.leader}
-                  </p>
-                </div>
+                <h3 className="font-serif font-semibold text-base text-stone-900 group-hover:text-[#001f44] transition">
+                  {dept.name}
+                </h3>
 
-                <p className="text-xs text-slate-600 font-serif line-clamp-3 leading-relaxed">
+                <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed font-serif">
                   {dept.missionStatement}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-[#002f6c]">
+              <div className="pt-3 mt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
                 <span>{dept.meetingTime.split(" ")[0]}</span>
-                <span className="group-hover:translate-x-1 transition-transform">
-                  Portal →
+                <span className="text-[#001f44] font-semibold group-hover:translate-x-0.5 transition-transform">
+                  View &rarr;
                 </span>
               </div>
             </Link>
           ))}
         </div>
-
-        <div className="pt-8 text-center">
-          <Link
-            href="/ministries"
-            className="inline-flex items-center gap-2 bg-[#002f6c] hover:bg-[#00224f] text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition shadow"
-          >
-            <span>Explore All Church Ministries &amp; Special Needs (APM)</span>
-            <span>↗</span>
-          </Link>
-        </div>
       </section>
 
-      {/* 7. EVENTS */}
-      <section id="events" className="max-w-6xl mx-auto px-6 pt-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      {/* 7. UPCOMING EVENTS */}
+      <section id="events" className="max-w-5xl mx-auto px-6 pt-20">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-8 pb-3 border-b border-stone-200 gap-4">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-2">
-              Official 2026 Calendar
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#002f6c] tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44]">
               Upcoming Events &amp; Services
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 font-serif mt-1">
-              Plan ahead and participate in our worship gatherings, youth rallies, and ministry weeks.
+            <p className="text-xs sm:text-sm text-stone-500 mt-1 font-serif">
+              Worship gatherings, department initiatives, and fellowship weeks.
             </p>
           </div>
 
           <Link
             href="/events"
-            className="bg-[#002f6c] hover:bg-[#00224f] text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-xl transition shadow shrink-0"
+            className="text-xs font-semibold text-[#001f44] hover:underline shrink-0"
           >
-            View Full 2026 Calendar (53 Events) →
+            Full 2026 Calendar (53 Events) &rarr;
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {jesdacCalendar2026.slice(0, 6).map((ev) => (
             <div
               key={ev.id}
-              className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
+              className="bg-white border border-stone-200/80 rounded-xl p-4 shadow-sm flex flex-col justify-between"
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 text-[#002f6c] border border-blue-100">
-                    {ev.quarter} • {ev.month}
+              <div>
+                <div className="flex items-center justify-between text-xs text-stone-400">
+                  <span className="uppercase tracking-wider font-semibold text-[#001f44]">
+                    {ev.department}
                   </span>
-                  <span className="text-xs font-mono font-bold text-amber-700">
-                    {ev.date}
-                  </span>
+                  <span className="font-medium text-stone-600">{ev.date}</span>
                 </div>
 
-                <h3 className="font-bold text-base text-slate-800 leading-snug">
+                <h3 className="font-serif font-semibold text-sm text-stone-900 mt-2">
                   {ev.event}
                 </h3>
-
-                <p className="text-xs text-slate-500 font-serif">
-                  Department: <strong className="text-slate-700">{ev.department}</strong>
-                </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span>
-                  Leader: <strong className="text-[#002f6c]">{ev.inCharge}</strong>
-                </span>
-                <Link href="/events" className="text-[#002f6c] font-bold hover:underline">
-                  Details →
+              <div className="pt-3 mt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
+                <span>Leader: {ev.inCharge}</span>
+                <Link href="/events" className="text-[#001f44] font-medium hover:underline">
+                  Details &rarr;
                 </Link>
               </div>
             </div>
@@ -703,37 +579,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. BELIEFS */}
-      <section id="beliefs" className="max-w-6xl mx-auto px-6 pt-24">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-2">
-            Our Foundation
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#002f6c] tracking-tight">
+      {/* 8. FUNDAMENTAL BELIEFS */}
+      <section id="beliefs" className="max-w-5xl mx-auto px-6 pt-20">
+        <div className="max-w-2xl mx-auto text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44]">
             What Seventh-day Adventists Believe
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 font-serif">
+          <p className="text-xs sm:text-sm text-stone-500 mt-1.5 font-serif leading-relaxed">
             Seventh-day Adventists accept the Bible as their only creed and hold certain fundamental beliefs to be the teaching of the Holy Scriptures.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {beliefs.map((b) => (
             <div
               key={b.id}
-              className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+              className="bg-white border border-stone-200/80 rounded-xl p-5 shadow-sm flex flex-col justify-between"
             >
               <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-xl mb-4">
-                  {b.icon}
-                </div>
-                <h3 className="font-bold text-base text-[#002f6c]">{b.title}</h3>
-                <p className="text-xs text-slate-600 mt-2 font-serif leading-relaxed">
+                <h3 className="font-serif font-semibold text-base text-[#001f44]">
+                  {b.title}
+                </h3>
+                <p className="text-xs text-stone-600 mt-2 font-serif leading-relaxed">
                   {b.summary}
                 </p>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-[#b08400]">
-                Key Verse: {b.keyScripture}
+              <div className="mt-4 pt-3 border-t border-stone-100 text-[11px] font-medium text-amber-800">
+                Scripture: {b.keyScripture}
               </div>
             </div>
           ))}
