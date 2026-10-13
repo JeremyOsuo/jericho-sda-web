@@ -16,17 +16,15 @@ export default function GivingPage() {
   const [grossIncome, setGrossIncome] = useState<string>("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  // Dedicated Giving Breakdown categories
   const [givingItems, setGivingItems] = useState<GivingItem[]>([
-    { id: "tithe", label: "Tithe (Holy to the Lord - 10%)", accountName: "Tithe", category: "Conference", amount: 0 },
-    { id: "combined", label: "Combined Offering (Local Church Budget)", accountName: "Church Budget", category: "Local Church", amount: 0 },
+    { id: "tithe", label: "Tithe (10%)", accountName: "Tithe", category: "Conference", amount: 0 },
+    { id: "combined", label: "Combined Offering (Church Budget)", accountName: "Church Budget", category: "Local Church", amount: 0 },
     { id: "camp", label: "Camp Meeting Offering", accountName: "Camp Meeting", category: "Conference", amount: 0 },
     { id: "building", label: "Sanctuary Development / Building", accountName: "Building Fund", category: "Special Project", amount: 0 },
     { id: "welfare", label: "Dorcas & Community Welfare", accountName: "Welfare", category: "Local Church", amount: 0 },
     { id: "youth", label: "Adventist Youth & Pathfinders", accountName: "Youth Ministry", category: "Local Church", amount: 0 },
   ]);
 
-  // Pledge Form State
   const [pledgeData, setPledgeData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -36,7 +34,6 @@ export default function GivingPage() {
   });
   const [pledgeStatus, setPledgeStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
-  // Automatically calculate 10% tithe and suggested offerings on gross income change
   const handleGrossChange = (val: string) => {
     setGrossIncome(val);
     const num = parseFloat(val) || 0;
@@ -87,71 +84,70 @@ export default function GivingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-100/90 pb-36 relative z-10 selection:bg-amber-300 selection:text-[#001737]">
+    <main className="min-h-screen bg-[#fcfbf9] text-stone-900 pb-32">
       
-      {/* 1. HERO BANNER */}
-      <section className="relative bg-gradient-to-br from-[#001129] via-[#001f49] to-[#002f6c] text-white pt-36 sm:pt-40 pb-24 sm:pb-28 px-4 sm:px-6 overflow-hidden border-b border-amber-400/20 shadow-xl">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0c_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0c_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-amber-300 border border-amber-300/30 text-[11px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-md shadow-sm">
-            <AdventistLogo className="w-4 h-4 text-amber-300" />
-            <span>Stewardship Ministries</span>
+      {/* 1. HERO BANNER - Dignified, deep navy, clear scripture */}
+      <section className="bg-[#001f44] text-white pt-36 sm:pt-42 pb-20 px-6 border-b border-stone-800">
+        <div className="max-w-3xl mx-auto text-center space-y-4">
+          <div className="inline-flex items-center gap-2 text-stone-300 text-xs tracking-wider uppercase">
+            <AdventistLogo className="w-4 h-4 text-amber-400" />
+            <span>Stewardship Ministries &bull; Jericho SDA Church</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-white tracking-tight leading-tight drop-shadow-md">
+          <h1 className="text-4xl sm:text-5xl font-serif font-normal text-stone-50 tracking-tight">
             Faithful Giving &amp; Tithes
           </h1>
 
-          <p className="text-blue-100 text-xs sm:text-sm md:text-base font-serif max-w-2xl mx-auto leading-relaxed">
+          <blockquote className="text-stone-300 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
             &ldquo;Bring ye all the tithes into the storehouse, that there may be meat in mine house, and prove me now herewith, saith the Lord of hosts.&rdquo;
-            <span className="block text-amber-300 font-sans font-bold text-xs mt-1">
-              — Malachi 3:10
-            </span>
-          </p>
+            <cite className="block not-italic text-xs font-sans font-medium text-amber-300/90 mt-1.5">
+              &mdash; Malachi 3:10
+            </cite>
+          </blockquote>
         </div>
       </section>
 
-      {/* 2. BODY CONTENT (FLOATING CONTAINER) */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-12 sm:-mt-16 relative z-20 space-y-10">
+      {/* 2. BODY CONTENT */}
+      <div className="max-w-5xl mx-auto px-6 -mt-8 space-y-10">
         
-        {/* M-PESA Paybill Info Banner */}
-        <div className="bg-gradient-to-r from-[#001737] via-[#002f6c] to-[#001737] rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center md:text-left">
-            <span className="bg-emerald-500 text-white font-mono text-[10px] font-black uppercase px-2.5 py-1 rounded">
-              Verified Safaricom Paybill
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold font-serif">
-              Lipa Na M-PESA Instructions
+        {/* M-PESA Information Card */}
+        <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" />
+              <span className="text-xs uppercase tracking-wider font-semibold text-emerald-800">
+                Official Safaricom Paybill
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-serif text-[#001f44]">
+              Lipa Na M-PESA
             </h2>
-            <p className="text-xs sm:text-sm text-blue-100 font-serif max-w-xl">
-              Use Paybill <strong>752922</strong> for all remittances. In the account name, specify the breakdown (e.g., <em>Tithe/Offering/Camp</em>).
+            <p className="text-xs sm:text-sm text-stone-600 font-serif max-w-lg">
+              Send tithes and offerings directly to <strong>752922</strong>. In the account field, specify your breakdown or your full name.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 bg-white/10 p-4 rounded-2xl border border-white/15 backdrop-blur shrink-0">
-            <div className="text-center px-4">
-              <span className="text-[10px] uppercase font-mono tracking-wider text-amber-300 block font-bold">
+          <div className="flex flex-wrap items-center gap-3 bg-stone-50 border border-stone-200/90 p-3.5 rounded-lg shrink-0">
+            <div>
+              <span className="text-[10px] uppercase font-mono tracking-wider text-stone-500 block">
                 Business No.
               </span>
-              <span className="text-2xl font-black font-mono tracking-wider block text-white mt-0.5">
+              <span className="text-2xl font-semibold font-mono tracking-wide text-stone-900">
                 752922
               </span>
             </div>
             <button
               type="button"
               onClick={() => copyToClipboard("752922", "paybill")}
-              className="bg-[#c99700] hover:bg-[#b08400] active:scale-95 text-[#001737] font-black text-xs uppercase px-4 py-2.5 rounded-xl transition cursor-pointer shadow"
+              className="bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium px-3.5 py-2 rounded transition cursor-pointer"
             >
               {copiedKey === "paybill" ? "Copied! ✓" : "Copy Paybill"}
             </button>
             <a
               href="#digital-pledge-card"
-              className="bg-white/15 hover:bg-white/25 active:scale-95 text-amber-300 border border-amber-300/30 font-bold text-xs uppercase px-4 py-2.5 rounded-xl transition cursor-pointer shadow"
+              className="text-stone-700 hover:text-stone-900 border border-stone-300 hover:border-stone-400 text-xs font-medium px-3.5 py-2 rounded transition"
             >
-              Make a Pledge ↓
+              Make a Pledge &darr;
             </a>
           </div>
         </div>
@@ -159,24 +155,24 @@ export default function GivingPage() {
         {/* 2-Column Interface: Calculator & Summary / Pledge Card */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left Column: Offering Calculator Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
+          {/* Left Column: Envelope Calculator */}
+          <div className="lg:col-span-7 bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
             <div>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
+              <h2 className="text-xl font-serif text-[#001f44]">
                 Tithe &amp; Offerings Envelope
-              </h3>
-              <p className="text-xs text-slate-500 font-serif mt-1">
-                Enter your gross earnings to calculate your biblical tithe (10%), then allocate offerings across ministries.
+              </h2>
+              <p className="text-xs text-stone-500 font-serif mt-1">
+                Calculate your 10% tithe and allocate planned offerings across church funds.
               </p>
             </div>
 
-            {/* Quick Income Estimator */}
-            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
-              <label className="text-xs font-bold text-slate-700 block">
-                Gross Monthly Earnings / Revenue (KES)
+            {/* Income Input */}
+            <div className="bg-stone-50 p-4 rounded-lg border border-stone-200 space-y-1.5">
+              <label className="text-xs font-medium text-stone-700 block">
+                Gross Income / Earnings (KES)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-2.5 text-xs font-mono font-bold text-slate-400">
+                <span className="absolute left-3 top-2.5 text-xs text-stone-400 font-medium">
                   KES
                 </span>
                 <input
@@ -185,38 +181,33 @@ export default function GivingPage() {
                   placeholder="e.g. 50,000"
                   value={grossIncome}
                   onChange={(e) => handleGrossChange(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded-xl pl-14 pr-4 py-2.5 text-sm font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-white border border-stone-300 rounded-lg pl-12 pr-3 py-2 text-sm font-medium text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
             </div>
 
-            {/* Itemized Allocations */}
-            <div className="space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                Itemized Church Funds Breakdown:
+            {/* Fund Breakdown Rows */}
+            <div className="space-y-3">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-400 block">
+                Itemized Allocation
               </span>
 
               {givingItems.map((item) => (
                 <div
                   key={item.id}
-                  className="p-4 rounded-2xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="p-3.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-50/70 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                 >
                   <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900 font-serif">
-                        {item.label}
-                      </h4>
-                      <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-blue-50 text-[#002f6c] border border-blue-100 font-bold">
-                        {item.category}
-                      </span>
-                    </div>
-                    <span className="text-[11px] text-slate-500 block font-mono mt-0.5">
+                    <h3 className="text-xs sm:text-sm font-medium text-stone-900">
+                      {item.label}
+                    </h3>
+                    <span className="text-[11px] text-stone-400 block mt-0.5">
                       Account tag: &ldquo;{item.accountName}&rdquo;
                     </span>
                   </div>
 
-                  <div className="relative w-full sm:w-40 shrink-0">
-                    <span className="absolute left-3 top-2 text-xs font-mono text-slate-400">
+                  <div className="relative w-full sm:w-36 shrink-0">
+                    <span className="absolute left-2.5 top-1.5 text-xs text-stone-400">
                       KES
                     </span>
                     <input
@@ -226,7 +217,7 @@ export default function GivingPage() {
                       onChange={(e) =>
                         updateItemAmount(item.id, parseFloat(e.target.value) || 0)
                       }
-                      className="w-full bg-white border border-slate-200 rounded-xl pl-12 pr-3 py-1.5 text-xs font-mono font-bold text-right text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                      className="w-full bg-stone-50 border border-stone-200 rounded px-2.5 py-1.5 text-xs font-medium text-right text-stone-900 focus:bg-white focus:outline-none focus:border-[#001f44]"
                       placeholder="0"
                     />
                   </div>
@@ -235,49 +226,49 @@ export default function GivingPage() {
             </div>
           </div>
 
-          {/* Right Column: Envelope Receipt, Pledge Card & Treasury Contact */}
+          {/* Right Column: Envelope Summary, Pledge Card, Treasury Contact */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* Envelope Summary Card */}
-            <div className="bg-[#001737] rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-white/10 space-y-6">
-              <div className="border-b border-white/10 pb-4">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 block font-bold">
-                  Digital Envelope Summary
+            {/* Envelope Summary Slip */}
+            <div className="bg-white rounded-xl p-6 border border-stone-200 shadow-sm space-y-5">
+              <div className="border-b border-stone-200 pb-4">
+                <span className="text-[11px] uppercase tracking-wider text-stone-400 block font-medium">
+                  Summary Slip
                 </span>
-                <h3 className="text-xl font-black font-serif text-white mt-1">
-                  Total Remittance
+                <h3 className="text-base font-serif text-[#001f44] mt-0.5">
+                  Total Planned Remittance
                 </h3>
-                <div className="text-3xl sm:text-4xl font-black font-mono text-[#c99700] mt-2">
+                <div className="text-3xl font-semibold text-amber-700 mt-1 font-mono">
                   KES {totalGiving.toLocaleString()}
                 </div>
               </div>
 
-              {/* Items Breakdown Review */}
-              <div className="space-y-2 text-xs font-serif">
+              {/* Items Breakdown */}
+              <div className="space-y-1.5 text-xs">
                 {givingItems
                   .filter((item) => item.amount > 0)
                   .map((item) => (
-                    <div key={item.id} className="flex items-center justify-between text-blue-100">
+                    <div key={item.id} className="flex items-center justify-between text-stone-600">
                       <span>{item.accountName}</span>
-                      <span className="font-mono font-bold text-white">
+                      <span className="font-mono text-stone-900 font-medium">
                         KES {item.amount.toLocaleString()}
                       </span>
                     </div>
                   ))}
 
                 {totalGiving === 0 && (
-                  <p className="text-slate-400 text-xs italic">
-                    No amounts specified yet. Fill in figures in the calculator to view your envelope breakdown.
+                  <p className="text-stone-400 text-xs italic">
+                    Enter amounts on the left to review your envelope allocation.
                   </p>
                 )}
               </div>
 
-              {/* Generated Account Field String for M-PESA */}
+              {/* M-PESA Account Field String */}
               {totalGiving > 0 && (
-                <div className="pt-4 border-t border-white/10 space-y-2">
+                <div className="pt-3 border-t border-stone-200 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-amber-300">
-                      Recommended Account Name Field:
+                    <span className="text-[10px] uppercase tracking-wider text-stone-500 font-medium">
+                      Copy into Account Field:
                     </span>
                     <button
                       type="button"
@@ -290,12 +281,12 @@ export default function GivingPage() {
                           "accString"
                         )
                       }
-                      className="text-[10px] text-amber-300 hover:text-white underline cursor-pointer"
+                      className="text-xs text-[#001f44] hover:underline cursor-pointer font-medium"
                     >
-                      {copiedKey === "accString" ? "Copied! ✓" : "Copy string"}
+                      {copiedKey === "accString" ? "Copied! ✓" : "Copy"}
                     </button>
                   </div>
-                  <div className="bg-black/40 p-3 rounded-xl border border-white/10 font-mono text-xs text-amber-200 break-all select-all">
+                  <div className="bg-stone-50 p-2.5 rounded border border-stone-200 font-mono text-xs text-stone-800 break-all select-all">
                     {givingItems
                       .filter((i) => i.amount > 0)
                       .map((i) => `${i.accountName}:${i.amount}`)
@@ -304,41 +295,42 @@ export default function GivingPage() {
                 </div>
               )}
 
-              {/* Step-by-step instructions */}
-              <div className="pt-4 border-t border-white/10 space-y-2 text-xs text-blue-200">
-                <h5 className="font-bold text-white">How to complete on your phone:</h5>
-                <ol className="list-decimal list-inside space-y-1 text-[11px] font-sans text-blue-200/90">
-                  <li>Go to <strong>M-PESA</strong> &gt; <strong>Lipa na M-PESA</strong> &gt; <strong>Paybill</strong></li>
-                  <li>Enter Business No: <strong className="text-white">752922</strong></li>
-                  <li>Enter Account: <strong className="text-amber-300">Tithe / Offering / Your Name</strong></li>
-                  <li>Enter Amount: <strong className="text-white">KES {totalGiving.toLocaleString()}</strong></li>
-                  <li>Enter your M-PESA PIN and press Send</li>
+              {/* Quick M-PESA Steps */}
+              <div className="pt-3 border-t border-stone-200 space-y-1.5 text-xs text-stone-500 font-serif">
+                <span className="font-medium text-stone-700 block font-sans">
+                  Steps on your phone:
+                </span>
+                <ol className="list-decimal list-inside space-y-1 text-xs">
+                  <li>M-PESA &gt; Lipa na M-PESA &gt; Paybill</li>
+                  <li>Business No: <strong>752922</strong></li>
+                  <li>Account: <strong>Tithe / Offering / Name</strong></li>
+                  <li>Amount: <strong>KES {totalGiving.toLocaleString()}</strong></li>
                 </ol>
               </div>
             </div>
 
-            {/* DIGITAL PLEDGE CARD SECTION */}
-            <div id="digital-pledge-card" className="bg-[#0b1e3b] rounded-3xl p-6 sm:p-8 text-white shadow-xl border border-amber-400/30 space-y-5 scroll-mt-24">
+            {/* DIGITAL PLEDGE CARD */}
+            <div id="digital-pledge-card" className="bg-[#001f44] rounded-xl p-6 text-white shadow-sm space-y-4 scroll-mt-24">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 block font-bold">
+                <span className="text-xs text-amber-300 font-medium uppercase tracking-wider block">
                   Stewardship Commitment
                 </span>
-                <h3 className="text-xl font-bold font-serif text-white mt-1">
+                <h3 className="text-xl font-serif text-white mt-1">
                   Digital Pledge Card
                 </h3>
-                <p className="text-xs text-slate-300 font-serif mt-1">
-                  Record your intentional pledge towards church projects. All entries go straight to the treasury records.
+                <p className="text-xs text-stone-300 font-serif mt-1">
+                  Record your intention toward church projects. Data submits directly to the treasury ledger.
                 </p>
               </div>
 
               {pledgeStatus === "success" ? (
-                <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-xl font-bold">
-                    ✓
-                  </div>
-                  <h4 className="text-sm font-bold text-emerald-300 font-serif">Pledge Recorded!</h4>
-                  <p className="text-xs text-slate-300">
-                    Thank you for committing to God’s work. May the Lord abundantly bless your stewardship.
+                <div className="p-5 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-center space-y-2">
+                  <div className="text-emerald-400 text-lg font-bold">✓</div>
+                  <h4 className="text-sm font-medium text-emerald-200 font-serif">
+                    Pledge Recorded
+                  </h4>
+                  <p className="text-xs text-stone-300 font-serif">
+                    Thank you for your commitment to God&apos;s house. May the Lord bless your faithful stewardship.
                   </p>
                   <button
                     type="button"
@@ -352,15 +344,15 @@ export default function GivingPage() {
                         cause: "Church Building / Renovation",
                       });
                     }}
-                    className="mt-2 text-xs bg-emerald-600 hover:bg-emerald-500 font-bold px-4 py-2 rounded-xl transition"
+                    className="mt-2 text-xs bg-emerald-800 hover:bg-emerald-700 font-medium px-3.5 py-1.5 rounded transition"
                   >
                     Submit Another Pledge
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handlePledgeSubmit} className="space-y-4 text-left">
+                <form onSubmit={handlePledgeSubmit} className="space-y-3.5 text-left">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-medium text-stone-200 mb-1">
                       Full Name
                     </label>
                     <input
@@ -369,12 +361,12 @@ export default function GivingPage() {
                       placeholder="e.g. Samuel Otieno"
                       value={pledgeData.fullName}
                       onChange={(e) => setPledgeData({ ...pledgeData, fullName: e.target.value })}
-                      className="w-full bg-[#001737] border border-white/20 rounded-xl px-3.5 py-2 text-xs font-serif text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      className="w-full bg-[#001737] border border-white/20 rounded-lg px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-amber-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-medium text-stone-200 mb-1">
                       Phone Number (M-PESA)
                     </label>
                     <input
@@ -383,19 +375,19 @@ export default function GivingPage() {
                       placeholder="0712345678"
                       value={pledgeData.phoneNumber}
                       onChange={(e) => setPledgeData({ ...pledgeData, phoneNumber: e.target.value })}
-                      className="w-full bg-[#001737] border border-white/20 rounded-xl px-3.5 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                      className="w-full bg-[#001737] border border-white/20 rounded-lg px-3 py-2 text-xs font-mono text-white placeholder-stone-400 focus:outline-none focus:border-amber-400"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-xs font-medium text-stone-200 mb-1">
                         Frequency
                       </label>
                       <select
                         value={pledgeData.frequency}
                         onChange={(e) => setPledgeData({ ...pledgeData, frequency: e.target.value })}
-                        className="w-full bg-[#001737] border border-white/20 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                        className="w-full bg-[#001737] border border-white/20 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
                       >
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -404,7 +396,7 @@ export default function GivingPage() {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                      <label className="block text-xs font-medium text-stone-200 mb-1">
                         Amount (KES)
                       </label>
                       <input
@@ -414,19 +406,19 @@ export default function GivingPage() {
                         placeholder="1,000"
                         value={pledgeData.amount}
                         onChange={(e) => setPledgeData({ ...pledgeData, amount: e.target.value })}
-                        className="w-full bg-[#001737] border border-white/20 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                        className="w-full bg-[#001737] border border-white/20 rounded-lg px-3 py-2 text-xs font-mono text-white placeholder-stone-400 focus:outline-none focus:border-amber-400"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-medium text-stone-200 mb-1">
                       Target Project / Fund
                     </label>
                     <select
                       value={pledgeData.cause}
                       onChange={(e) => setPledgeData({ ...pledgeData, cause: e.target.value })}
-                      className="w-full bg-[#001737] border border-white/20 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      className="w-full bg-[#001737] border border-white/20 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
                     >
                       <option value="Church Building / Renovation">Church Building &amp; Renovation</option>
                       <option value="Local Church Budget">Local Church Budget</option>
@@ -439,38 +431,38 @@ export default function GivingPage() {
                   <button
                     type="submit"
                     disabled={pledgeStatus === "submitting"}
-                    className="w-full mt-2 bg-[#c99700] hover:bg-[#b08400] active:scale-95 text-[#001737] font-black text-xs uppercase py-2.5 rounded-xl transition cursor-pointer shadow disabled:opacity-50"
+                    className="w-full mt-2 bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs uppercase tracking-wider py-2.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
                   >
-                    {pledgeStatus === "submitting" ? "Submitting Pledge..." : "Commit Pledge →"}
+                    {pledgeStatus === "submitting" ? "Submitting..." : "Commit Pledge →"}
                   </button>
 
                   {pledgeStatus === "error" && (
-                    <p className="text-[11px] text-rose-400 text-center">
-                      Failed to record pledge. Please verify your connection or try again.
+                    <p className="text-xs text-rose-300 text-center">
+                      Failed to record pledge. Please try again.
                     </p>
                   )}
                 </form>
               )}
             </div>
 
-            {/* Treasury Support Contact */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xl space-y-3">
-              <h4 className="text-sm font-bold font-serif text-[#002f6c]">
+            {/* Treasury Contact Card */}
+            <div className="bg-white rounded-xl p-5 border border-stone-200 shadow-sm space-y-2">
+              <h4 className="text-sm font-serif text-[#001f44]">
                 Treasury &amp; Stewardship Inquiries
               </h4>
-              <p className="text-xs text-slate-500 font-serif leading-relaxed">
-                For tithe receipts, bank wire transfers, or gift pledges, please contact the Church Treasury directly.
+              <p className="text-xs text-stone-500 font-serif leading-relaxed">
+                For tithe receipts, bank wire transfers, or queries, contact the treasury team:
               </p>
-              <div className="text-xs text-slate-700 font-mono space-y-1">
-                <div>Email: <strong>treasury@jerichosda.church</strong></div>
+              <div className="text-xs text-stone-700 space-y-0.5 pt-1">
+                <div>Email: <strong className="font-mono">jesdatreasury@gmail.com</strong></div>
                 <div>Office: <strong>Sabbaths after Divine Service</strong></div>
               </div>
               <div className="pt-2">
                 <Link
                   href="/leadership"
-                  className="text-xs font-bold text-[#002f6c] hover:underline"
+                  className="text-xs font-medium text-[#001f44] hover:underline"
                 >
-                  View Treasury Department Leaders →
+                  View Treasury Department Leaders &rarr;
                 </Link>
               </div>
             </div>

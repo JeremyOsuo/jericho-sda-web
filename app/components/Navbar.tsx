@@ -10,7 +10,7 @@ import { useSiteSettings } from "@/context/SiteSettingsContext";
 export default function Navbar() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMinistriesOpen, setIsMinistriesOpen] = useState(false);
   const [isMobileMinistriesOpen, setIsMobileMinistriesOpen] = useState(false);
 
@@ -25,9 +25,9 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent background scrolling only when mobile drawer sheet is explicitly open
+  // Lock body scroll when mobile drawer is open
   useEffect(() => {
-    if (isMenuOpen) {
+    if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -35,7 +35,7 @@ export default function Navbar() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isMenuOpen]);
+  }, [isMobileMenuOpen]);
 
   // Close desktop dropdown on outside click
   useEffect(() => {
@@ -53,56 +53,58 @@ export default function Navbar() {
 
   return (
     <>
-      {/* 1. TOP HEADER (DESKTOP & MOBILE BRANDING) */}
-      <header className="fixed top-0 left-0 right-0 z-40 pointer-events-none">
+      <header className="fixed top-0 left-0 right-0 z-50">
+        {/* Urgent Church Notice Banner */}
         {urgentBannerActive && (
           <aside
             aria-label="Urgent Church Notice"
-            className="bg-amber-400 text-[#001737] py-2 px-4 text-xs font-bold text-center border-b border-amber-500 shadow-md flex items-center justify-center gap-2 pointer-events-auto"
+            className="bg-amber-400 text-[#001f44] py-2 px-4 text-xs font-semibold text-center border-b border-amber-500 shadow-sm flex items-center justify-center gap-2"
           >
-            <span className="font-mono uppercase tracking-wider text-[10px] bg-[#001737] text-white px-2 py-0.5 rounded font-black">
-              Urgent Notice
+            <span className="font-mono uppercase tracking-wider text-[10px] bg-[#001f44] text-white px-1.5 py-0.5 rounded">
+              Notice
             </span>
             <span className="font-serif">{urgentBannerText}</span>
           </aside>
         )}
 
+        {/* Main Navbar with Translucent Frosted Blur on Scroll */}
         <div
-          className={`w-full transition-all duration-300 pointer-events-auto ${
+          className={`w-full transition-all duration-300 ${
             isScrolled
-              ? "bg-[#001737]/95 backdrop-blur-md py-3 shadow-lg border-b border-white/10"
-              : "bg-gradient-to-b from-[#001129]/95 via-[#001129]/70 to-transparent py-4 sm:py-5"
+              ? "bg-[#001f44]/80 backdrop-blur-md shadow-sm border-b border-white/10 py-3"
+              : "bg-[#001f44] border-b border-white/10 py-4"
           }`}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
-            {/* Church Brand with Secret Double-Click to Admin */}
+          <div className="max-w-6xl mx-auto px-5 sm:px-6 flex items-center justify-between gap-4">
+            
+            {/* Church Brand (Double-click route to /admin preserved) */}
             <div
               onDoubleClick={() => router.push("/admin")}
-              className="flex items-center gap-2.5 group shrink-0 cursor-pointer select-none"
-              title="Jericho SDA Sanctuary"
+              className="flex items-center gap-3 shrink-0 cursor-pointer select-none"
+              title="Jericho SDA Church"
             >
               <Link
                 href="/"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-amber-300 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform"
+                className="w-9 h-9 rounded-lg bg-amber-400 flex items-center justify-center shadow-sm shrink-0"
               >
-                <AdventistLogo className="w-5 h-5 sm:w-6 sm:h-6 text-[#001737]" />
+                <AdventistLogo className="w-5 h-5 text-[#001f44]" />
               </Link>
-              <Link href="/">
-                <span className="text-white font-serif font-black text-xs sm:text-sm tracking-wide block leading-tight">
-                  JERICHO SDA
+              <Link href="/" className="leading-tight">
+                <span className="text-white font-serif font-semibold text-sm tracking-wide block">
+                  Jericho SDA Church
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-amber-300 block">
-                  Sanctuary
+                <span className="text-[11px] text-amber-300/90 block">
+                  Nairobi Eastlands
                 </span>
               </Link>
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-3 xl:gap-5 text-[11px] font-extrabold tracking-wide uppercase text-blue-100/90 shrink-0">
-              <Link href="/" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+            <nav className="hidden lg:flex items-center gap-6 text-xs font-medium text-stone-200">
+              <Link href="/" className="hover:text-amber-300 transition py-1">
                 Home
               </Link>
-              <Link href="/bulletin" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+              <Link href="/bulletin" className="hover:text-amber-300 transition py-1">
                 Bulletin
               </Link>
 
@@ -116,39 +118,44 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setIsMinistriesOpen((p) => !p)}
-                  className="flex items-center gap-1 hover:text-amber-300 transition py-1 whitespace-nowrap uppercase cursor-pointer"
+                  className="flex items-center gap-1.5 hover:text-amber-300 transition py-1 cursor-pointer"
                 >
                   <span>Ministries</span>
-                  <span className={`text-[9px] transition-transform ${isMinistriesOpen ? "rotate-180" : ""}`}>
-                    ▼
-                  </span>
+                  <svg
+                    className={`w-3 h-3 transition-transform ${isMinistriesOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
 
                 {isMinistriesOpen && (
-                  <div className="absolute top-full -left-4 w-72 bg-[#001737] border border-white/10 rounded-2xl shadow-2xl p-2.5 space-y-1 backdrop-blur-xl">
-                    <div className="px-3 py-1.5 border-b border-white/10 mb-1 flex items-center justify-between">
-                      <span className="text-[9px] font-mono uppercase tracking-widest text-amber-300 block font-bold">
+                  <div className="absolute top-full left-0 w-64 bg-[#001f44] border border-white/15 rounded-xl shadow-xl p-2 space-y-1 mt-1">
+                    <div className="px-3 py-1.5 border-b border-white/10 flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wider text-amber-300 font-semibold">
                         Departments
                       </span>
                       <Link
                         href="/ministries"
                         onClick={() => setIsMinistriesOpen(false)}
-                        className="text-[10px] text-blue-200 hover:text-amber-300 underline font-bold"
+                        className="text-[11px] text-stone-300 hover:text-white"
                       >
-                        All Ministries →
+                        All Ministries &rarr;
                       </Link>
                     </div>
 
-                    <div className="max-h-[360px] overflow-y-auto space-y-0.5 pr-1">
+                    <div className="max-h-80 overflow-y-auto space-y-0.5 pt-1">
                       {departments.map((dept) => (
                         <Link
                           key={dept.slug}
                           href={`/departments/${dept.slug}`}
                           onClick={() => setIsMinistriesOpen(false)}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-blue-100 hover:text-white hover:bg-white/10 transition normal-case"
+                          className="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs text-stone-200 hover:text-white hover:bg-white/10 transition"
                         >
-                          <span className="text-base">{dept.emoji}</span>
-                          <span className="truncate">{dept.shortName}</span>
+                          <span className="truncate">{dept.name}</span>
+                          <span className="text-[10px] text-stone-400">{dept.meetingTime.split(" ")[0]}</span>
                         </Link>
                       ))}
                     </div>
@@ -156,19 +163,19 @@ export default function Navbar() {
                 )}
               </div>
 
-              <Link href="/leadership" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+              <Link href="/leadership" className="hover:text-amber-300 transition py-1">
                 Leadership
               </Link>
-              <Link href="/estates" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+              <Link href="/estates" className="hover:text-amber-300 transition py-1">
                 Prayer Cells
               </Link>
-              <Link href="/care" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+              <Link href="/care" className="hover:text-amber-300 transition py-1">
                 Pastoral Care
               </Link>
-              <Link href="/camp-meeting" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+              <Link href="/camp-meeting" className="hover:text-amber-300 transition py-1">
                 Camp Meeting
               </Link>
-              <Link href="/events" className="hover:text-amber-300 transition py-1 whitespace-nowrap">
+              <Link href="/events" className="hover:text-amber-300 transition py-1">
                 Events
               </Link>
             </nav>
@@ -177,187 +184,160 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-3 shrink-0">
               <Link
                 href="/giving"
-                className="bg-[#002f6c] hover:bg-[#00224f] border border-white/20 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-xl shadow transition hover:scale-105"
+                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition"
               >
                 Online Giving
               </Link>
             </div>
 
-            {/* Mobile Top Giving Quick Button */}
+            {/* Mobile Actions: Giving + Menu Toggle */}
             <div className="flex lg:hidden items-center gap-2">
               <Link
                 href="/giving"
-                className="bg-amber-400 text-[#001737] font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-xl shadow active:scale-95"
+                className="bg-amber-400 text-[#001f44] font-semibold text-xs px-3 py-1.5 rounded-lg shadow-sm"
               >
-                Giving
+                Give
               </Link>
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(true)}
+                aria-label="Open Navigation Menu"
+                className="p-1.5 text-stone-200 hover:text-white rounded-lg focus:outline-none"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
             </div>
+
           </div>
         </div>
       </header>
 
-      {/* 2. MOBILE BOTTOM NAVIGATION BAR */}
-      <nav
-        aria-label="Mobile Navigation"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#001229]/95 backdrop-blur-lg border-t border-white/15 px-2 py-2 flex items-center justify-around text-center shadow-2xl pointer-events-auto"
-      >
-        <Link
-          href="/"
-          className="flex flex-col items-center justify-center w-14 py-1 text-slate-300 hover:text-amber-300 active:scale-90 transition"
-        >
-          <span className="text-lg">⛪</span>
-          <span className="text-[10px] font-bold tracking-tight mt-0.5">Home</span>
-        </Link>
-
-        <Link
-          href="/estates"
-          className="flex flex-col items-center justify-center w-14 py-1 text-slate-300 hover:text-amber-300 active:scale-90 transition"
-        >
-          <span className="text-lg">📍</span>
-          <span className="text-[10px] font-bold tracking-tight mt-0.5">Cells</span>
-        </Link>
-
-        {/* Center Giving Button */}
-        <Link
-          href="/giving"
-          className="-mt-5 bg-gradient-to-tr from-amber-400 to-amber-300 text-[#001737] w-12 h-12 rounded-full flex flex-col items-center justify-center shadow-lg border-2 border-[#001229] active:scale-90 transition font-black"
-        >
-          <span className="text-base leading-none">💳</span>
-          <span className="text-[8px] uppercase tracking-tighter font-extrabold mt-0.5">Give</span>
-        </Link>
-
-        <Link
-          href="/camp-meeting"
-          className="flex flex-col items-center justify-center w-14 py-1 text-slate-300 hover:text-amber-300 active:scale-90 transition"
-        >
-          <span className="text-lg">🏕️</span>
-          <span className="text-[10px] font-bold tracking-tight mt-0.5">Camp</span>
-        </Link>
-
-        {/* Menu Sheet Trigger */}
-        <button
-          type="button"
-          onClick={() => setIsMenuOpen(true)}
-          className="flex flex-col items-center justify-center w-14 py-1 text-slate-300 hover:text-amber-300 active:scale-90 transition cursor-pointer"
-        >
-          <span className="text-lg">☰</span>
-          <span className="text-[10px] font-bold tracking-tight mt-0.5">Menu</span>
-        </button>
-      </nav>
-
-      {/* 3. MOBILE FULL MENU BOTTOM SHEET */}
-      {isMenuOpen && (
-        <div
-          style={{ position: "fixed", inset: 0, zIndex: 999999 }}
-          className="lg:hidden flex flex-col justify-end bg-black/75 backdrop-blur-sm pointer-events-auto animate-in fade-in duration-200"
-        >
-          {/* Backdrop Tap to Close */}
+      {/* Mobile Slide-Over Drawer */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
           <div
-            className="flex-1 w-full"
-            onClick={() => setIsMenuOpen(false)}
+            className="fixed inset-0 bg-black/60 transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
           />
 
-          <div className="bg-[#001737] border-t-2 border-amber-400/40 rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden text-white shadow-2xl animate-in slide-in-from-bottom duration-300">
-            {/* Sheet Header */}
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#001126] shrink-0">
+          {/* Drawer Sheet */}
+          <div className="relative ml-auto w-full max-w-xs bg-[#001f44] text-white h-full shadow-2xl flex flex-col justify-between overflow-hidden z-10 border-l border-white/10">
+            {/* Header */}
+            <div className="p-5 border-b border-white/10 flex items-center justify-between">
               <div
                 onDoubleClick={() => {
-                  setIsMenuOpen(false);
+                  setIsMobileMenuOpen(false);
                   router.push("/admin");
                 }}
-                className="flex items-center gap-2 cursor-pointer select-none"
+                className="flex items-center gap-2.5 cursor-pointer select-none"
               >
-                <AdventistLogo className="w-5 h-5 text-amber-400" />
-                <span className="font-serif font-black text-sm tracking-wide text-white">
-                  JERICHO SDA DIRECTORY
-                </span>
+                <div className="w-7 h-7 rounded bg-amber-400 flex items-center justify-center">
+                  <AdventistLogo className="w-4 h-4 text-[#001f44]" />
+                </div>
+                <span className="font-serif font-semibold text-sm">Jericho SDA</span>
               </div>
               <button
                 type="button"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-base font-bold flex items-center justify-center cursor-pointer"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close Menu"
+                className="p-1.5 text-stone-300 hover:text-white"
               >
-                ✕
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
-            {/* Sheet Body Links */}
-            <div className="p-5 space-y-4 overflow-y-auto flex-1">
-              {/* Navigation Grid */}
-              <div className="grid grid-cols-2 gap-2 text-xs font-bold uppercase tracking-wider">
-                <Link
-                  href="/"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 block"
-                >
-                  ⛪ Home
-                </Link>
-                <Link
-                  href="/bulletin"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 block"
-                >
-                  📖 Bulletin
-                </Link>
-                <Link
-                  href="/leadership"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 block"
-                >
-                  👥 Officers
-                </Link>
-                <Link
-                  href="/care"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 block"
-                >
-                  🏡 Pastoral Care
-                </Link>
-                <Link
-                  href="/camp-meeting"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 block"
-                >
-                  🏕️ Camp 2026
-                </Link>
-                <Link
-                  href="/events"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 block"
-                >
-                  📅 2026 Calendar
-                </Link>
-              </div>
+            {/* Navigation Body */}
+            <div className="p-5 space-y-1 overflow-y-auto flex-1 text-sm font-medium">
+              <Link
+                href="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                Home
+              </Link>
+              <Link
+                href="/bulletin"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                Divine Bulletin
+              </Link>
+              <Link
+                href="/leadership"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                Church Leadership
+              </Link>
+              <Link
+                href="/estates"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                Prayer Cells &amp; Estates
+              </Link>
+              <Link
+                href="/care"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                Pastoral Care
+              </Link>
+              <Link
+                href="/camp-meeting"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                Camp Meeting
+              </Link>
+              <Link
+                href="/events"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
+              >
+                2026 Calendar
+              </Link>
 
               {/* Ministries Accordion */}
-              <div className="border border-white/10 bg-white/5 rounded-2xl p-3">
+              <div className="pt-2">
                 <button
                   type="button"
                   onClick={() => setIsMobileMinistriesOpen((p) => !p)}
-                  className="w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-amber-300 cursor-pointer"
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-white/10 text-amber-300 font-semibold cursor-pointer"
                 >
-                  <span>🏛️ All 17 Church Ministries</span>
-                  <span>{isMobileMinistriesOpen ? "▲" : "▼"}</span>
+                  <span>Church Ministries</span>
+                  <svg
+                    className={`w-3.5 h-3.5 transition-transform ${isMobileMinistriesOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
 
                 {isMobileMinistriesOpen && (
-                  <div className="mt-3 max-h-48 overflow-y-auto space-y-1.5 pt-2 border-t border-white/10">
+                  <div className="pl-3 pr-1 py-1 space-y-0.5 border-l border-white/15 ml-3 mt-1 max-h-48 overflow-y-auto">
                     <Link
                       href="/ministries"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-xs font-bold text-amber-200 underline pb-1"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-2.5 py-1 text-xs text-amber-200 font-semibold"
                     >
-                      View Ministries Hub Page →
+                      All Ministries &rarr;
                     </Link>
                     {departments.map((d) => (
                       <Link
                         key={d.slug}
                         href={`/departments/${d.slug}`}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center gap-2 text-xs text-blue-100 hover:text-white py-1"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block px-2.5 py-1 text-xs text-stone-300 hover:text-white"
                       >
-                        <span>{d.emoji}</span>
-                        <span className="normal-case">{d.name}</span>
+                        {d.name}
                       </Link>
                     ))}
                   </div>
@@ -365,14 +345,14 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Bottom Paybill Strip */}
-            <div className="p-4 bg-[#001026] border-t border-white/10 shrink-0">
+            {/* Bottom Giving Action */}
+            <div className="p-5 border-t border-white/10 bg-[#001737]">
               <Link
                 href="/giving"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full bg-[#002f6c] text-white border border-white/20 font-bold text-center text-xs uppercase tracking-wider py-3 rounded-xl block shadow"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-center text-xs uppercase tracking-wider py-3 rounded-lg shadow-sm"
               >
-                Tithe &amp; Offerings (Paybill 752922)
+                Online Giving &bull; Paybill 752922
               </Link>
             </div>
           </div>

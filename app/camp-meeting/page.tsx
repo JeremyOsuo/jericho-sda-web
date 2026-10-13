@@ -34,161 +34,131 @@ export default function CampMeetingPage() {
   const selectedDay: DaySchedule = campDailyRecap[selectedDayIndex] || campDailyRecap[0];
 
   return (
-    <main className="min-h-screen bg-slate-100/90 pb-36 relative z-10 selection:bg-amber-300 selection:text-[#001737]">
+    <main className="min-h-screen bg-[#fcfbf9] text-stone-900 pb-32">
       
-      {/* 1. RICH NAVY HERO BANNER WITH GEOMETRIC TEXTURE */}
-      <section className="relative bg-gradient-to-br from-[#001129] via-[#001f49] to-[#002f6c] text-white pt-36 sm:pt-40 pb-24 sm:pb-28 px-4 sm:px-6 overflow-hidden border-b border-amber-400/20 shadow-xl">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0c_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0c_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-amber-300 border border-amber-300/30 text-[11px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full backdrop-blur-md shadow-sm">
-            <AdventistLogo className="w-4 h-4 text-amber-300" />
-            <span>Annual Camp Meeting • {campMeetingDates}</span>
+      {/* 1. HERO - Dignified, deep navy, clear scripture */}
+      <section className="bg-[#001f44] text-white pt-36 sm:pt-42 pb-20 px-6 border-b border-stone-800">
+        <div className="max-w-3xl mx-auto text-center space-y-4">
+          <div className="inline-flex items-center gap-2 text-stone-300 text-xs tracking-wider uppercase">
+            <AdventistLogo className="w-4 h-4 text-amber-400" />
+            <span>Annual Camp Convocation &bull; {campMeetingDates}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-white tracking-tight leading-tight drop-shadow-md">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-normal text-stone-50 tracking-tight leading-tight">
             &ldquo;{campMeetingTheme}&rdquo;
           </h1>
 
-          <p className="text-blue-100 text-xs sm:text-sm md:text-base font-serif max-w-2xl mx-auto leading-relaxed">
+          <blockquote className="text-stone-300 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
             &ldquo;{campMeetingScriptureFull}&rdquo;
-            <span className="block text-amber-300 font-sans font-bold text-xs mt-1">
-              — {campMeetingScripture}
-            </span>
-          </p>
+            <cite className="block not-italic text-xs font-sans font-medium text-amber-300/90 mt-1.5">
+              &mdash; {campMeetingScripture}
+            </cite>
+          </blockquote>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
             {campMeetingPdf && (
               <a
                 href={campMeetingPdf}
                 download
-                className="bg-[#c99700] hover:bg-[#b08400] text-[#001737] font-black px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-lg active:scale-95 cursor-pointer inline-flex items-center gap-2"
+                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-5 py-2.5 rounded-lg transition shadow-sm"
               >
-                <span>Download Camp Guide (PDF)</span>
-                <span>📥</span>
+                Download Souvenir Guide (PDF) &rarr;
               </a>
             )}
             <Link
               href="/giving"
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition backdrop-blur active:scale-95"
+              className="bg-white/10 hover:bg-white/15 text-stone-100 border border-white/20 font-medium text-xs px-5 py-2.5 rounded-lg transition"
             >
-              Camp Giving (Paybill {campMeetingPaybill}) 💳
+              Camp Giving &bull; Paybill {campMeetingPaybill}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 2. BODY CONTENT (FLOATING CONTAINER) */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-12 sm:-mt-16 relative z-20 space-y-8">
+      {/* 2. BODY CONTENT */}
+      <div className="max-w-5xl mx-auto px-6 -mt-8 relative z-20 space-y-8">
         
-        {/* Chief Guest Spotlight Card with Real Picture (church-15.jpg) */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl flex flex-col md:flex-row items-center gap-6">
-          <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl bg-gradient-to-tr from-[#001737] to-[#002f6c] p-1 shadow-lg shrink-0 overflow-hidden">
+        {/* Chief Guest Speaker Card */}
+        <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm flex flex-col md:flex-row items-center gap-6">
+          <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-lg bg-stone-100 shrink-0 overflow-hidden border border-stone-200">
             <img
               src="/church-15.jpg"
               alt={campMeetingChiefGuest}
-              className="w-full h-full object-cover object-top rounded-xl"
+              className="w-full h-full object-cover object-top"
             />
           </div>
 
           <div className="space-y-2 text-center md:text-left flex-1">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-              <span className="bg-amber-100 text-[#b08400] border border-amber-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full font-mono">
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
                 Chief Guest Speaker
               </span>
-              <span className="text-xs text-slate-500 font-mono">
+              <span className="text-xs text-stone-500 font-serif">
                 East-Central Africa Division (ECD)
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-bold font-serif text-[#002f6c]">
+            <h2 className="text-2xl font-serif text-[#001f44]">
               {campMeetingChiefGuest}
             </h2>
 
-            <p className="text-xs sm:text-sm text-slate-600 font-serif leading-relaxed">
-              Family Ministries Director, Adventist Possibility Ministries Director, and Revival &amp; Reformation Director at the East-Central Africa Division. Leading the main sermon series calling all to behold the cross of Christ, receive new life, and prepare for His soon return.
+            <p className="text-xs sm:text-sm text-stone-600 font-serif leading-relaxed">
+              Family Ministries Director, Adventist Possibility Ministries Director, and Revival &amp; Reformation Director at the East-Central Africa Division. Leading the main convocation sermon series.
             </p>
 
-            <div className="text-[11px] font-mono text-slate-500 pt-1 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1">
-              <span>Host: <strong>{campMeetingHostPastor}</strong></span>
-              <span>Associate: <strong>{campMeetingAssocPastor}</strong></span>
-              <span>First Elder: <strong>{campMeetingFirstElder}</strong></span>
-              <span>Chair: <strong>{campMeetingCampChair}</strong></span>
+            <div className="text-xs text-stone-500 pt-1 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1 font-serif">
+              <span>Host Pastor: <strong className="text-stone-800">{campMeetingHostPastor}</strong></span>
+              <span>Associate: <strong className="text-stone-800">{campMeetingAssocPastor}</strong></span>
+              <span>First Elder: <strong className="text-stone-800">{campMeetingFirstElder}</strong></span>
+              <span>Camp Chair: <strong className="text-stone-800">{campMeetingCampChair}</strong></span>
             </div>
           </div>
         </div>
 
-        {/* Tab Switcher Controls */}
+        {/* Tab Switcher Controls (No Emojis) */}
         <div className="flex justify-center">
-          <div className="inline-flex p-1.5 bg-white rounded-2xl border border-slate-200 shadow-md gap-1 flex-wrap justify-center">
-            <button
-              type="button"
-              onClick={() => setActiveTab("schedule")}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
-                activeTab === "schedule"
-                  ? "bg-[#002f6c] text-white shadow"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
-            >
-              📅 Daily Schedule ({campDailyRecap.length} Days)
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("speakers")}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
-                activeTab === "speakers"
-                  ? "bg-[#002f6c] text-white shadow"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
-            >
-              👥 Guest Speakers ({guestSpeakers.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("hymns")}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
-                activeTab === "hymns"
-                  ? "bg-[#002f6c] text-white shadow"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
-            >
-              🎵 Theme Hymns
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("gallery")}
-              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
-                activeTab === "gallery"
-                  ? "bg-[#002f6c] text-white shadow"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
-            >
-              📸 Gallery ({campMeetingSlides.length} Photos)
-            </button>
+          <div className="inline-flex p-1 bg-stone-200/60 rounded-lg border border-stone-200 gap-1 flex-wrap justify-center">
+            {[
+              { id: "schedule", label: `Daily Schedule (${campDailyRecap.length} Days)` },
+              { id: "speakers", label: `Guest Speakers (${guestSpeakers.length})` },
+              { id: "hymns", label: "Theme Hymns" },
+              { id: "gallery", label: `Gallery (${campMeetingSlides.length} Photos)` },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-4 py-2 rounded-md text-xs font-medium transition cursor-pointer ${
+                  activeTab === tab.id
+                    ? "bg-[#001f44] text-white shadow-sm"
+                    : "text-stone-600 hover:text-stone-900"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* TAB 1: DAILY SCHEDULE MATRIX */}
+        {/* TAB 1: DAILY SCHEDULE */}
         {activeTab === "schedule" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
             
-            {/* Day Selector Pills */}
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                Select Day of Convocation:
+            {/* Day Selector Tabs */}
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-stone-400 block">
+                Select Convocation Day:
               </span>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {campDailyRecap.map((dayObj, idx) => (
                   <button
                     key={dayObj.day}
                     type="button"
                     onClick={() => setSelectedDayIndex(idx)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition cursor-pointer ${
                       selectedDayIndex === idx
-                        ? "bg-[#002f6c] text-white shadow-md scale-105"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        ? "bg-[#001f44] text-white"
+                        : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                     }`}
                   >
                     {dayObj.day} ({dayObj.date.split(" ")[0]})
@@ -198,31 +168,31 @@ export default function CampMeetingPage() {
             </div>
 
             {/* Current Day Header Card */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] font-mono font-bold uppercase text-[#b08400] block">
+                <span className="text-xs uppercase tracking-wider font-semibold text-amber-800 block">
                   Official Timetable
                 </span>
-                <h3 className="text-xl font-bold font-serif text-slate-900">
+                <h3 className="text-xl font-serif text-stone-900 mt-0.5">
                   {selectedDay.day}, {selectedDay.date}
                 </h3>
                 {selectedDay.timeKeeper && (
-                  <p className="text-xs text-slate-500 font-mono mt-0.5">
-                    Timekeeper: <strong>{selectedDay.timeKeeper}</strong>
+                  <p className="text-xs text-stone-500 font-serif mt-0.5">
+                    Timekeeper: <strong className="text-stone-700">{selectedDay.timeKeeper}</strong>
                   </p>
                 )}
               </div>
 
               {/* Choirs on duty list */}
               <div className="text-left sm:text-right">
-                <span className="text-[10px] font-mono font-bold uppercase text-slate-400 block">
+                <span className="text-[11px] uppercase tracking-wider font-medium text-stone-400 block">
                   Choirs on Duty:
                 </span>
                 <div className="flex flex-wrap sm:justify-end gap-1 mt-1 max-w-md">
                   {selectedDay.choirsOnDuty.map((choir, i) => (
                     <span
                       key={i}
-                      className="text-[9px] bg-white border border-slate-200 text-[#002f6c] font-bold px-2 py-0.5 rounded shadow-sm"
+                      className="text-[10px] bg-white border border-stone-200 text-[#001f44] font-medium px-2 py-0.5 rounded shadow-2xs"
                     >
                       {choir}
                     </span>
@@ -231,30 +201,30 @@ export default function CampMeetingPage() {
               </div>
             </div>
 
-            {/* Timetable Data Table */}
+            {/* Timetable Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
-                    <th className="py-3 px-4 rounded-l-xl">Time Window</th>
-                    <th className="py-3 px-4">Program / Session</th>
-                    <th className="py-3 px-4">Facilitator</th>
-                    <th className="py-3 px-4 rounded-r-xl">Coordinator</th>
+                  <tr className="border-b border-stone-200 text-[11px] font-semibold uppercase tracking-wider text-stone-500 bg-stone-50/50">
+                    <th className="py-2.5 px-3">Time</th>
+                    <th className="py-2.5 px-3">Program / Session</th>
+                    <th className="py-2.5 px-3">Facilitator</th>
+                    <th className="py-2.5 px-3">Coordinator</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-xs font-serif">
+                <tbody className="divide-y divide-stone-100 font-serif">
                   {selectedDay.schedule.map((item: DayScheduleItem, i) => (
-                    <tr key={i} className="hover:bg-slate-50/80 transition">
-                      <td className="py-3.5 px-4 font-mono font-bold text-[#002f6c] whitespace-nowrap">
+                    <tr key={i} className="hover:bg-stone-50/60 transition">
+                      <td className="py-3 px-3 font-mono font-medium text-[#001f44] whitespace-nowrap">
                         {item.time}
                       </td>
-                      <td className="py-3.5 px-4 font-bold text-slate-800">
+                      <td className="py-3 px-3 font-medium text-stone-900 font-sans">
                         {item.program}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-700">
+                      <td className="py-3 px-3 text-stone-700">
                         {item.facilitator || "—"}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-500 font-mono text-[11px]">
+                      <td className="py-3 px-3 text-stone-500 text-[11px]">
                         {item.coordinator || "—"}
                       </td>
                     </tr>
@@ -265,66 +235,64 @@ export default function CampMeetingPage() {
           </div>
         )}
 
-        {/* TAB 2: GUEST SPEAKERS ROSTER */}
+        {/* TAB 2: GUEST SPEAKERS */}
         {activeTab === "speakers" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                Ministerial Faculty
-              </span>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
+            <div className="border-b border-stone-100 pb-3">
+              <h3 className="text-xl font-serif text-[#001f44]">
                 Camp Meeting Evangelists &amp; Facilitators
               </h3>
+              <p className="text-xs text-stone-500 font-serif mt-0.5">
+                Pastoral leaders, directors, and guest speakers ministering throughout the week.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {guestSpeakers.map((spk, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-50 border border-slate-200 rounded-2xl p-5 hover:bg-white hover:shadow-md transition flex flex-col justify-between space-y-3"
+                  className="bg-stone-50 border border-stone-200 rounded-lg p-5 space-y-2"
                 >
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#b08400] bg-amber-100/60 border border-amber-200 px-2 py-0.5 rounded">
-                      {spk.role}
-                    </span>
-                    <h4 className="text-base font-bold font-serif text-slate-900">
-                      {spk.name}
-                    </h4>
-                    <p className="text-xs text-[#002f6c] font-semibold font-serif">
-                      {spk.portfolio}
-                    </p>
-                    <p className="text-xs text-slate-600 font-serif leading-relaxed pt-1">
-                      {spk.bio}
-                    </p>
-                  </div>
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
+                    {spk.role}
+                  </span>
+                  <h4 className="text-base font-serif font-semibold text-stone-900">
+                    {spk.name}
+                  </h4>
+                  <p className="text-xs text-[#001f44] font-medium">
+                    {spk.portfolio}
+                  </p>
+                  <p className="text-xs text-stone-600 font-serif leading-relaxed pt-1">
+                    {spk.bio}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* TAB 3: THEME HYMNS LYRICS */}
+        {/* TAB 3: THEME HYMNS */}
         {activeTab === "hymns" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                  Camp Hymnody
-                </span>
-                <h3 className="text-xl font-bold font-serif text-[#002f6c]">
+                <h3 className="text-xl font-serif text-[#001f44]">
                   Theme Song Stanzas &amp; Refrain
                 </h3>
+                <p className="text-xs text-stone-500 font-serif mt-0.5">
+                  Official hymnal selections for the 2026 convocation.
+                </p>
               </div>
 
               {/* Language Switch */}
-              <div className="inline-flex p-1 bg-slate-100 rounded-xl">
+              <div className="inline-flex p-1 bg-stone-100 rounded-lg border border-stone-200 gap-1">
                 <button
                   type="button"
                   onClick={() => setHymnLang("en")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`px-3 py-1 rounded text-xs font-medium transition cursor-pointer ${
                     hymnLang === "en"
-                      ? "bg-[#002f6c] text-white shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-[#001f44] text-white shadow-2xs"
+                      : "text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   English (SDAH 590)
@@ -332,10 +300,10 @@ export default function CampMeetingPage() {
                 <button
                   type="button"
                   onClick={() => setHymnLang("sw")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`px-3 py-1 rounded text-xs font-medium transition cursor-pointer ${
                     hymnLang === "sw"
-                      ? "bg-[#002f6c] text-white shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-[#001f44] text-white shadow-2xs"
+                      : "text-stone-600 hover:text-stone-900"
                   }`}
                 >
                   Kiswahili (NZK 128)
@@ -344,23 +312,23 @@ export default function CampMeetingPage() {
             </div>
 
             {hymnLang === "en" ? (
-              <div className="space-y-6 font-serif max-w-2xl mx-auto text-center">
+              <div className="space-y-6 font-serif max-w-xl mx-auto text-center">
                 <div className="space-y-1">
-                  <h4 className="text-2xl font-bold text-slate-900 font-serif">
+                  <h4 className="text-2xl font-serif text-stone-900">
                     {themeSongsLyrics.sdah590.title}
                   </h4>
-                  <p className="text-xs text-amber-700 font-sans font-bold">
+                  <p className="text-xs text-amber-800 font-sans font-medium">
                     Author: {themeSongsLyrics.sdah590.author}
                   </p>
-                  <p className="text-xs text-slate-500 font-serif italic max-w-md mx-auto">
+                  <p className="text-xs text-stone-500 italic max-w-md mx-auto">
                     {themeSongsLyrics.sdah590.description}
                   </p>
                 </div>
 
-                <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+                <div className="space-y-5 text-sm text-stone-800 leading-relaxed">
                   {themeSongsLyrics.sdah590.stanzas.map((st) => (
                     <div key={st.num}>
-                      <span className="text-xs font-mono font-bold text-slate-400 block mb-1">
+                      <span className="text-xs text-stone-400 block mb-1 font-sans">
                         Stanza {st.num}
                       </span>
                       {st.lines.map((line, lIdx) => (
@@ -369,32 +337,32 @@ export default function CampMeetingPage() {
                     </div>
                   ))}
 
-                  <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/60 font-bold text-[#002f6c]">
-                    <span className="text-xs font-mono font-bold uppercase text-[#b08400] block mb-1">
+                  <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-200/70 text-[#001f44]">
+                    <span className="text-xs uppercase tracking-wider font-semibold text-amber-800 block mb-1 font-sans">
                       Refrain
                     </span>
-                    <p>{themeSongsLyrics.sdah590.refrain}</p>
+                    <p className="font-semibold">{themeSongsLyrics.sdah590.refrain}</p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="space-y-6 font-serif max-w-2xl mx-auto text-center">
+              <div className="space-y-6 font-serif max-w-xl mx-auto text-center">
                 <div className="space-y-1">
-                  <h4 className="text-2xl font-bold text-slate-900 font-serif">
+                  <h4 className="text-2xl font-serif text-stone-900">
                     {themeSongsLyrics.nzk128.title}
                   </h4>
-                  <p className="text-xs text-amber-700 font-sans font-bold">
+                  <p className="text-xs text-amber-800 font-sans font-medium">
                     Kitabu: {themeSongsLyrics.nzk128.author}
                   </p>
-                  <p className="text-xs text-slate-500 font-serif italic max-w-md mx-auto">
+                  <p className="text-xs text-stone-500 italic max-w-md mx-auto">
                     {themeSongsLyrics.nzk128.description}
                   </p>
                 </div>
 
-                <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+                <div className="space-y-5 text-sm text-stone-800 leading-relaxed">
                   {themeSongsLyrics.nzk128.stanzas.map((st) => (
                     <div key={st.num}>
-                      <span className="text-xs font-mono font-bold text-slate-400 block mb-1">
+                      <span className="text-xs text-stone-400 block mb-1 font-sans">
                         Ubeti {st.num}
                       </span>
                       {st.lines.map((line, lIdx) => (
@@ -403,11 +371,11 @@ export default function CampMeetingPage() {
                     </div>
                   ))}
 
-                  <div className="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/60 font-bold text-[#002f6c]">
-                    <span className="text-xs font-mono font-bold uppercase text-[#b08400] block mb-1">
+                  <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-200/70 text-[#001f44]">
+                    <span className="text-xs uppercase tracking-wider font-semibold text-amber-800 block mb-1 font-sans">
                       Kiitikio
                     </span>
-                    <p>{themeSongsLyrics.nzk128.refrain}</p>
+                    <p className="font-semibold">{themeSongsLyrics.nzk128.refrain}</p>
                   </div>
                 </div>
               </div>
@@ -415,27 +383,24 @@ export default function CampMeetingPage() {
           </div>
         )}
 
-        {/* TAB 4: PHOTO GALLERY (ALL 28 MOMENTS) */}
+        {/* TAB 4: PHOTO GALLERY */}
         {activeTab === "gallery" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                Camp Retrospective
-              </span>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
-                Camp Meeting Moments (28 Photos)
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
+            <div className="border-b border-stone-100 pb-3">
+              <h3 className="text-xl font-serif text-[#001f44]">
+                Camp Meeting Moments ({campMeetingSlides.length} Photos)
               </h3>
-              <p className="text-xs text-slate-500 font-serif mt-1">
+              <p className="text-xs text-stone-500 font-serif mt-0.5">
                 Click any photo to enlarge in the high-resolution lightbox viewer.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {campMeetingSlides.map((slide: CampPhoto, idx) => (
                 <div
                   key={slide.id}
                   onClick={() => setLightboxImg(slide.image)}
-                  className="group relative rounded-2xl overflow-hidden aspect-[4/3] bg-slate-900 shadow-md cursor-pointer border border-slate-200 hover:shadow-xl transition"
+                  className="group relative rounded-lg overflow-hidden aspect-[4/3] bg-stone-900 shadow-xs cursor-pointer border border-stone-200 hover:shadow-md transition"
                 >
                   <img
                     src={slide.image}
@@ -444,13 +409,13 @@ export default function CampMeetingPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute bottom-3 inset-x-3 text-white">
-                    <span className="text-[10px] font-mono text-amber-300 font-bold uppercase block">
+                    <span className="text-[10px] text-amber-300 font-semibold uppercase block">
                       {slide.day || `Moment ${idx + 1}`}
                     </span>
-                    <h4 className="text-xs font-bold font-serif line-clamp-1">
+                    <h4 className="text-xs font-serif font-semibold line-clamp-1">
                       {slide.title}
                     </h4>
-                    <p className="text-[11px] text-slate-200 font-serif line-clamp-1">
+                    <p className="text-[11px] text-stone-200 font-serif line-clamp-1">
                       {slide.caption}
                     </p>
                   </div>
@@ -465,20 +430,20 @@ export default function CampMeetingPage() {
       {lightboxImg && (
         <div
           onClick={() => setLightboxImg(null)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer animate-in fade-in"
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
         >
           <div className="relative max-w-4xl max-h-[85vh]">
             <img
               src={lightboxImg}
               alt="Enlarged Camp Photo"
-              className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/20"
+              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/20"
             />
             <button
               type="button"
               onClick={() => setLightboxImg(null)}
-              className="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-white text-slate-900 font-bold text-lg flex items-center justify-center shadow-lg hover:bg-amber-400 transition cursor-pointer"
+              className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white text-stone-900 font-bold text-sm flex items-center justify-center shadow-md hover:bg-amber-400 transition cursor-pointer"
             >
-              ✕
+              &times;
             </button>
           </div>
         </div>

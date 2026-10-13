@@ -11,20 +11,19 @@ export default function AdminDeskPage() {
   const [enteredPin, setEnteredPin] = useState<string>("");
   const [pinError, setPinError] = useState<string>("");
 
-  // Default secretariat PIN (can be adjusted or hooked to an environment variable)
+  // Default secretariat PIN
   const SECRET_PIN = "752922";
 
-  // Connect to SiteSettingsContext if setUrgentBanner is available, otherwise manage locally
   const siteSettings = useSiteSettings();
 
-  // Working state initialized with default weekly bulletin data
   const [bulletinState, setBulletinState] = useState<WeeklyBulletinData>(weeklyBulletin);
   const [urgentActive, setUrgentActive] = useState<boolean>(siteSettings?.urgentBannerActive ?? false);
-  const [urgentText, setUrgentText] = useState<string>(siteSettings?.urgentBannerText ?? "Camp Meeting registration is ongoing. Check Camp tab for details.");
+  const [urgentText, setUrgentText] = useState<string>(
+    siteSettings?.urgentBannerText ?? "Camp Meeting registration is ongoing. Check Camp tab for details."
+  );
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"liturgy" | "officers" | "notices" | "banner" | "print">("liturgy");
 
-  // Check sessionStorage on initial load to avoid typing PIN on every refresh
   useEffect(() => {
     const sessionAuth = sessionStorage.getItem("jericho_admin_auth");
     if (sessionAuth === "true") {
@@ -64,23 +63,21 @@ export default function AdminDeskPage() {
   // 1. PIN LOCK SCREEN
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-slate-900 flex items-center justify-center p-4 relative z-10 selection:bg-amber-300 selection:text-[#001737]">
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-
-        <div className="bg-[#001737] border border-amber-400/30 rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl space-y-6 relative z-10 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 to-amber-300 mx-auto flex items-center justify-center shadow-lg">
-            <AdventistLogo className="w-9 h-9 text-[#001737]" />
+      <main className="min-h-screen bg-[#fcfbf9] flex items-center justify-center p-6 text-stone-900">
+        <div className="bg-white border border-stone-200 rounded-xl p-8 max-w-sm w-full shadow-sm space-y-6 text-center">
+          <div className="w-12 h-12 rounded-lg bg-amber-400 mx-auto flex items-center justify-center shadow-xs">
+            <AdventistLogo className="w-6 h-6 text-[#001f44]" />
           </div>
 
           <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 font-bold block">
+            <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-800 block">
               Jericho SDA Church
             </span>
-            <h1 className="text-2xl font-bold font-serif text-white">
-              Secretariat Admin Desk
+            <h1 className="text-xl font-serif text-[#001f44]">
+              Secretariat Desk
             </h1>
-            <p className="text-xs text-blue-200 font-serif">
-              Enter authorized PIN to manage bulletin liturgy, officers, and emergency notices.
+            <p className="text-xs text-stone-500 font-serif">
+              Enter secretariat PIN to manage divine service liturgy and notices.
             </p>
           </div>
 
@@ -91,30 +88,30 @@ export default function AdminDeskPage() {
                 inputMode="numeric"
                 pattern="[0-9]*"
                 maxLength={8}
-                placeholder="Enter PIN (Default: 752922)"
+                placeholder="Enter PIN"
                 value={enteredPin}
                 onChange={(e) => {
                   setEnteredPin(e.target.value);
                   setPinError("");
                 }}
-                className="w-full bg-black/40 border border-white/20 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-widest text-amber-300 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="w-full bg-stone-50 border border-stone-300 rounded-lg px-4 py-2.5 text-center text-lg font-mono tracking-widest text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#001f44]"
               />
               {pinError && (
-                <p className="text-xs text-rose-400 font-mono mt-2">{pinError}</p>
+                <p className="text-xs text-rose-600 font-serif mt-2">{pinError}</p>
               )}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#c99700] hover:bg-[#b08400] text-[#001737] font-black py-3 rounded-xl text-xs uppercase tracking-wider transition shadow active:scale-95 cursor-pointer"
+              className="w-full bg-[#001f44] hover:bg-[#001530] text-white font-medium py-2.5 rounded-lg text-xs transition cursor-pointer"
             >
-              Unlock Dashboard →
+              Unlock Dashboard &rarr;
             </button>
           </form>
 
-          <div className="pt-2">
-            <Link href="/" className="text-xs text-slate-400 hover:text-white transition">
-              ← Return to Public Website
+          <div className="pt-1">
+            <Link href="/" className="text-xs text-stone-500 hover:text-stone-900 font-serif">
+              &larr; Return to Public Website
             </Link>
           </div>
         </div>
@@ -122,34 +119,33 @@ export default function AdminDeskPage() {
     );
   }
 
-  // 2. UNLOCKED ADMIN CONTROL DESK
+  // 2. UNLOCKED SECRETARIAT WORKSPACE
   return (
-    <main className="min-h-screen bg-slate-100 pb-36 relative z-10 selection:bg-amber-300 selection:text-[#001737]">
-      
+    <main className="min-h-screen bg-[#fcfbf9] text-stone-900 pb-32">
       {/* Top Admin Header */}
-      <section className="bg-gradient-to-br from-[#001129] via-[#001f49] to-[#002f6c] text-white pt-32 pb-16 px-4 sm:px-6 border-b border-amber-400/20 shadow-xl">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <section className="bg-[#001f44] text-white pt-32 pb-16 px-6 border-b border-stone-800">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[10px] font-mono uppercase px-3 py-1 rounded-full font-bold">
-              <span>● Session Active</span>
-              <span>•</span>
-              <span>Church Secretariat Desk</span>
+            <div className="inline-flex items-center gap-2 text-stone-300 text-xs tracking-wider uppercase">
+              <span>Session Active</span>
+              <span>&bull;</span>
+              <span>Church Secretariat</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black font-serif tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-serif font-normal text-stone-50">
               Worship &amp; Bulletin Control
             </h1>
-            <p className="text-xs sm:text-sm text-blue-200 font-serif">
-              Publish divine service liturgies, assign duty officers, and control the top notice ticker.
+            <p className="text-xs sm:text-sm text-stone-300 font-serif">
+              Publish divine service liturgies, assign duty officers, and configure alerts.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleSaveAll}
-              className="bg-[#c99700] hover:bg-[#b08400] text-[#001737] font-black px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow transition cursor-pointer active:scale-95"
+              className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold px-4 py-2 rounded-lg text-xs transition cursor-pointer shadow-xs"
             >
-              {savedSuccess ? "Saved Successfully! ✓" : "Save Changes 💾"}
+              {savedSuccess ? "Saved Successfully! ✓" : "Save Changes"}
             </button>
             <button
               type="button"
@@ -157,35 +153,35 @@ export default function AdminDeskPage() {
                 sessionStorage.removeItem("jericho_admin_auth");
                 setIsAuthenticated(false);
               }}
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider transition cursor-pointer"
+              className="bg-white/10 hover:bg-white/15 text-stone-100 border border-white/20 px-3.5 py-2 rounded-lg text-xs transition cursor-pointer"
             >
-              Lock Desk 🔒
+              Lock Desk
             </button>
           </div>
         </div>
       </section>
 
       {/* Main Dashboard Workspace */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-8 relative z-20 space-y-6">
+      <div className="max-w-5xl mx-auto px-6 -mt-8 relative z-20 space-y-6">
         
         {/* Navigation Tabs */}
         <div className="flex justify-center sm:justify-start">
-          <div className="inline-flex p-1.5 bg-white rounded-2xl border border-slate-200 shadow-md gap-1 flex-wrap">
+          <div className="inline-flex p-1 bg-stone-200/60 rounded-lg border border-stone-200 gap-1 flex-wrap">
             {[
-              { id: "liturgy", label: "📖 Divine Liturgy" },
-              { id: "officers", label: "👥 Duty Officers" },
-              { id: "notices", label: "📢 Department Notices" },
-              { id: "banner", label: "⚠️ Urgent Banner" },
-              { id: "print", label: "🖨️ Printable Insert" },
+              { id: "liturgy", label: "Divine Liturgy" },
+              { id: "officers", label: "Duty Officers" },
+              { id: "notices", label: "Department Notices" },
+              { id: "banner", label: "Urgent Banner" },
+              { id: "print", label: "Printable Insert" },
             ].map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setActiveTab(t.id as any)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition cursor-pointer ${
                   activeTab === t.id
-                    ? "bg-[#002f6c] text-white shadow"
-                    : "text-slate-600 hover:bg-slate-100"
+                    ? "bg-[#001f44] text-white shadow-xs"
+                    : "text-stone-600 hover:text-stone-900"
                 }`}
               >
                 {t.label}
@@ -194,149 +190,127 @@ export default function AdminDeskPage() {
           </div>
         </div>
 
-        {/* TAB 1: WORSHIP & LITURGY SETTINGS */}
+        {/* TAB 1: WORSHIP & LITURGY */}
         {activeTab === "liturgy" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                Divine Hour Info
-              </span>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-5">
+            <div className="border-b border-stone-100 pb-3">
+              <h2 className="text-xl font-serif text-[#001f44]">
                 Upcoming Sabbath Worship Details
-              </h3>
+              </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Sabbath Date Label
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Sabbath Date</label>
                 <input
                   type="text"
                   value={bulletinState.sabbathDate}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, sabbathDate: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Friday Sunset (Sunset Begins)
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Friday Sunset</label>
                 <input
                   type="text"
                   value={bulletinState.sunsetFriday}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, sunsetFriday: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs font-mono text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Sabbath Sunset (Sabbath Closes)
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Sabbath Sunset</label>
                 <input
                   type="text"
                   value={bulletinState.sunsetSabbath}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, sunsetSabbath: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs font-mono text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="sm:col-span-2 space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Divine Service Sermon Title
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Sermon Title</label>
                 <input
                   type="text"
                   value={bulletinState.divineSermonTitle}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, divineSermonTitle: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs font-serif font-medium text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Speaker / Preacher
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Speaker / Preacher</label>
                 <input
                   type="text"
                   value={bulletinState.divinePreacher}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, divinePreacher: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Scripture Reading Text
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Scripture Reading</label>
                 <input
                   type="text"
                   value={bulletinState.divineScripture}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, divineScripture: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs font-mono text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="sm:col-span-2 space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Sabbath School Theme
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Sabbath School Theme</label>
                 <input
                   type="text"
                   value={bulletinState.sabbathSchoolTheme}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, sabbathSchoolTheme: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="sm:col-span-3 space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Sabbath School Memory Verse Text &amp; Reference
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Memory Verse Text</label>
                 <textarea
                   rows={2}
                   value={bulletinState.sabbathSchoolMemoryVerse}
                   onChange={(e) =>
                     setBulletinState({ ...bulletinState, sabbathSchoolMemoryVerse: e.target.value })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg p-2.5 text-xs font-serif text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* TAB 2: DUTY OFFICERS ROSTER */}
+        {/* TAB 2: DUTY OFFICERS */}
         {activeTab === "officers" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                Roster Allocation
-              </span>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
-                Serving Officers on Sabbath
-              </h3>
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-5">
+            <div className="border-b border-stone-100 pb-3">
+              <h2 className="text-xl font-serif text-[#001f44]">
+                Serving Officers Allocation
+              </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">Duty Elder (Platform)</label>
+                <label className="text-xs font-medium text-stone-700 block">Duty Elder (Platform)</label>
                 <input
                   type="text"
                   value={bulletinState.dutyOfficers.dutyElder}
@@ -346,12 +320,12 @@ export default function AdminDeskPage() {
                       dutyOfficers: { ...bulletinState.dutyOfficers, dutyElder: e.target.value },
                     })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">Associate Duty Elder</label>
+                <label className="text-xs font-medium text-stone-700 block">Associate Duty Elder</label>
                 <input
                   type="text"
                   value={bulletinState.dutyOfficers.associateElder}
@@ -361,12 +335,12 @@ export default function AdminDeskPage() {
                       dutyOfficers: { ...bulletinState.dutyOfficers, associateElder: e.target.value },
                     })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">Head Deacon on Duty</label>
+                <label className="text-xs font-medium text-stone-700 block">Head Deacon on Duty</label>
                 <input
                   type="text"
                   value={bulletinState.dutyOfficers.headDeacon}
@@ -376,12 +350,12 @@ export default function AdminDeskPage() {
                       dutyOfficers: { ...bulletinState.dutyOfficers, headDeacon: e.target.value },
                     })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">Head Deaconess on Duty</label>
+                <label className="text-xs font-medium text-stone-700 block">Head Deaconess on Duty</label>
                 <input
                   type="text"
                   value={bulletinState.dutyOfficers.headDeaconess}
@@ -391,12 +365,12 @@ export default function AdminDeskPage() {
                       dutyOfficers: { ...bulletinState.dutyOfficers, headDeaconess: e.target.value },
                     })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">Chorister on Duty</label>
+                <label className="text-xs font-medium text-stone-700 block">Chorister on Duty</label>
                 <input
                   type="text"
                   value={bulletinState.dutyOfficers.chorister}
@@ -406,12 +380,12 @@ export default function AdminDeskPage() {
                       dutyOfficers: { ...bulletinState.dutyOfficers, chorister: e.target.value },
                     })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">Pianist / Accompanist</label>
+                <label className="text-xs font-medium text-stone-700 block">Pianist / Accompanist</label>
                 <input
                   type="text"
                   value={bulletinState.dutyOfficers.pianist}
@@ -421,7 +395,7 @@ export default function AdminDeskPage() {
                       dutyOfficers: { ...bulletinState.dutyOfficers, pianist: e.target.value },
                     })
                   }
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
             </div>
@@ -430,27 +404,22 @@ export default function AdminDeskPage() {
 
         {/* TAB 3: DEPARTMENT NOTICES */}
         {activeTab === "notices" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                Weekly Announcements
-              </span>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-5">
+            <div className="border-b border-stone-100 pb-3">
+              <h2 className="text-xl font-serif text-[#001f44]">
                 Department Notices Management
-              </h3>
+              </h2>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {bulletinState.departmentNotices.map((n: DepartmentNotice, idx) => (
                 <div
                   key={n.id}
-                  className="p-5 border border-slate-200 rounded-2xl bg-slate-50 space-y-3"
+                  className="p-4 border border-stone-200 rounded-lg bg-stone-50/60 space-y-2.5"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] font-bold text-slate-600 block uppercase">
-                        Department
-                      </label>
+                      <label className="text-[10px] uppercase font-semibold text-stone-600 block">Department</label>
                       <input
                         type="text"
                         value={n.department}
@@ -459,13 +428,11 @@ export default function AdminDeskPage() {
                           updated[idx].department = e.target.value;
                           setBulletinState({ ...bulletinState, departmentNotices: updated });
                         }}
-                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-800"
+                        className="w-full bg-white border border-stone-300 rounded-lg px-3 py-1.5 text-xs text-stone-900"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] font-bold text-slate-600 block uppercase">
-                        Notice Title
-                      </label>
+                      <label className="text-[10px] uppercase font-semibold text-stone-600 block">Notice Title</label>
                       <input
                         type="text"
                         value={n.title}
@@ -474,15 +441,13 @@ export default function AdminDeskPage() {
                           updated[idx].title = e.target.value;
                           setBulletinState({ ...bulletinState, departmentNotices: updated });
                         }}
-                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-serif font-bold text-slate-800"
+                        className="w-full bg-white border border-stone-300 rounded-lg px-3 py-1.5 text-xs font-serif font-medium text-stone-900"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] font-bold text-slate-600 block uppercase">
-                      Content / Announcement Text
-                    </label>
+                    <label className="text-[10px] uppercase font-semibold text-stone-600 block">Content</label>
                     <textarea
                       rows={2}
                       value={n.content}
@@ -491,7 +456,7 @@ export default function AdminDeskPage() {
                         updated[idx].content = e.target.value;
                         setBulletinState({ ...bulletinState, departmentNotices: updated });
                       }}
-                      className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-serif text-slate-700"
+                      className="w-full bg-white border border-stone-300 rounded-lg p-2.5 text-xs font-serif text-stone-800"
                     />
                   </div>
                 </div>
@@ -500,55 +465,50 @@ export default function AdminDeskPage() {
           </div>
         )}
 
-        {/* TAB 4: URGENT BANNER CONTROLS */}
+        {/* TAB 4: URGENT BANNER */}
         {activeTab === "banner" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200 px-3 py-1 rounded-full inline-block mb-1">
-                Emergency Alert
-              </span>
-              <h3 className="text-xl font-bold font-serif text-[#002f6c]">
-                Website Top Notice Ticker
-              </h3>
-              <p className="text-xs text-slate-500 font-serif mt-1">
-                Activate to display an urgent yellow alert strip across the very top of all website pages.
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-5">
+            <div className="border-b border-stone-100 pb-3">
+              <h2 className="text-xl font-serif text-[#001f44]">
+                Website Urgent Notice Bar
+              </h2>
+              <p className="text-xs text-stone-500 font-serif mt-0.5">
+                Display an emergency alert strip across the top of all pages.
               </p>
             </div>
 
             <div className="space-y-4">
-              <label className="flex items-center gap-3 p-4 rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer">
+              <label className="flex items-center gap-3 p-3.5 rounded-lg border border-stone-200 bg-stone-50 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={urgentActive}
                   onChange={(e) => setUrgentActive(e.target.checked)}
-                  className="w-4 h-4 text-amber-500 rounded focus:ring-amber-400"
+                  className="w-4 h-4 text-[#001f44] rounded border-stone-300 focus:ring-amber-400"
                 />
                 <div>
-                  <strong className="block text-slate-800 text-sm">
-                    Activate Top Urgent Notice Bar
+                  <strong className="block text-stone-900 text-xs sm:text-sm">
+                    Activate Top Urgent Alert Banner
                   </strong>
-                  <span className="text-xs text-slate-500 font-serif">
-                    When checked, this alert appears immediately across every device.
+                  <span className="text-[11px] text-stone-500 font-serif">
+                    When enabled, this notice is displayed immediately on public devices.
                   </span>
                 </div>
               </label>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Ticker Message
-                </label>
+                <label className="text-xs font-medium text-stone-700 block">Alert Message</label>
                 <textarea
                   rows={3}
                   value={urgentText}
                   onChange={(e) => setUrgentText(e.target.value)}
-                  placeholder="e.g. Midweek prayer meeting postponed to Thursday at 6:00 PM due to weather."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm font-serif text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#002f6c]"
+                  placeholder="e.g. Midweek prayer meeting moved to Thursday at 6:00 PM."
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg p-3 text-xs sm:text-sm font-serif text-stone-900 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
 
               {urgentActive && (
-                <div className="bg-amber-400 text-[#001737] p-3 rounded-xl text-xs font-bold flex items-center gap-2 border border-amber-500 shadow-sm">
-                  <span className="bg-[#001737] text-white px-2 py-0.5 rounded text-[10px] font-mono uppercase">
+                <div className="bg-amber-400 text-[#001f44] p-3 rounded-lg text-xs font-medium flex items-center gap-2 border border-amber-500">
+                  <span className="bg-[#001f44] text-white px-1.5 py-0.5 rounded text-[10px] font-sans font-semibold uppercase">
                     Preview
                   </span>
                   <span>{urgentText}</span>
@@ -558,75 +518,75 @@ export default function AdminDeskPage() {
           </div>
         )}
 
-        {/* TAB 5: PRINTABLE INSERT (PRINT-OPTIMIZED) */}
+        {/* TAB 5: PRINTABLE INSERT */}
         {activeTab === "print" && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-3">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#b08400] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full inline-block mb-1">
-                  Sanctuary Physical Print
-                </span>
-                <h3 className="text-xl font-bold font-serif text-[#002f6c]">
-                  Printable Sabbath Order of Service Insert
-                </h3>
+                <h2 className="text-xl font-serif text-[#001f44]">
+                  Printable Order of Service
+                </h2>
+                <p className="text-xs text-stone-500 font-serif mt-0.5">
+                  Formatted for physical printing and weekly bulletin inserts.
+                </p>
               </div>
               <button
                 type="button"
                 onClick={handlePrint}
-                className="bg-[#002f6c] text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow hover:bg-[#001f49] transition cursor-pointer shrink-0"
+                className="bg-[#001f44] text-white font-medium px-4 py-2 rounded-lg text-xs hover:bg-[#001530] transition cursor-pointer shrink-0"
               >
-                Print / Save PDF (Ctrl + P) 🖨️
+                Print / Save PDF (Ctrl + P)
               </button>
             </div>
 
             {/* Print Sheet Container */}
-            <div className="border border-slate-300 p-8 rounded-2xl bg-white space-y-6 text-slate-900 max-w-2xl mx-auto shadow-sm print:border-none print:shadow-none print:p-0">
-              <div className="text-center space-y-1 border-b pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-slate-500 block">
-                  Seventh-day Adventist Church • East Kenya Union Conference
+            <div className="border border-stone-300 p-8 rounded-lg bg-white space-y-5 text-stone-900 max-w-2xl mx-auto shadow-2xs print:border-none print:shadow-none print:p-0">
+              <div className="text-center space-y-1 border-b pb-3">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-stone-500 block">
+                  Seventh-day Adventist Church &bull; Central Kenya Conference (CKC)
                 </span>
-                <h2 className="text-2xl font-black font-serif tracking-tight text-[#001737]">
+                <h3 className="text-xl font-serif font-bold text-[#001f44]">
                   JERICHO SDA CHURCH SANCTUARY
-                </h2>
-                <p className="text-xs font-serif font-bold text-slate-600">
-                  Weekly Worship Bulletin • {bulletinState.sabbathDate}
+                </h3>
+                <p className="text-xs font-serif text-stone-600">
+                  Weekly Worship Bulletin &bull; {bulletinState.sabbathDate}
                 </p>
-                <div className="text-[10px] font-mono text-slate-500 pt-1 flex justify-center gap-4">
+                <div className="text-[10px] font-mono text-stone-500 pt-0.5 flex justify-center gap-4">
                   <span>Sunset Friday: {bulletinState.sunsetFriday}</span>
-                  <span>•</span>
+                  <span>&bull;</span>
                   <span>Sunset Sabbath: {bulletinState.sunsetSabbath}</span>
                 </div>
               </div>
 
               {/* Preacher Banner */}
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-1">
-                <span className="text-[9px] font-mono uppercase font-bold text-[#b08400] block">
+              <div className="bg-stone-50 p-3.5 rounded-lg border border-stone-200 text-center space-y-0.5">
+                <span className="text-[10px] uppercase font-semibold text-amber-800 block">
                   Divine Service Sermon
                 </span>
-                <h4 className="text-lg font-bold font-serif text-[#002f6c]">
+                <h4 className="text-base font-serif font-semibold text-[#001f44]">
                   &ldquo;{bulletinState.divineSermonTitle}&rdquo;
                 </h4>
-                <p className="text-xs font-serif text-slate-700">
-                  Speaker: <strong>{bulletinState.divinePreacher}</strong> | Scripture: <strong>{bulletinState.divineScripture}</strong>
+                <p className="text-xs font-serif text-stone-700">
+                  Speaker: <strong>{bulletinState.divinePreacher}</strong> &bull; Scripture: <strong>{bulletinState.divineScripture}</strong>
                 </p>
               </div>
 
               {/* Order of Divine Worship Table */}
               <div className="space-y-2">
-                <h5 className="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono border-b pb-1">
+                <h5 className="text-xs font-semibold uppercase tracking-wider text-stone-700 font-sans border-b pb-1">
                   Order of Divine Worship
                 </h5>
                 <table className="w-full text-left text-xs font-serif border-collapse">
                   <tbody>
                     {bulletinState.orderOfDivineService.map((item, idx) => (
-                      <tr key={idx} className="border-b border-slate-100">
-                        <td className="py-1.5 font-bold text-[#002f6c] w-36">
+                      <tr key={idx} className="border-b border-stone-100">
+                        <td className="py-1.5 font-medium text-[#001f44] w-36">
                           {item.part}
                         </td>
-                        <td className="py-1.5 text-slate-600">
+                        <td className="py-1.5 text-stone-600">
                           {item.detail}
                         </td>
-                        <td className="py-1.5 text-right font-mono font-bold text-slate-700">
+                        <td className="py-1.5 text-right font-mono text-stone-700 text-[11px]">
                           {item.hymnOrScripture || item.facilitator}
                         </td>
                       </tr>
@@ -636,7 +596,7 @@ export default function AdminDeskPage() {
               </div>
 
               {/* Duty Roster */}
-              <div className="pt-2 border-t text-[11px] font-serif grid grid-cols-2 gap-2 text-slate-700">
+              <div className="pt-2 border-t text-[11px] font-serif grid grid-cols-2 gap-2 text-stone-700">
                 <div>Duty Elder: <strong>{bulletinState.dutyOfficers.dutyElder}</strong></div>
                 <div>Head Deacon: <strong>{bulletinState.dutyOfficers.headDeacon}</strong></div>
                 <div>Associate Elder: <strong>{bulletinState.dutyOfficers.associateElder}</strong></div>
@@ -646,12 +606,13 @@ export default function AdminDeskPage() {
               </div>
 
               {/* Giving reminder */}
-              <div className="text-center text-[10px] font-mono text-slate-500 pt-2 border-t">
-                Faithful Stewardship: M-PESA Paybill <strong>752922</strong> • Account: <strong>Tithe / Offering</strong>
+              <div className="text-center text-[10px] font-mono text-stone-500 pt-2 border-t">
+                Faithful Stewardship: M-PESA Paybill <strong>752922</strong> &bull; Account: <strong>Tithe / Offering</strong>
               </div>
             </div>
           </div>
         )}
+
       </div>
     </main>
   );

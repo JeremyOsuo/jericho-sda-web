@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Cinzel } from "next/font/google";
+import { Inter, Cinzel, Merriweather } from "next/font/google";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
@@ -13,12 +13,20 @@ const inter = Inter({
 
 const cinzel = Cinzel({
   subsets: ["latin"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
+
+const merriweather = Merriweather({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#001737",
+  themeColor: "#001f44",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -105,7 +113,7 @@ export default function RootLayout({
       latitude: -1.2917,
       longitude: 36.8775,
     },
-    telephone: "+254700000100",
+    telephone: "+254700000000",
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
@@ -127,7 +135,7 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`scroll-smooth ${inter.variable} ${cinzel.variable}`}
+      className={`scroll-smooth ${inter.variable} ${cinzel.variable} ${merriweather.variable}`}
     >
       <head>
         <script
@@ -135,7 +143,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(churchJsonLd) }}
         />
       </head>
-      <body className="font-sans antialiased bg-slate-50 text-slate-900 flex flex-col min-h-screen selection:bg-amber-300 selection:text-[#001737]">
+      <body className="font-sans antialiased bg-[#fcfbf9] text-stone-900 flex flex-col min-h-screen selection:bg-amber-300 selection:text-[#001f44]">
         <SiteSettingsProvider>
           <Navbar />
           <div className="flex-1 w-full">{children}</div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import AdventistLogo from "../components/AdventistLogo";
 
 export default function PledgePage() {
   const [formData, setFormData] = useState({
@@ -32,55 +33,91 @@ export default function PledgePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#001737] text-white py-12 px-4 sm:px-6">
-      <div className="max-w-xl mx-auto">
-        <div className="mb-6">
-          <Link href="/" className="text-xs text-amber-400 hover:underline">
-            ← Return to Sanctuary Portal
+    <main className="min-h-screen bg-[#fcfbf9] text-stone-900 pb-32">
+      {/* 1. HERO - Dignified, deep navy, clear scripture */}
+      <section className="bg-[#001f44] text-white pt-36 sm:pt-42 pb-20 px-6 border-b border-stone-800">
+        <div className="max-w-3xl mx-auto text-center space-y-4">
+          <div className="inline-flex items-center gap-2 text-stone-300 text-xs tracking-wider uppercase">
+            <AdventistLogo className="w-4 h-4 text-amber-400" />
+            <span>Christian Stewardship &bull; Jericho SDA Church</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl font-serif font-normal text-stone-50 tracking-tight">
+            Digital Stewardship Pledge
+          </h1>
+
+          <blockquote className="text-stone-300 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
+            &ldquo;Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver.&rdquo;
+            <cite className="block not-italic text-xs font-sans font-medium text-amber-300/90 mt-1.5">
+              &mdash; 2 Corinthians 9:7
+            </cite>
+          </blockquote>
+        </div>
+      </section>
+
+      {/* 2. BODY CONTENT */}
+      <div className="max-w-xl mx-auto px-6 -mt-8 relative z-20">
+        <div className="mb-4">
+          <Link
+            href="/giving"
+            className="text-xs text-stone-600 hover:text-stone-900 font-medium"
+          >
+            &larr; Return to Online Giving
           </Link>
         </div>
 
         {status === "success" ? (
-          <div className="bg-[#0b1e3b] border border-emerald-500/40 p-8 rounded-2xl text-center shadow-xl">
-            <div className="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+          <div className="bg-white border border-stone-200 p-8 rounded-xl text-center shadow-sm space-y-4">
+            <div className="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
               ✓
             </div>
-            <h2 className="text-2xl font-bold text-emerald-400 mb-2">Pledge Recorded!</h2>
-            <p className="text-slate-300 text-sm mb-6">
-              Thank you for committing to God’s work at Jericho SDA Church. Your pledge has been registered with the church stewardship records.
-            </p>
-            <button
-              onClick={() => {
-                setStatus("idle");
-                setFormData({
-                  fullName: "",
-                  phoneNumber: "",
-                  frequency: "Monthly",
-                  amount: "",
-                  cause: "Local Church Budget",
-                });
-              }}
-              className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-semibold transition"
-            >
-              Submit Another Commitment
-            </button>
+            <div>
+              <h2 className="text-2xl font-serif text-[#001f44]">
+                Pledge Commitment Recorded
+              </h2>
+              <p className="text-stone-600 font-serif text-sm mt-1 leading-relaxed">
+                Thank you for your commitment to God&apos;s cause at Jericho SDA Church. Your pledge has been registered with church stewardship records.
+              </p>
+            </div>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setStatus("idle");
+                  setFormData({
+                    fullName: "",
+                    phoneNumber: "",
+                    frequency: "Monthly",
+                    amount: "",
+                    cause: "Local Church Budget",
+                  });
+                }}
+                className="bg-[#001f44] hover:bg-[#001530] text-white px-5 py-2.5 rounded-lg text-xs font-medium transition cursor-pointer"
+              >
+                Submit Another Commitment
+              </button>
+            </div>
           </div>
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="bg-[#0b1e3b] border border-white/10 p-6 md:p-8 rounded-2xl shadow-xl space-y-5"
+            className="bg-white border border-stone-200 p-6 sm:p-8 rounded-xl shadow-sm space-y-4"
           >
-            <div>
-              <span className="text-xs uppercase tracking-widest text-amber-400 font-bold">Jericho SDA Church</span>
-              <h1 className="text-2xl font-bold text-white mt-1">Digital Pledge Card</h1>
-              <p className="text-xs text-slate-300 mt-1 italic">
-                "Every man according as he purposeth in his heart, so let him give." — 2 Corinthians 9:7
+            <div className="border-b border-stone-100 pb-3">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-800 block">
+                Jericho SDA Church Treasury
+              </span>
+              <h2 className="text-xl font-serif text-[#001f44] mt-0.5">
+                Stewardship Commitment Card
+              </h2>
+              <p className="text-xs text-stone-500 font-serif mt-0.5">
+                Record your recurring or one-time sacrificial giving commitment.
               </p>
             </div>
 
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1.5">
-                Full Name
+            <div className="space-y-1">
+              <label className="block text-xs font-medium text-stone-700">
+                Full Name <span className="text-rose-600">*</span>
               </label>
               <input
                 required
@@ -88,33 +125,33 @@ export default function PledgePage() {
                 value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 placeholder="e.g. Samuel Otieno"
-                className="w-full bg-[#001737] border border-white/20 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                className="w-full bg-stone-50/70 border border-stone-300 rounded-lg px-3.5 py-2 text-xs text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#001f44]"
               />
             </div>
 
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1.5">
-                Phone Number (M-PESA)
+            <div className="space-y-1">
+              <label className="block text-xs font-medium text-stone-700">
+                Phone Number (M-PESA) <span className="text-rose-600">*</span>
               </label>
               <input
                 required
                 type="tel"
                 value={formData.phoneNumber}
                 onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                placeholder="0712345678"
-                className="w-full bg-[#001737] border border-white/20 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                placeholder="0712 345 678"
+                className="w-full bg-stone-50/70 border border-stone-300 rounded-lg px-3.5 py-2 text-xs font-mono text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#001f44]"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1.5">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-stone-700">
                   Frequency
                 </label>
                 <select
                   value={formData.frequency}
                   onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                  className="w-full bg-[#001737] border border-white/20 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+                  className="w-full bg-stone-50/70 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
                 >
                   <option value="Weekly">Weekly</option>
                   <option value="Monthly">Monthly</option>
@@ -122,9 +159,9 @@ export default function PledgePage() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1.5">
-                  Amount (KES)
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-stone-700">
+                  Amount (KES) <span className="text-rose-600">*</span>
                 </label>
                 <input
                   required
@@ -133,19 +170,19 @@ export default function PledgePage() {
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                   placeholder="1000"
-                  className="w-full bg-[#001737] border border-white/20 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  className="w-full bg-stone-50/70 border border-stone-300 rounded-lg px-3.5 py-2 text-xs font-mono text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#001f44]"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-slate-300 font-semibold mb-1.5">
-                Fund / Cause
+            <div className="space-y-1">
+              <label className="block text-xs font-medium text-stone-700">
+                Designated Fund / Purpose
               </label>
               <select
                 value={formData.cause}
                 onChange={(e) => setFormData({ ...formData, cause: e.target.value })}
-                className="w-full bg-[#001737] border border-white/20 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+                className="w-full bg-stone-50/70 border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
               >
                 <option value="Local Church Budget">Local Church Budget</option>
                 <option value="Church Building & Renovation">Church Building & Renovation</option>
@@ -155,17 +192,19 @@ export default function PledgePage() {
               </select>
             </div>
 
-            <button
-              type="submit"
-              disabled={status === "submitting"}
-              className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg transition disabled:opacity-50 mt-2"
-            >
-              {status === "submitting" ? "Recording Commitment..." : "Submit Pledge"}
-            </button>
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={status === "submitting"}
+                className="w-full py-2.5 bg-[#001f44] hover:bg-[#001530] text-white font-medium rounded-lg text-xs transition disabled:opacity-50 cursor-pointer"
+              >
+                {status === "submitting" ? "Recording Commitment..." : "Submit Commitment Card \u2192"}
+              </button>
+            </div>
 
             {status === "error" && (
-              <p className="text-rose-400 text-xs text-center">
-                Could not record your pledge. Please check your connection and try again.
+              <p className="text-rose-600 text-xs text-center pt-1 font-serif">
+                Could not record your pledge. Please check your network and try again.
               </p>
             )}
           </form>
