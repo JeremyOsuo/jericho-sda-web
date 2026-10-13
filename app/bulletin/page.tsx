@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import AdventistLogo from "../components/AdventistLogo";
+import LiveStreamCard from "../components/LiveStreamCard";
 import {
   currentAnnouncement,
   weeklyBulletin,
@@ -94,6 +95,12 @@ export default function BulletinPage() {
           </div>
         </div>
 
+        {/* Live Broadcast Card */}
+        <LiveStreamCard
+          channelHandle="jerichosdanairobi"
+          channelId="UCrcRFa9oS22hMfwMog9zhVA"
+        />
+
         {/* Priority Mission Banner */}
         {currentAnnouncement.active && (
           <div className="bg-[#001f44] rounded-xl p-5 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm border border-white/10">
@@ -117,7 +124,7 @@ export default function BulletinPage() {
           </div>
         )}
 
-        {/* Tab Controls (No Emojis) */}
+        {/* Tab Controls */}
         <div className="flex justify-center">
           <div className="inline-flex p-1 bg-stone-200/60 rounded-lg border border-stone-200 gap-1 flex-wrap justify-center">
             {[

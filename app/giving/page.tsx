@@ -34,6 +34,8 @@ export default function GivingPage() {
   });
   const [pledgeStatus, setPledgeStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
+  const churchEmail = "jericho.sda@gmail.com";
+
   const handleGrossChange = (val: string) => {
     setGrossIncome(val);
     const num = parseFloat(val) || 0;
@@ -453,8 +455,16 @@ export default function GivingPage() {
               <p className="text-xs text-stone-500 font-serif leading-relaxed">
                 For tithe receipts, bank wire transfers, or queries, contact the treasury team:
               </p>
-              <div className="text-xs text-stone-700 space-y-0.5 pt-1">
-                <div>Email: <strong className="font-mono">jesdatreasury@gmail.com</strong></div>
+              <div className="text-xs text-stone-700 space-y-1 pt-1 font-sans">
+                <div>
+                  Email:{" "}
+                  <a
+                    href={`mailto:${churchEmail}?subject=Tithe%20%2F%20Offering%20Inquiry`}
+                    className="font-mono text-[#001f44] font-semibold underline hover:text-amber-800"
+                  >
+                    {churchEmail}
+                  </a>
+                </div>
                 <div>Office: <strong>Sabbaths after Divine Service</strong></div>
               </div>
               <div className="pt-2">

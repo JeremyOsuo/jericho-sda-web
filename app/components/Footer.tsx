@@ -76,15 +76,35 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Col 4: Sanctuary & Pastoral Care */}
+        {/* Col 4: Sanctuary & Contact */}
         <div className="space-y-3">
           <h3 className="text-xs uppercase font-semibold text-amber-300 tracking-wider font-sans">
-            Sanctuary Address
+            Sanctuary &amp; Inquiries
           </h3>
           <p className="text-xs text-stone-300 font-serif leading-relaxed">
             Jericho Estate, Off Jogoo Road &amp; Rabai Road Perimeter,<br />
             Eastlands, Nairobi, Kenya.
           </p>
+
+          <div className="space-y-1 pt-1 text-xs font-serif">
+            <span className="text-[11px] font-sans uppercase tracking-wider text-stone-400 block">
+              Secretariat Desk:
+            </span>
+            <a
+              href="mailto:jericho.sda@gmail.com"
+              className="text-amber-300 hover:underline block font-sans text-xs"
+            >
+              jericho.sda@gmail.com
+            </a>
+            <a
+              href="https://www.youtube.com/@jerichosdanairobi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-stone-300 hover:text-white block font-sans text-xs"
+            >
+              YouTube: @jerichosdanairobi &rarr;
+            </a>
+          </div>
 
           <div className="pt-2">
             <Link

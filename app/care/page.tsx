@@ -42,7 +42,7 @@ export default function PastoralCarePage() {
   const [requestType, setRequestType] = useState<
     "Intercessory Prayer" | "Pastoral Visitation" | "Counseling" | "Baby Dedication" | "Baptism"
   >("Intercessory Prayer");
-  
+
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -51,12 +51,12 @@ export default function PastoralCarePage() {
     preferredDate: "",
     notes: "",
   });
-  
+
   const [submitted, setSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  // Active church correspondence inbox (prevents bounce-backs)
-  const activeChurchInbox = "jesdatreasury@gmail.com";
+  // Official church correspondence inbox
+  const activeChurchInbox = "jericho.sda@gmail.com";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +65,9 @@ export default function PastoralCarePage() {
       return;
     }
 
-    const emailSubject = encodeURIComponent(`[Pastoral Care Request] ${requestType} - ${formData.fullName}`);
+    const emailSubject = encodeURIComponent(
+      `[Pastoral Care Request] ${requestType} - ${formData.fullName}`
+    );
     const emailBody = encodeURIComponent(
       `JERICHO SDA CHURCH - PASTORAL CARE REQUEST\n\n` +
       `Category: ${requestType}\n` +
@@ -338,7 +340,7 @@ export default function PastoralCarePage() {
           {/* Right Column: Office Hours & Contacts */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* Urgent Inquiries Card */}
+            {/* Direct Contact Card */}
             <div className="bg-white rounded-xl p-5 border border-stone-200 shadow-sm space-y-2.5">
               <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-800 block">
                 Direct Contact
@@ -349,8 +351,16 @@ export default function PastoralCarePage() {
               <p className="text-xs text-stone-600 font-serif leading-relaxed">
                 For hospital visits or emergency pastoral needs, you can connect directly with the church secretariat:
               </p>
-              <div className="text-xs space-y-1 pt-1 text-stone-700 font-sans">
-                <div>Email: <strong className="font-mono">{activeChurchInbox}</strong></div>
+              <div className="text-xs space-y-1.5 pt-1 text-stone-700 font-sans">
+                <div>
+                  Email:{" "}
+                  <a
+                    href={`mailto:${activeChurchInbox}`}
+                    className="font-mono text-[#001f44] font-semibold underline hover:text-amber-800"
+                  >
+                    {activeChurchInbox}
+                  </a>
+                </div>
                 <div>Location: <strong>Sanctuary Office, Jericho Estate</strong></div>
               </div>
             </div>
