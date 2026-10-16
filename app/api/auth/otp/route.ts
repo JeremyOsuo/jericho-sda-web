@@ -1,6 +1,6 @@
 // app/api/auth/otp/route.ts
 import { NextResponse } from "next/server";
-import { normalizePhone, otpStore, ledgerStore } from "@/lib/ledger";
+import { normalizePhone, otpStore, getMemberRecords } from "@/lib/ledger";
 
 // Request OTP
 export async function POST(req: Request) {
@@ -53,8 +53,8 @@ export async function PUT(req: Request) {
     // Clear used code
     otpStore.delete(phone);
 
-    // Retrieve transactions for this member
-    const records = ledgerStore.filter((r) => r.phoneNumber === phone);
+    // Retrieve transactions for this member from Supabase / ledger
+    const records = await getMemberRecords(phone);
 
     const totals = records.reduce(
       (acc, curr) => {

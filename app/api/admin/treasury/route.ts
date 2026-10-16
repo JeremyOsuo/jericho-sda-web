@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ledgerStore } from "@/lib/ledger";
+import { getAllRecords } from "@/lib/ledger";
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized access" }, { status: 401 });
     }
 
-    const records = [...ledgerStore];
+    // Retrieve records from Supabase / ledger store
+    const records = await getAllRecords();
 
     // Compute key conference and local church metrics
     const totals = records.reduce(

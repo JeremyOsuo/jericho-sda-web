@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ledgerStore, GivingRecord } from "@/lib/ledger";
+import { saveGivingRecord, GivingRecord } from "@/lib/ledger";
 
 export async function POST(req: Request) {
   try {
@@ -22,7 +22,6 @@ export async function POST(req: Request) {
       const amount = Number(getVal("Amount") || 0);
       const receiptNumber = String(getVal("MpesaReceiptNumber") || `REC_${Date.now()}`);
       const rawPhone = String(getVal("PhoneNumber") || "");
-      const transDate = String(getVal("TransactionDate") || new Date().toISOString());
 
       // Standardize phone format (e.g. 254712345678)
       const phone = rawPhone.startsWith("+") ? rawPhone.slice(1) : rawPhone;
@@ -51,8 +50,8 @@ export async function POST(req: Request) {
         status: "Completed",
       };
 
-      // Push into central ledger
-      ledgerStore.unshift(record);
+      // Persist permanently to Supabase (with in-memory fallback)
+      await saveGivingRecord(record);
 
       console.log(`[DARAJA CALLBACK SUCCESS] Receipt: ${receiptNumber} | Phone: ${phone} | Amount: KES ${amount}`);
     } else {
