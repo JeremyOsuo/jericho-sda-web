@@ -6,6 +6,36 @@ import AdventistLogo from "../components/AdventistLogo";
 import { weeklyBulletin, type WeeklyBulletinData, type DepartmentNotice } from "@/data/announcements";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 
+interface TreasuryData {
+  totals: {
+    grossCollections: number;
+    titheCKC: number;
+    localBudget: number;
+    buildingFund: number;
+    welfare: number;
+    campMeeting: number;
+    youth: number;
+  };
+  recordsCount: number;
+  records: Array<{
+    id: string;
+    receiptNumber: string;
+    phoneNumber: string;
+    amount: number;
+    timestamp: string;
+    breakdown: {
+      tithe: number;
+      combinedOffering: number;
+      campMeeting: number;
+      buildingFund: number;
+      welfare: number;
+      youthMinistry: number;
+    };
+    accountReference: string;
+    status: string;
+  }>;
+}
+
 export default function AdminDeskPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [enteredPin, setEnteredPin] = useState<string>("");
@@ -22,7 +52,14 @@ export default function AdminDeskPage() {
     siteSettings?.urgentBannerText ?? "Camp Meeting registration is ongoing. Check Camp tab for details."
   );
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<"liturgy" | "officers" | "notices" | "banner" | "print">("liturgy");
+  const [activeTab, setActiveTab] = useState<
+    "liturgy" | "officers" | "notices" | "banner" | "treasury" | "print"
+  >("liturgy");
+
+  // Treasury State
+  const [treasuryData, setTreasuryData] = useState<TreasuryData | null>(null);
+  const [treasuryLoading, setTreasuryLoading] = useState<boolean>(false);
+  const [treasurySearch, setTreasurySearch] = useState<string>("");
 
   useEffect(() => {
     const sessionAuth = sessionStorage.getItem("jericho_admin_auth");
@@ -38,6 +75,28 @@ export default function AdminDeskPage() {
       }
     }
   }, []);
+
+  // Fetch Treasury Data when switching to Treasury tab
+  useEffect(() => {
+    if (isAuthenticated && activeTab === "treasury") {
+      fetchTreasuryData();
+    }
+  }, [isAuthenticated, activeTab]);
+
+  const fetchTreasuryData = async () => {
+    setTreasuryLoading(true);
+    try {
+      const res = await fetch(`/api/admin/treasury?pin=${SECRET_PIN}`);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setTreasuryData(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch treasury records", e);
+    } finally {
+      setTreasuryLoading(false);
+    }
+  };
 
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +119,45 @@ export default function AdminDeskPage() {
     window.print();
   };
 
+  // CSV Export for Sabbath Treasury Audit
+  const handleExportCSV = () => {
+    if (!treasuryData || !treasuryData.records.length) return;
+
+    const headers = ["Receipt Number", "Date", "Phone Number", "Total Amount (KES)", "Tithe", "Combined Offering", "Building Fund", "Welfare", "Youth", "Reference", "Status"];
+    const rows = treasuryData.records.map((r) => [
+      r.receiptNumber,
+      new Date(r.timestamp).toISOString(),
+      `+${r.phoneNumber}`,
+      r.amount,
+      r.breakdown.tithe,
+      r.breakdown.combinedOffering,
+      r.breakdown.buildingFund,
+      r.breakdown.welfare,
+      r.breakdown.youthMinistry,
+      `"${r.accountReference}"`,
+      r.status,
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Jericho_SDA_Treasury_Audit_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Filtered transactions in treasury view
+  const filteredRecords = treasuryData?.records.filter((r) => {
+    const q = treasurySearch.toLowerCase();
+    return (
+      r.receiptNumber.toLowerCase().includes(q) ||
+      r.phoneNumber.includes(q) ||
+      r.accountReference.toLowerCase().includes(q)
+    );
+  });
+
   // 1. PIN LOCK SCREEN
   if (!isAuthenticated) {
     return (
@@ -77,7 +175,7 @@ export default function AdminDeskPage() {
               Secretariat Desk
             </h1>
             <p className="text-xs text-stone-500 font-serif">
-              Enter secretariat PIN to manage divine service liturgy and notices.
+              Enter secretariat PIN to manage divine service liturgy, treasury inflows, and notices.
             </p>
           </div>
 
@@ -132,10 +230,10 @@ export default function AdminDeskPage() {
               <span>Church Secretariat</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-serif font-normal text-stone-50">
-              Worship &amp; Bulletin Control
+              Secretariat &amp; Treasury Desk
             </h1>
             <p className="text-xs sm:text-sm text-stone-300 font-serif">
-              Publish divine service liturgies, assign duty officers, and configure alerts.
+              Publish divine service liturgies, manage church officers, monitor treasury collections, and configure alerts.
             </p>
           </div>
 
@@ -171,6 +269,7 @@ export default function AdminDeskPage() {
               { id: "liturgy", label: "Divine Liturgy" },
               { id: "officers", label: "Duty Officers" },
               { id: "notices", label: "Department Notices" },
+              { id: "treasury", label: "Treasury Ledger" },
               { id: "banner", label: "Urgent Banner" },
               { id: "print", label: "Printable Insert" },
             ].map((t) => (
@@ -465,7 +564,215 @@ export default function AdminDeskPage() {
           </div>
         )}
 
-        {/* TAB 4: URGENT BANNER */}
+        {/* TAB 4: TREASURY & STEWARDSHIP LEDGER */}
+        {activeTab === "treasury" && (
+          <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-4">
+              <div>
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-800 block">
+                  Church Treasury Department
+                </span>
+                <h2 className="text-xl font-serif text-[#001f44]">
+                  M-PESA Tithe &amp; Inflow Ledger
+                </h2>
+                <p className="text-xs text-stone-500 font-serif mt-0.5">
+                  Real-time collection reports, conference tithe accounts, and Sabbath audit tools.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={fetchTreasuryData}
+                  disabled={treasuryLoading}
+                  className="bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs px-3 py-2 rounded-lg border border-stone-300 transition"
+                >
+                  {treasuryLoading ? "Refreshing..." : "↻ Refresh Ledger"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleExportCSV}
+                  className="bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium px-4 py-2 rounded-lg transition shadow-xs"
+                >
+                  Export CSV / Excel &darr;
+                </button>
+              </div>
+            </div>
+
+            {/* Treasury KPI Summary Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-1">
+                <span className="text-[10px] uppercase font-semibold text-stone-500 tracking-wider block">
+                  Gross Collections
+                </span>
+                <span className="text-2xl font-bold font-mono text-[#001f44] block">
+                  KES {treasuryData?.totals.grossCollections.toLocaleString() ?? "0"}
+                </span>
+                <span className="text-[10px] text-stone-500 font-serif">
+                  {treasuryData?.recordsCount ?? 0} Recorded Inflows
+                </span>
+              </div>
+
+              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-1">
+                <span className="text-[10px] uppercase font-semibold text-amber-800 tracking-wider block">
+                  Tithe (CKC Conference)
+                </span>
+                <span className="text-2xl font-bold font-mono text-amber-900 block">
+                  KES {treasuryData?.totals.titheCKC.toLocaleString() ?? "0"}
+                </span>
+                <span className="text-[10px] text-stone-500 font-serif">
+                  100% Remittance to Conference
+                </span>
+              </div>
+
+              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-1">
+                <span className="text-[10px] uppercase font-semibold text-emerald-800 tracking-wider block">
+                  Local Church Budget
+                </span>
+                <span className="text-2xl font-bold font-mono text-emerald-900 block">
+                  KES {treasuryData?.totals.localBudget.toLocaleString() ?? "0"}
+                </span>
+                <span className="text-[10px] text-stone-500 font-serif">
+                  Combined Offering (Operating)
+                </span>
+              </div>
+
+              <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-1">
+                <span className="text-[10px] uppercase font-semibold text-blue-800 tracking-wider block">
+                  Building &amp; Welfare
+                </span>
+                <span className="text-2xl font-bold font-mono text-blue-900 block">
+                  KES {((treasuryData?.totals.buildingFund ?? 0) + (treasuryData?.totals.welfare ?? 0)).toLocaleString()}
+                </span>
+                <span className="text-[10px] text-stone-500 font-serif">
+                  Sanctuary Dev &amp; Dorcas
+                </span>
+              </div>
+            </div>
+
+            {/* Proportion Distribution Bar */}
+            {treasuryData && treasuryData.totals.grossCollections > 0 && (
+              <div className="p-4 rounded-xl bg-stone-50 border border-stone-200 space-y-2">
+                <div className="flex items-center justify-between text-xs font-sans">
+                  <span className="font-semibold text-stone-700">Inflow Portfolio Allocation</span>
+                  <span className="text-stone-500 text-[11px] font-mono">
+                    KES {treasuryData.totals.grossCollections.toLocaleString()} Total Inflow
+                  </span>
+                </div>
+
+                <div className="w-full h-3.5 rounded-full bg-stone-200 flex overflow-hidden">
+                  <div
+                    style={{
+                      width: `${(treasuryData.totals.titheCKC / treasuryData.totals.grossCollections) * 100}%`,
+                    }}
+                    className="bg-amber-600 h-full"
+                    title="Tithe"
+                  />
+                  <div
+                    style={{
+                      width: `${(treasuryData.totals.localBudget / treasuryData.totals.grossCollections) * 100}%`,
+                    }}
+                    className="bg-emerald-600 h-full"
+                    title="Combined Offering"
+                  />
+                  <div
+                    style={{
+                      width: `${((treasuryData.totals.buildingFund + treasuryData.totals.welfare) / treasuryData.totals.grossCollections) * 100}%`,
+                    }}
+                    className="bg-blue-600 h-full"
+                    title="Building & Welfare"
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4 text-[11px] font-serif pt-1 text-stone-600">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-600" />
+                    Tithe CKC ({Math.round((treasuryData.totals.titheCKC / treasuryData.totals.grossCollections) * 100)}%)
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                    Local Church Budget ({Math.round((treasuryData.totals.localBudget / treasuryData.totals.grossCollections) * 100)}%)
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                    Building &amp; Welfare ({Math.round(((treasuryData.totals.buildingFund + treasuryData.totals.welfare) / treasuryData.totals.grossCollections) * 100)}%)
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Filter Search Bar & Table */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h3 className="font-serif text-base text-[#001f44]">
+                  Recent Remittance Records
+                </h3>
+                <input
+                  type="text"
+                  placeholder="Filter by receipt, phone, or fund..."
+                  value={treasurySearch}
+                  onChange={(e) => setTreasurySearch(e.target.value)}
+                  className="bg-stone-50 border border-stone-300 rounded-lg px-3 py-1.5 text-xs text-stone-900 w-full sm:w-64 focus:outline-none focus:border-[#001f44]"
+                />
+              </div>
+
+              <div className="overflow-x-auto border border-stone-200 rounded-lg">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-stone-200 text-[11px] font-semibold uppercase tracking-wider text-stone-600 bg-stone-50">
+                      <th className="py-2.5 px-3">Date</th>
+                      <th className="py-2.5 px-3">Receipt Code</th>
+                      <th className="py-2.5 px-3">Member Phone</th>
+                      <th className="py-2.5 px-3">Allocation Breakdown</th>
+                      <th className="py-2.5 px-3 text-right">Amount (KES)</th>
+                      <th className="py-2.5 px-3 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100 font-serif">
+                    {filteredRecords && filteredRecords.length > 0 ? (
+                      filteredRecords.map((r) => (
+                        <tr key={r.id} className="hover:bg-stone-50/70 transition">
+                          <td className="py-2.5 px-3 text-stone-600 whitespace-nowrap">
+                            {new Date(r.timestamp).toLocaleDateString("en-GB", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </td>
+                          <td className="py-2.5 px-3 font-mono font-semibold text-stone-900">
+                            {r.receiptNumber}
+                          </td>
+                          <td className="py-2.5 px-3 font-mono text-stone-600">
+                            +{r.phoneNumber}
+                          </td>
+                          <td className="py-2.5 px-3 text-stone-600 max-w-xs truncate" title={r.accountReference}>
+                            {r.accountReference}
+                          </td>
+                          <td className="py-2.5 px-3 font-mono text-right font-medium text-[#001f44] whitespace-nowrap">
+                            {r.amount.toLocaleString()}
+                          </td>
+                          <td className="py-2.5 px-3 text-center">
+                            <span className="bg-emerald-50 text-emerald-800 text-[10px] font-sans font-medium px-2 py-0.5 rounded-full border border-emerald-200">
+                              {r.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={6} className="py-6 text-center text-stone-400 font-serif text-xs">
+                          {treasuryLoading ? "Loading ledger records..." : "No remittance records match your search."}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: URGENT BANNER */}
         {activeTab === "banner" && (
           <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-5">
             <div className="border-b border-stone-100 pb-3">
@@ -518,7 +825,7 @@ export default function AdminDeskPage() {
           </div>
         )}
 
-        {/* TAB 5: PRINTABLE INSERT */}
+        {/* TAB 6: PRINTABLE INSERT */}
         {activeTab === "print" && (
           <div className="bg-white rounded-xl p-6 sm:p-7 border border-stone-200 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-3">

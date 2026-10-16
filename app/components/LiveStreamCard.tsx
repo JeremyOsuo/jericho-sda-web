@@ -1,21 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import AdventistLogo from "./AdventistLogo";
 
 interface LiveStreamCardProps {
   channelHandle?: string;
   channelId?: string;
+  // Put the YouTube video ID of your most recent Sabbath Divine Service here
+  // (e.g. from https://www.youtube.com/watch?v=dQw4w9WgXcQ, the ID is dQw4w9WgXcQ)
+  featuredVideoId?: string;
 }
 
 export default function LiveStreamCard({
   channelHandle = "jerichosdanairobi",
   channelId = "UCrcRFa9oS22hMfwMog9zhVA",
+  featuredVideoId = "", // Leave empty or pass a real video ID
 }: LiveStreamCardProps) {
   const [isSabbathServiceTime, setIsSabbathServiceTime] = useState(false);
-  // Default to live player during Sabbath service, or allow toggling to recent uploads playlist
-  const [viewMode, setViewMode] = useState<"live" | "recent">("live");
 
   useEffect(() => {
     const checkSabbathTime = () => {
@@ -32,9 +33,6 @@ export default function LiveStreamCard({
       // Sabbath Divine Worship window: 08:30 AM (510 min) to 01:00 PM (780 min) EAT
       const isDuringService = dayOfWeek === 6 && totalMinutes >= 510 && totalMinutes <= 780;
       setIsSabbathServiceTime(isDuringService);
-      if (isDuringService) {
-        setViewMode("live");
-      }
     };
 
     checkSabbathTime();
@@ -42,14 +40,6 @@ export default function LiveStreamCard({
     return () => clearInterval(interval);
   }, []);
 
-  // Uploads playlist ID is channel ID with 'U' as the second character
-  const uploadsPlaylistId = channelId.startsWith("UC")
-    ? `UU${channelId.slice(2)}`
-    : channelId;
-
-  const liveEmbedUrl = `https://www.youtube-nocookie.com/embed/live_stream?channel=${channelId}&autoplay=0`;
-  const recentPlaylistEmbedUrl = `https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsPlaylistId}`;
-  
   const channelUrl = `https://www.youtube.com/@${channelHandle}`;
   const liveUrl = `https://www.youtube.com/@${channelHandle}/live`;
 
@@ -61,7 +51,7 @@ export default function LiveStreamCard({
           {isSabbathServiceTime ? (
             <span className="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-sans font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
               <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
-              Sabbath Service Active
+              Sabbath Divine Service Hours
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 text-stone-600 text-[10px] font-sans font-medium uppercase tracking-wider">
@@ -75,68 +65,87 @@ export default function LiveStreamCard({
           </span>
         </div>
 
-        {/* View Switcher Controls */}
-        <div className="flex items-center gap-1 bg-stone-200/60 p-0.5 rounded-lg text-xs self-start sm:self-auto font-sans">
-          <button
-            type="button"
-            onClick={() => setViewMode("live")}
-            className={`px-3 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
-              viewMode === "live"
-                ? "bg-[#001f44] text-white shadow-xs"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            {isSabbathServiceTime ? "🔴 Live Broadcast" : "Live Stream Feed"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode("recent")}
-            className={`px-3 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
-              viewMode === "recent"
-                ? "bg-[#001f44] text-white shadow-xs"
-                : "text-stone-600 hover:text-stone-900"
-            }`}
-          >
-            Recent Sermons
-          </button>
+        <span className="text-[11px] text-stone-500 font-serif">
+          Sabbaths &bull; 08:30 AM &ndash; 01:00 PM EAT
+        </span>
+      </div>
+
+      {/* Viewport */}
+      {featuredVideoId ? (
+        <div className="relative aspect-video w-full bg-black">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${featuredVideoId}?rel=0`}
+            title="Jericho SDA Church Divine Service"
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
-      </div>
+      ) : (
+        <div className="relative aspect-video sm:aspect-[21/9] bg-[#001f44] text-white flex items-center justify-center p-6 text-center">
+          <div className="space-y-3 max-w-lg">
+            <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mx-auto text-amber-400">
+              <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
 
-      {/* Embedded YouTube Player Viewport */}
-      <div className="relative aspect-video w-full bg-black">
-        <iframe
-          key={viewMode}
-          src={viewMode === "live" ? liveEmbedUrl : recentPlaylistEmbedUrl}
-          title="Jericho SDA Church Sanctuary Broadcast"
-          className="w-full h-full border-0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          loading="lazy"
-        />
-      </div>
+            <div className="space-y-1">
+              <h3 className="font-serif text-lg sm:text-xl text-stone-50">
+                {isSabbathServiceTime
+                  ? "Sabbath Divine Worship Broadcast"
+                  : "Jericho SDA Sanctuary Broadcasts"}
+              </h3>
+              <p className="text-xs text-stone-300 font-serif leading-relaxed">
+                {isSabbathServiceTime
+                  ? "Divine service is currently in session. Join the congregation online via our official YouTube live feed."
+                  : "Join our Sabbath services live every Saturday morning, or watch sermon replays and choir presentations on YouTube."}
+              </p>
+            </div>
 
-      {/* Footer Info & Quick Links */}
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-2.5">
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-4 py-2 rounded-lg transition shadow-xs inline-flex items-center gap-1.5"
+              >
+                <span>{isSabbathServiceTime ? "Join Live Stream Now" : "Go to YouTube Live Feed"}</span>
+                <span>&rarr;</span>
+              </a>
+
+              <a
+                href={channelUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/15 text-stone-100 border border-white/20 text-xs font-medium px-4 py-2 rounded-lg transition"
+              >
+                Browse Video Archives &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer Info Strip */}
       <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs bg-white">
         <div className="space-y-0.5">
           <h4 className="font-serif font-medium text-stone-900">
-            Jericho SDA Church YouTube Channel
+            Jericho SDA Media &amp; Communication Ministry
           </h4>
           <p className="text-stone-500 font-serif text-[11px]">
-            {viewMode === "live"
-              ? "Displaying the active or upcoming sanctuary broadcast stream."
-              : "Browsing latest uploaded sermons and Sabbath services."}
+            Divine Service, Sabbath School Panel, &amp; Music Ministry.
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
           <a
-            href={viewMode === "live" ? liveUrl : channelUrl}
+            href={channelUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium px-3.5 py-1.5 rounded-lg transition inline-flex items-center gap-1.5"
+            className="text-stone-700 hover:text-stone-900 font-medium text-[11px]"
           >
-            <span>Open in YouTube</span>
-            <span>&rarr;</span>
+            Visit Channel &rarr;
           </a>
           <span className="text-stone-300">&bull;</span>
           <a
