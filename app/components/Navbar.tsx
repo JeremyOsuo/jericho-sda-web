@@ -25,7 +25,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile drawer is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -37,7 +36,6 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // Close desktop dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -54,7 +52,6 @@ export default function Navbar() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
-        {/* Urgent Church Notice Banner */}
         {urgentBannerActive && (
           <aside
             aria-label="Urgent Church Notice"
@@ -67,25 +64,25 @@ export default function Navbar() {
           </aside>
         )}
 
-        {/* Main Navbar with Translucent Frosted Blur on Scroll */}
+        {/* Main Navbar */}
         <div
           className={`w-full transition-all duration-300 ${
             isScrolled
-              ? "bg-[#001f44]/80 backdrop-blur-md shadow-sm border-b border-white/10 py-3"
+              ? "bg-[#001f44]/85 backdrop-blur-md shadow-sm border-b border-white/10 py-3"
               : "bg-[#001f44] border-b border-white/10 py-4"
           }`}
         >
-          <div className="max-w-6xl mx-auto px-5 sm:px-6 flex items-center justify-between gap-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
             
-            {/* Church Brand (Double-click route to /admin preserved) */}
+            {/* Church Brand */}
             <div
               onDoubleClick={() => router.push("/admin")}
-              className="flex items-center gap-3 shrink-0 cursor-pointer select-none"
+              className="flex items-center gap-2.5 shrink-0 cursor-pointer select-none"
               title="Jericho SDA Church"
             >
               <Link
                 href="/"
-                className="w-9 h-9 rounded-lg bg-amber-400 flex items-center justify-center shadow-sm shrink-0"
+                className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center shadow-sm shrink-0"
               >
                 <AdventistLogo className="w-5 h-5 text-[#001f44]" />
               </Link>
@@ -93,19 +90,22 @@ export default function Navbar() {
                 <span className="text-white font-serif font-semibold text-sm tracking-wide block">
                   Jericho SDA Church
                 </span>
-                <span className="text-[11px] text-amber-300/90 block">
+                <span className="text-[10px] text-amber-300/90 block">
                   Nairobi Eastlands
                 </span>
               </Link>
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-6 text-xs font-medium text-stone-200">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-5 text-xs font-medium text-stone-200">
               <Link href="/" className="hover:text-amber-300 transition py-1">
                 Home
               </Link>
-              <Link href="/bulletin" className="hover:text-amber-300 transition py-1">
-                Bulletin
+              <Link href="/#about" className="hover:text-amber-300 transition py-1">
+                About Us
+              </Link>
+              <Link href="/magazine" className="hover:text-amber-300 transition py-1 text-amber-300 font-semibold">
+                Magazine
               </Link>
 
               {/* Ministries Dropdown */}
@@ -118,7 +118,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setIsMinistriesOpen((p) => !p)}
-                  className="flex items-center gap-1.5 hover:text-amber-300 transition py-1 cursor-pointer"
+                  className="flex items-center gap-1 hover:text-amber-300 transition py-1 cursor-pointer"
                 >
                   <span>Ministries</span>
                   <svg
@@ -180,17 +180,17 @@ export default function Navbar() {
               </Link>
             </nav>
 
-            {/* Desktop Giving Action */}
+            {/* Desktop Giving */}
             <div className="hidden lg:flex items-center gap-3 shrink-0">
               <Link
                 href="/giving"
-                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-4 py-2 rounded-lg shadow-sm transition"
+                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-3.5 py-2 rounded-lg shadow-sm transition"
               >
                 Online Giving
               </Link>
             </div>
 
-            {/* Mobile Actions: Giving + Menu Toggle */}
+            {/* Mobile Actions */}
             <div className="flex lg:hidden items-center gap-2">
               <Link
                 href="/giving"
@@ -217,15 +217,12 @@ export default function Navbar() {
       {/* Mobile Slide-Over Drawer */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/60 transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
-          {/* Drawer Sheet */}
           <div className="relative ml-auto w-full max-w-xs bg-[#001f44] text-white h-full shadow-2xl flex flex-col justify-between overflow-hidden z-10 border-l border-white/10">
-            {/* Header */}
             <div className="p-5 border-b border-white/10 flex items-center justify-between">
               <div
                 onDoubleClick={() => {
@@ -251,7 +248,6 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Navigation Body */}
             <div className="p-5 space-y-1 overflow-y-auto flex-1 text-sm font-medium">
               <Link
                 href="/"
@@ -261,11 +257,18 @@ export default function Navbar() {
                 Home
               </Link>
               <Link
-                href="/bulletin"
+                href="/#about"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-stone-200 hover:text-white"
               >
-                Divine Bulletin
+                About Us
+              </Link>
+              <Link
+                href="/magazine"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2.5 rounded-lg hover:bg-white/10 transition text-amber-300 font-semibold"
+              >
+                The Jericho Herald (Magazine)
               </Link>
               <Link
                 href="/leadership"

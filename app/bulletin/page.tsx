@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getLatestBulletin, BulletinData } from "@/lib/bulletin";
+import AdventistLogo from "../components/AdventistLogo";
 
 export default function BulletinPage() {
   const [bulletin, setBulletin] = useState<BulletinData | null>(null);
@@ -27,72 +28,93 @@ export default function BulletinPage() {
 
   if (!bulletin) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-slate-300">
+      <main className="min-h-screen bg-[#fcfbf9] flex items-center justify-center text-stone-500 font-serif pt-28">
         Loading Sabbath bulletin...
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header Banner */}
-        <div className="bg-gradient-to-r from-emerald-900/60 via-slate-900 to-slate-900 border border-emerald-500/20 rounded-3xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <span className="inline-block px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">
-                Sabbath Bulletin • {bulletin.sabbathDate}
-              </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+    <main className="min-h-screen bg-[#fcfbf9] text-stone-900 pb-28 pt-32 sm:pt-40">
+      <div className="max-w-4xl mx-auto px-6 space-y-8">
+        
+        {/* 1. Header Banner */}
+        <section className="bg-[#001f44] text-white rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="space-y-2 max-w-xl">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-300 bg-amber-400/10 border border-amber-300/20 px-3 py-0.5 rounded-full inline-block">
+                  Sabbath Bulletin &bull; {bulletin.sabbathDate}
+                </span>
+                <span className="text-[11px] text-stone-300">Order of Service</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-serif font-normal tracking-tight text-stone-50 leading-tight">
                 Jericho SDA Church
               </h1>
-              <p className="text-emerald-400 font-medium text-lg mt-1 italic">
-                "{bulletin.theme}"
+              <p className="text-amber-300 font-serif text-base sm:text-lg italic">
+                &ldquo;{bulletin.theme}&rdquo;
               </p>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Quick Share Buttons */}
+            <div className="flex items-center gap-2 shrink-0">
               <button
+                type="button"
                 onClick={handleShareWhatsApp}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-semibold transition shadow-lg shadow-emerald-900/30"
+                className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-semibold transition shadow-sm cursor-pointer"
               >
-                <span>Share to WhatsApp</span>
+                Share via WhatsApp
               </button>
               <button
+                type="button"
                 onClick={handleCopyLink}
-                className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm transition border border-slate-700"
+                className="px-3 py-2 bg-white/10 hover:bg-white/20 text-stone-200 border border-white/15 rounded-xl text-xs font-medium transition cursor-pointer"
               >
-                {copied ? "Copied!" : "Copy Link"}
+                {copied ? "Copied! ✓" : "Copy Link"}
               </button>
             </div>
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-800/80 text-sm">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/15 text-xs">
             <div>
-              <p className="text-xs text-slate-400 uppercase tracking-wide">Speaker</p>
-              <p className="font-semibold text-slate-200 mt-0.5">{bulletin.preacher}</p>
+              <p className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">Preacher</p>
+              <p className="font-serif font-medium text-stone-100 mt-0.5">{bulletin.preacher}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-400 uppercase tracking-wide">Scripture</p>
-              <p className="font-semibold text-slate-200 mt-0.5">{bulletin.scriptureReading}</p>
+              <p className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">Scripture</p>
+              <p className="font-serif font-medium text-stone-100 mt-0.5">{bulletin.scriptureReading}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-400 uppercase tracking-wide">This Week's Lesson</p>
-              <p className="font-semibold text-slate-200 mt-0.5 truncate" title={`${bulletin.lessonStudy.number}: ${bulletin.lessonStudy.title}`}>
+              <p className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">Adult Bible Study</p>
+              <p className="font-serif font-medium text-stone-100 mt-0.5 truncate" title={`${bulletin.lessonStudy.number}: ${bulletin.lessonStudy.title}`}>
                 {bulletin.lessonStudy.number}: {bulletin.lessonStudy.title}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-400 uppercase tracking-wide">Online Giving</p>
-              <Link href="/giving" className="text-emerald-400 hover:underline font-semibold block mt-0.5">
-                Paybill 752922 →
+              <p className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">Online Giving</p>
+              <Link href="/giving" className="text-amber-300 hover:text-white font-medium block mt-0.5 transition">
+                Paybill 752922 &rarr;
               </Link>
             </div>
           </div>
+        </section>
+
+        {/* 2. Secondary Link to Magazine */}
+        <div className="bg-amber-50 border border-amber-200/80 rounded-xl px-4 py-3 flex items-center justify-between text-xs">
+          <span className="text-amber-900 font-serif">
+            Looking for quarterly articles, testimonies, and in-depth pastoral messages?
+          </span>
+          <Link
+            href="/magazine"
+            className="text-[#001f44] font-semibold hover:underline shrink-0 ml-3"
+          >
+            Read Church Magazine &rarr;
+          </Link>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex border-b border-slate-800 space-x-2 overflow-x-auto pb-1 scrollbar-none">
+        {/* 3. Tab Navigation */}
+        <div className="flex border-b border-stone-200 space-x-2 overflow-x-auto pb-1 scrollbar-none">
           {[
             { id: "divine", label: "Divine Service" },
             { id: "ss", label: "Sabbath School" },
@@ -102,10 +124,10 @@ export default function BulletinPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2.5 font-medium text-sm rounded-t-xl transition whitespace-nowrap ${
+              className={`px-4 py-2 font-medium text-xs sm:text-sm rounded-t-xl transition whitespace-nowrap cursor-pointer ${
                 activeTab === tab.id
-                  ? "bg-slate-900 border-t border-x border-slate-700 text-emerald-400"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-white border-t border-x border-stone-200 text-[#001f44] font-semibold shadow-xs"
+                  : "text-stone-500 hover:text-stone-800"
               }`}
             >
               {tab.label}
@@ -115,25 +137,28 @@ export default function BulletinPage() {
 
         {/* Tab 1: Divine Service */}
         {activeTab === "divine" && (
-          <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-md">
-            <h2 className="text-xl font-bold text-white mb-6 flex items-center justify-between">
-              <span>Order of Divine Worship</span>
-              <span className="text-xs font-normal text-slate-400">Main Sanctuary • 10:45 AM</span>
-            </h2>
-            <div className="space-y-4">
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <h2 className="text-xl font-serif text-[#001f44]">
+                Order of Divine Worship
+              </h2>
+              <span className="text-xs text-stone-500 font-serif">Main Sanctuary &bull; 10:45 AM</span>
+            </div>
+
+            <div className="space-y-2.5">
               {bulletin.divineService.map((row, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-950/40 rounded-2xl border border-slate-800/60 hover:border-slate-700 transition"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-stone-50 rounded-xl border border-stone-200/70 hover:border-stone-300 transition"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-white border border-stone-200 text-stone-600 font-semibold">
                       {row.time || String(idx + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-semibold text-slate-200">{row.item}</span>
+                    <span className="text-xs sm:text-sm font-serif font-semibold text-stone-900">{row.item}</span>
                   </div>
                   {row.person && (
-                    <span className="text-sm text-emerald-400/90 sm:text-right mt-1 sm:mt-0 font-medium">
+                    <span className="text-xs text-amber-900 sm:text-right mt-1 sm:mt-0 font-medium">
                       {row.person}
                     </span>
                   )}
@@ -145,48 +170,46 @@ export default function BulletinPage() {
 
         {/* Tab 2: Sabbath School */}
         {activeTab === "ss" && (
-          <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-md space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <div>
-                <h2 className="text-xl font-bold text-white">Sabbath School Program</h2>
-                <p className="text-xs text-slate-400 mt-0.5">09:00 AM – 10:40 AM</p>
+                <h2 className="text-xl font-serif text-[#001f44]">Sabbath School Program</h2>
+                <p className="text-xs text-stone-500 font-serif mt-0.5">08:00 AM – 10:40 AM</p>
               </div>
-              <div className="text-right">
-                <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                  {bulletin.lessonStudy.number}
-                </span>
-              </div>
+              <span className="text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-200/70 px-3 py-1 rounded-full">
+                {bulletin.lessonStudy.number}
+              </span>
             </div>
 
             {/* Lesson Spotlight Card */}
-            <div className="p-4 bg-emerald-950/20 border border-emerald-500/20 rounded-2xl">
-              <p className="text-xs uppercase tracking-wider text-emerald-400 font-semibold">
-                Quarterly Adult Bible Study
+            <div className="p-4 bg-amber-50/60 border border-amber-200/70 rounded-xl space-y-1">
+              <p className="text-[10px] uppercase tracking-wider text-amber-800 font-semibold font-mono">
+                Quarterly Adult Bible Study Guide
               </p>
-              <h3 className="text-lg font-bold text-white mt-1">
+              <h3 className="text-base font-serif font-semibold text-stone-900">
                 {bulletin.lessonStudy.title}
               </h3>
               {bulletin.lessonStudy.memoryVerse && (
-                <p className="text-xs text-slate-300 mt-1 italic">
-                  Memory Text: <span className="text-emerald-300 font-medium">{bulletin.lessonStudy.memoryVerse}</span>
+                <p className="text-xs text-stone-600 italic font-serif pt-0.5">
+                  Memory Text: <span className="text-amber-900 font-medium not-italic font-sans">&ldquo;{bulletin.lessonStudy.memoryVerse}&rdquo;</span>
                 </p>
               )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2.5">
               {bulletin.sabbathSchool.map((row, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-950/40 rounded-2xl border border-slate-800/60 hover:border-slate-700 transition"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-stone-50 rounded-xl border border-stone-200/70 hover:border-stone-300 transition"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-white border border-stone-200 text-stone-600 font-semibold">
                       {row.time || String(idx + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-semibold text-slate-200">{row.item}</span>
+                    <span className="text-xs sm:text-sm font-serif font-semibold text-stone-900">{row.item}</span>
                   </div>
                   {row.person && (
-                    <span className="text-sm text-emerald-400/90 sm:text-right mt-1 sm:mt-0 font-medium">
+                    <span className="text-xs text-amber-900 sm:text-right mt-1 sm:mt-0 font-medium">
                       {row.person}
                     </span>
                   )}
@@ -198,18 +221,20 @@ export default function BulletinPage() {
 
         {/* Tab 3: Announcements */}
         {activeTab === "announcements" && (
-          <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-md">
-            <h2 className="text-xl font-bold text-white mb-6">Church Notices & Pastoral Alerts</h2>
-            <div className="space-y-3">
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+            <h2 className="text-xl font-serif text-[#001f44] border-b border-stone-100 pb-3">
+              Church Notices &amp; Pastoral Announcements
+            </h2>
+            <div className="space-y-2.5">
               {bulletin.announcements.map((note, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-3.5 p-4 bg-slate-950/50 rounded-2xl border border-slate-800/70"
+                  className="flex items-start gap-3 p-3.5 bg-stone-50 rounded-xl border border-stone-200/70"
                 >
-                  <div className="w-6 h-6 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-[#001f44] text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
                     {idx + 1}
                   </div>
-                  <p className="text-slate-300 text-sm leading-relaxed">{note}</p>
+                  <p className="text-stone-700 text-xs sm:text-sm font-serif leading-relaxed">{note}</p>
                 </div>
               ))}
             </div>
@@ -218,24 +243,27 @@ export default function BulletinPage() {
 
         {/* Tab 4: Duty Roster */}
         {activeTab === "roster" && (
-          <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-md">
-            <h2 className="text-xl font-bold text-white mb-6">Serving This Sabbath</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+            <h2 className="text-xl font-serif text-[#001f44] border-b border-stone-100 pb-3">
+              Officers Serving This Sabbath
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {Object.entries(bulletin.dutyRoster).map(([role, name]) => (
                 <div
                   key={role}
-                  className="p-4 bg-slate-950/40 rounded-2xl border border-slate-800/60"
+                  className="p-3.5 bg-stone-50 rounded-xl border border-stone-200/70 space-y-0.5"
                 >
-                  <p className="text-xs uppercase tracking-wider text-slate-400">
+                  <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold font-mono">
                     {role.replace(/([A-Z])/g, " $1")}
                   </p>
-                  <p className="font-semibold text-slate-100 text-base mt-1">{name || "—"}</p>
+                  <p className="font-serif font-semibold text-stone-900 text-sm">{name || "—"}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
+
       </div>
-    </div>
+    </main>
   );
 }
