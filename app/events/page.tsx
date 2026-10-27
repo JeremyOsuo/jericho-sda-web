@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import AdventistLogo from "../components/AdventistLogo";
+import AdventistLogo from "../../components/AdventistLogo";
 import {
   churchCalendar2026,
   type EventCategory,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import AdventistLogo from "../components/AdventistLogo";
+import AdventistLogo from "../../components/AdventistLogo";
 
 export interface Hymn {
   number: number;

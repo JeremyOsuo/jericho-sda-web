@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import AdventistLogo from "../components/AdventistLogo";
+import AdventistLogo from "../../components/AdventistLogo";
+import GivingVerification from "@/components/GivingVerification";
+import {
+  Smartphone,
+  Copy,
+  CheckCircle2,
+  Clock,
+  Printer,
+  ArrowRight,
+  ShieldCheck,
+  Send,
+  Lock,
+} from "lucide-react";
 
 interface GivingItem {
   id: string;
@@ -226,10 +238,16 @@ export default function GivingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#fcfbf9] text-stone-900 pb-32">
-      {/* 1. HERO BANNER WITH AUTHENTIC CHURCH IMAGE */}
-      <section className="relative bg-[#001f44] text-white pt-36 sm:pt-42 pb-24 px-6 border-b border-stone-800 overflow-hidden">
-        {/* Church Background Photo */}
+    <main
+      style={{
+        background:
+          "linear-gradient(135deg, #ffffff 0%, #e0edff 50%, #bfdbfe 100%)",
+        minHeight: "100vh",
+      }}
+      className="text-slate-800 pb-32 font-sans"
+    >
+      {/* 1. HERO BANNER WITH SANCTUARY IMAGE */}
+      <section className="relative bg-[#001f44] text-white pt-36 sm:pt-42 pb-24 px-6 overflow-hidden">
         <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
           <img
             src="/church-hero.jpg"
@@ -240,18 +258,20 @@ export default function GivingPage() {
         </div>
 
         <div className="max-w-3xl mx-auto text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 text-stone-300 text-xs tracking-wider uppercase bg-white/10 px-3 py-1 rounded-full border border-white/15 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 text-stone-200 text-xs tracking-wider uppercase bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-md">
             <AdventistLogo className="w-4 h-4 text-amber-400" />
-            <span>Stewardship Ministries &bull; Jericho SDA Church</span>
+            <span className="font-semibold">
+              Stewardship Ministries &bull; Jericho SDA Church
+            </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-serif font-normal text-stone-50 tracking-tight leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-serif font-normal text-white tracking-tight leading-tight">
             Faithful Giving &amp; Tithes
           </h1>
 
-          <blockquote className="text-stone-300 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
+          <blockquote className="text-blue-100 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
             &ldquo;Bring ye all the tithes into the storehouse, that there may be meat in mine house, and prove me now herewith, saith the Lord of hosts.&rdquo;
-            <cite className="block not-italic text-xs font-sans font-medium text-amber-300/90 mt-1.5">
+            <cite className="block not-italic text-xs font-sans font-semibold text-amber-300 mt-1.5">
               &mdash; Malachi 3:10
             </cite>
           </blockquote>
@@ -260,17 +280,16 @@ export default function GivingPage() {
 
       {/* 2. BODY CONTENT */}
       <div className="max-w-5xl mx-auto px-6 -mt-10 space-y-6 relative z-20">
-        
         {/* Navigation Switcher: Envelope vs Personal Statement */}
         <div className="flex justify-center">
-          <div className="inline-flex p-1 bg-white/90 backdrop-blur-md rounded-xl border border-stone-200 shadow-sm gap-1 font-sans">
+          <div className="inline-flex p-1.5 bg-white/90 backdrop-blur-md rounded-2xl border border-blue-200/80 shadow-xs gap-1">
             <button
               type="button"
               onClick={() => setActiveTab("envelope")}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer ${
+              className={`px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                 activeTab === "envelope"
-                  ? "bg-[#001f44] text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-600 hover:text-blue-900"
               }`}
             >
               Tithe Envelope &amp; Giving
@@ -278,10 +297,10 @@ export default function GivingPage() {
             <button
               type="button"
               onClick={() => setActiveTab("statement")}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer ${
+              className={`px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                 activeTab === "statement"
-                  ? "bg-[#001f44] text-white shadow-xs"
-                  : "text-stone-600 hover:text-stone-900"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-600 hover:text-blue-900"
               }`}
             >
               My Stewardship Statement
@@ -292,72 +311,75 @@ export default function GivingPage() {
         {activeTab === "envelope" ? (
           <>
             {/* Paybill Quick Info Header */}
-            <div className="bg-white rounded-2xl p-5 sm:p-6 border border-stone-200/90 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="bg-white/90 backdrop-blur-md rounded-3xl p-5 sm:p-7 border border-blue-200/70 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block animate-pulse" />
-                  <span className="text-[11px] uppercase tracking-wider font-semibold text-emerald-800">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
                     Official Safaricom Paybill
                   </span>
                 </div>
-                <h2 className="text-xl font-serif text-[#001f44]">
+                <h2 className="text-xl font-serif font-bold text-blue-950">
                   Lipa Na M-PESA &bull; 752922
                 </h2>
-                <p className="text-xs text-stone-500 font-serif">
+                <p className="text-xs text-slate-500">
                   Allocate funds below to dispatch an automated prompt or remit manually.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 bg-stone-50 border border-stone-200/80 p-2.5 rounded-xl shrink-0">
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl shrink-0">
                 <div className="px-2">
-                  <span className="text-[9px] uppercase font-mono tracking-wider text-stone-400 block font-semibold">
+                  <span className="text-[9px] uppercase font-mono tracking-wider text-slate-400 block font-bold">
                     Paybill No.
                   </span>
-                  <span className="text-xl font-bold font-mono text-stone-900">
+                  <span className="text-xl font-extrabold font-mono text-slate-900">
                     752922
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => copyToClipboard("752922", "paybill")}
-                  className="bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium px-3 py-1.5 rounded-lg transition cursor-pointer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition cursor-pointer shadow-2xs flex items-center gap-1"
                 >
-                  {copiedKey === "paybill" ? "Copied! ✓" : "Copy"}
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>{copiedKey === "paybill" ? "Copied! ✓" : "Copy"}</span>
                 </button>
               </div>
             </div>
 
             {/* 2-Column Interface: Calculator & Interactive Action Panel */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              
               {/* Left Column: Envelope Calculator */}
-              <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-stone-200/90 shadow-sm space-y-5">
-                <div className="border-b border-stone-100 pb-3">
-                  <h2 className="text-lg font-serif text-[#001f44]">
+              <div className="lg:col-span-7 bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-7 border border-blue-200/70 shadow-xs space-y-5">
+                <div className="border-b border-slate-100 pb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 block">
+                    Interactive Worksheet
+                  </span>
+                  <h2 className="text-lg font-serif font-bold text-slate-900">
                     Itemized Remittance Envelope
                   </h2>
-                  <p className="text-xs text-stone-500 font-serif mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     Enter income to calculate tithe or type directly into any fund field.
                   </p>
                 </div>
 
                 {/* Gross Income Quick Calculator */}
-                <div className="bg-stone-50 p-3.5 rounded-xl border border-stone-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block">
+                    <label className="text-xs font-bold text-slate-800 block">
                       Gross Income / Earnings
                     </label>
-                    <span className="text-[10px] text-stone-400">Autofills 10% Tithe &amp; 5% Budget</span>
+                    <span className="text-[10px] text-slate-400">Autofills 10% Tithe &amp; 5% Budget</span>
                   </div>
                   <div className="relative w-full sm:w-44">
-                    <span className="absolute left-3 top-2 text-xs text-stone-400 font-medium">KES</span>
+                    <span className="absolute left-3 top-2 text-xs text-slate-400 font-mono font-medium">KES</span>
                     <input
                       type="number"
                       min="0"
                       placeholder="e.g. 50,000"
                       value={grossIncome}
                       onChange={(e) => handleGrossChange(e.target.value)}
-                      className="w-full bg-white border border-stone-300 rounded-lg pl-11 pr-3 py-1.5 text-xs font-semibold text-stone-900 focus:outline-none focus:border-[#001f44]"
+                      className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-3 py-1.5 text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -367,21 +389,19 @@ export default function GivingPage() {
                   {givingItems.map((item) => (
                     <div
                       key={item.id}
-                      className="p-3 rounded-xl border border-stone-200/80 bg-white hover:border-stone-300 transition flex items-center justify-between gap-3"
+                      className="p-3 rounded-2xl border border-slate-200/80 bg-white hover:border-blue-300 transition flex items-center justify-between gap-3"
                     >
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-xs font-medium text-stone-900 truncate">
-                            {item.label}
-                          </h3>
-                        </div>
-                        <span className="text-[10px] font-mono text-stone-400 block">
+                        <h3 className="text-xs font-bold text-slate-900 truncate">
+                          {item.label}
+                        </h3>
+                        <span className="text-[10px] font-mono text-slate-400 block">
                           Tag: {item.accountName}
                         </span>
                       </div>
 
                       <div className="relative w-32 shrink-0">
-                        <span className="absolute left-2.5 top-1.5 text-[11px] text-stone-400">KES</span>
+                        <span className="absolute left-2.5 top-1.5 text-[11px] text-slate-400 font-mono">KES</span>
                         <input
                           type="number"
                           min="0"
@@ -389,7 +409,7 @@ export default function GivingPage() {
                           onChange={(e) =>
                             updateItemAmount(item.id, parseFloat(e.target.value) || 0)
                           }
-                          className="w-full bg-stone-50 border border-stone-200 rounded-lg px-2.5 py-1.5 text-xs font-mono font-semibold text-right text-stone-900 focus:bg-white focus:outline-none focus:border-[#001f44]"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-right text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                           placeholder="0"
                         />
                       </div>
@@ -400,33 +420,32 @@ export default function GivingPage() {
 
               {/* Right Column: Checkout Panel (STK vs Manual vs Pledge) */}
               <div className="lg:col-span-5 space-y-4">
-                <div className="bg-white rounded-2xl p-6 border border-stone-200/90 shadow-sm space-y-5">
-                  
+                <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 border border-blue-200/70 shadow-xs space-y-5">
                   {/* Summary Total */}
-                  <div className="border-b border-stone-100 pb-3 flex items-baseline justify-between">
+                  <div className="border-b border-slate-100 pb-3 flex items-baseline justify-between">
                     <div>
-                      <span className="text-[10px] uppercase font-mono tracking-wider text-stone-400 block font-semibold">
+                      <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block font-bold">
                         Planned Envelope Total
                       </span>
-                      <div className="text-2xl font-bold text-amber-800 font-mono mt-0.5">
+                      <div className="text-2xl font-extrabold text-blue-900 font-mono mt-0.5">
                         KES {totalGiving.toLocaleString()}
                       </div>
                     </div>
 
-                    <span className="text-[10px] font-medium text-stone-500 bg-stone-100 px-2 py-0.5 rounded">
-                      {givingItems.filter((i) => i.amount > 0).length} Funds Selected
+                    <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 font-mono">
+                      {givingItems.filter((i) => i.amount > 0).length} Funds
                     </span>
                   </div>
 
-                  {/* Mode Selector Tabs (STK / Manual / Pledge) */}
-                  <div className="grid grid-cols-3 gap-1 bg-stone-100 p-1 rounded-xl text-center text-xs font-medium">
+                  {/* Mode Selector Tabs */}
+                  <div className="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl text-center text-xs font-medium">
                     <button
                       type="button"
                       onClick={() => setCheckoutMode("stk")}
                       className={`py-1.5 rounded-lg transition cursor-pointer ${
                         checkoutMode === "stk"
-                          ? "bg-[#001f44] text-white shadow-xs font-semibold"
-                          : "text-stone-600 hover:text-stone-900"
+                          ? "bg-blue-600 text-white shadow-2xs font-bold"
+                          : "text-slate-600 hover:text-slate-900"
                       }`}
                     >
                       STK Push
@@ -436,8 +455,8 @@ export default function GivingPage() {
                       onClick={() => setCheckoutMode("manual")}
                       className={`py-1.5 rounded-lg transition cursor-pointer ${
                         checkoutMode === "manual"
-                          ? "bg-[#001f44] text-white shadow-xs font-semibold"
-                          : "text-stone-600 hover:text-stone-900"
+                          ? "bg-blue-600 text-white shadow-2xs font-bold"
+                          : "text-slate-600 hover:text-slate-900"
                       }`}
                     >
                       Manual
@@ -447,8 +466,8 @@ export default function GivingPage() {
                       onClick={() => setCheckoutMode("pledge")}
                       className={`py-1.5 rounded-lg transition cursor-pointer ${
                         checkoutMode === "pledge"
-                          ? "bg-[#001f44] text-white shadow-xs font-semibold"
-                          : "text-stone-600 hover:text-stone-900"
+                          ? "bg-blue-600 text-white shadow-2xs font-bold"
+                          : "text-slate-600 hover:text-slate-900"
                       }`}
                     >
                       Pledge
@@ -458,13 +477,13 @@ export default function GivingPage() {
                   {/* MODE 1: STK PUSH */}
                   {checkoutMode === "stk" && (
                     <div className="space-y-3">
-                      <p className="text-xs text-stone-500 font-serif leading-relaxed">
+                      <p className="text-xs text-slate-500 leading-relaxed">
                         Trigger a direct Safaricom PIN request to your phone for <strong>KES {totalGiving.toLocaleString()}</strong>.
                       </p>
 
-                      <form onSubmit={handleStkPush} className="space-y-2.5">
+                      <form onSubmit={handleStkPush} className="space-y-3">
                         <div>
-                          <label className="block text-[11px] font-medium text-stone-700 mb-1">
+                          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
                             Safaricom Mobile Number
                           </label>
                           <input
@@ -473,26 +492,27 @@ export default function GivingPage() {
                             placeholder="0712 345 678"
                             value={stkPhone}
                             onChange={(e) => setStkPhone(e.target.value)}
-                            className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs font-mono text-stone-900 focus:bg-white focus:outline-none focus:border-[#001f44]"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                           />
                         </div>
 
                         <button
                           type="submit"
                           disabled={stkStatus === "sending" || totalGiving <= 0}
-                          className="w-full bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white font-medium py-2.5 rounded-xl text-xs transition cursor-pointer shadow-sm"
+                          className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
                         >
-                          {stkStatus === "sending" ? "Dispatched to phone..." : "Send M-PESA Prompt →"}
+                          <Smartphone className="w-3.5 h-3.5" />
+                          <span>{stkStatus === "sending" ? "Dispatched to phone..." : "Send M-PESA Prompt →"}</span>
                         </button>
                       </form>
 
                       {stkStatus === "sent" && (
-                        <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-serif">
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
                           ✓ {stkMessage}
                         </div>
                       )}
                       {stkStatus === "error" && (
-                        <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-serif">
+                        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
                           {stkMessage}
                         </div>
                       )}
@@ -501,15 +521,15 @@ export default function GivingPage() {
 
                   {/* MODE 2: MANUAL PAYBILL */}
                   {checkoutMode === "manual" && (
-                    <div className="space-y-3 bg-stone-50 p-4 rounded-xl border border-stone-200/80 text-xs text-stone-600 font-serif">
-                      <span className="font-semibold text-stone-800 block font-sans">
+                    <div className="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs text-slate-600">
+                      <span className="font-bold text-slate-900 block">
                         Manual Paybill Instructions:
                       </span>
-                      <ol className="list-decimal list-inside space-y-1.5 leading-relaxed">
+                      <ol className="list-decimal list-inside space-y-1.5 leading-relaxed font-mono text-[11px]">
                         <li>M-PESA &rarr; Lipa na M-PESA &rarr; <strong>Paybill</strong></li>
-                        <li>Business No: <strong className="font-mono text-stone-900">752922</strong></li>
-                        <li>Account No: <strong className="font-mono text-stone-900">Tithe / Offering / Name</strong></li>
-                        <li>Amount: <strong className="font-mono text-stone-900">KES {totalGiving.toLocaleString()}</strong></li>
+                        <li>Business No: <strong className="text-slate-900 font-bold">752922</strong></li>
+                        <li>Account No: <strong className="text-blue-700 font-bold">Tithe / Offering / Name</strong></li>
+                        <li>Amount: <strong className="text-slate-900 font-bold">KES {totalGiving.toLocaleString()}</strong></li>
                       </ol>
                     </div>
                   )}
@@ -517,31 +537,31 @@ export default function GivingPage() {
                   {/* MODE 3: DIGITAL PLEDGE */}
                   {checkoutMode === "pledge" && (
                     <div className="space-y-3">
-                      <p className="text-xs text-stone-500 font-serif">
-                        Record a future commitment directly into the treasury register.
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Record a future commitment directly into the church stewardship register.
                       </p>
 
                       {pledgeStatus === "success" ? (
-                        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-center space-y-1">
-                          <p className="text-xs font-semibold">✓ Pledge Committed</p>
-                          <p className="text-[11px] font-serif">Thank you for supporting God&apos;s sanctuary.</p>
+                        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-center space-y-1">
+                          <p className="text-xs font-bold">✓ Pledge Committed</p>
+                          <p className="text-[11px]">Thank you for supporting God&apos;s sanctuary.</p>
                           <button
                             type="button"
                             onClick={() => setPledgeStatus("idle")}
-                            className="text-[11px] text-[#001f44] font-semibold underline pt-1 cursor-pointer"
+                            className="text-[11px] text-blue-700 font-bold underline pt-1 cursor-pointer"
                           >
                             New Pledge
                           </button>
                         </div>
                       ) : (
-                        <form onSubmit={handlePledgeSubmit} className="space-y-2">
+                        <form onSubmit={handlePledgeSubmit} className="space-y-2.5">
                           <input
                             required
                             type="text"
                             placeholder="Full Name"
                             value={pledgeData.fullName}
                             onChange={(e) => setPledgeData({ ...pledgeData, fullName: e.target.value })}
-                            className="w-full bg-stone-50 border border-stone-300 rounded-lg px-2.5 py-1.5 text-xs text-stone-900 focus:outline-none focus:border-[#001f44]"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500"
                           />
                           <input
                             required
@@ -549,13 +569,13 @@ export default function GivingPage() {
                             placeholder="Phone (07...)"
                             value={pledgeData.phoneNumber}
                             onChange={(e) => setPledgeData({ ...pledgeData, phoneNumber: e.target.value })}
-                            className="w-full bg-stone-50 border border-stone-300 rounded-lg px-2.5 py-1.5 text-xs font-mono text-stone-900 focus:outline-none focus:border-[#001f44]"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-500"
                           />
                           <div className="grid grid-cols-2 gap-2">
                             <select
                               value={pledgeData.frequency}
                               onChange={(e) => setPledgeData({ ...pledgeData, frequency: e.target.value })}
-                              className="bg-stone-50 border border-stone-300 rounded-lg px-2 py-1.5 text-xs text-stone-900 focus:outline-none"
+                              className="bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs text-slate-900 focus:outline-none"
                             >
                               <option value="Weekly">Weekly</option>
                               <option value="Monthly">Monthly</option>
@@ -568,13 +588,13 @@ export default function GivingPage() {
                               placeholder="Amount"
                               value={pledgeData.amount}
                               onChange={(e) => setPledgeData({ ...pledgeData, amount: e.target.value })}
-                              className="bg-stone-50 border border-stone-300 rounded-lg px-2.5 py-1.5 text-xs font-mono text-stone-900 focus:outline-none"
+                              className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none"
                             />
                           </div>
                           <select
                             value={pledgeData.cause}
                             onChange={(e) => setPledgeData({ ...pledgeData, cause: e.target.value })}
-                            className="w-full bg-stone-50 border border-stone-300 rounded-lg px-2 py-1.5 text-xs text-stone-900 focus:outline-none"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none"
                           >
                             <option value="Church Building / Renovation">Sanctuary Renovation</option>
                             <option value="Local Church Budget">Church Budget</option>
@@ -584,7 +604,7 @@ export default function GivingPage() {
                           <button
                             type="submit"
                             disabled={pledgeStatus === "submitting"}
-                            className="w-full bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs py-2 rounded-lg transition cursor-pointer"
+                            className="w-full bg-amber-400 hover:bg-amber-300 text-blue-950 font-bold text-xs py-2.5 rounded-xl transition cursor-pointer shadow-xs"
                           >
                             {pledgeStatus === "submitting" ? "Recording..." : "Record Pledge →"}
                           </button>
@@ -595,40 +615,44 @@ export default function GivingPage() {
                 </div>
 
                 {/* Treasury Inquiries Compact Footer */}
-                <div className="bg-white rounded-2xl p-4 border border-stone-200/90 shadow-sm flex items-center justify-between text-xs">
+                <div className="bg-white/85 backdrop-blur-md rounded-2xl p-4 border border-blue-100 shadow-xs flex items-center justify-between text-xs">
                   <div>
-                    <span className="font-semibold text-stone-800 block">Treasury Support</span>
+                    <span className="font-semibold text-slate-800 block">Treasury Support</span>
                     <a
                       href={`mailto:${churchEmail}`}
-                      className="text-stone-500 hover:text-amber-800 font-mono text-[11px]"
+                      className="text-slate-500 hover:text-blue-700 font-mono text-[11px]"
                     >
                       {churchEmail}
                     </a>
                   </div>
                   <Link
                     href="/care"
-                    className="text-[#001f44] font-semibold hover:underline text-[11px]"
+                    className="text-blue-600 font-bold hover:underline text-[11px]"
                   >
-                    Request Envelope &rarr;
+                    Request Physical Envelope &rarr;
                   </Link>
                 </div>
               </div>
+            </div>
 
+            {/* Live Verification Widget Component */}
+            <div className="pt-4">
+              <GivingVerification />
             </div>
           </>
         ) : (
           /* TAB 2: MY STEWARDSHIP STATEMENT (OTP PROTECTED) */
-          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-sm space-y-6">
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-blue-200/70 shadow-xs space-y-6">
             {otpStage !== "verified" ? (
               <div className="max-w-md mx-auto text-center space-y-4 py-8">
-                <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center mx-auto">
-                  <AdventistLogo className="w-6 h-6 text-[#001f44]" />
+                <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-100">
+                  <Lock className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-2xl font-serif text-[#001f44]">
+                  <h3 className="text-2xl font-serif text-blue-950 font-normal">
                     Member Stewardship Statement
                   </h3>
-                  <p className="text-xs text-stone-500 font-serif">
+                  <p className="text-xs text-slate-500">
                     Access your official tithe and offering contributions securely via your phone number.
                   </p>
                 </div>
@@ -636,7 +660,7 @@ export default function GivingPage() {
                 {otpStage === "phone" ? (
                   <form onSubmit={handleRequestOtp} className="space-y-3 pt-2 text-left">
                     <div>
-                      <label className="block text-xs font-medium text-stone-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         M-PESA Phone Number
                       </label>
                       <input
@@ -645,13 +669,13 @@ export default function GivingPage() {
                         placeholder="0712 345 678"
                         value={otpPhone}
                         onChange={(e) => setOtpPhone(e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-xs font-mono text-stone-900 focus:bg-white focus:outline-none focus:border-[#001f44]"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={otpLoading}
-                      className="w-full bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium py-2.5 rounded-xl transition cursor-pointer"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-xl transition cursor-pointer shadow-xs"
                     >
                       {otpLoading ? "Sending SMS Code..." : "Send Verification Code →"}
                     </button>
@@ -659,7 +683,7 @@ export default function GivingPage() {
                 ) : (
                   <form onSubmit={handleVerifyOtp} className="space-y-3 pt-2 text-left">
                     <div>
-                      <label className="block text-xs font-medium text-stone-700 mb-1">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
                         4-Digit Verification Code
                       </label>
                       <input
@@ -669,13 +693,13 @@ export default function GivingPage() {
                         placeholder="e.g. 7529"
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value)}
-                        className="w-full text-center tracking-widest bg-stone-50 border border-stone-300 rounded-lg px-3 py-2 text-base font-mono font-bold text-stone-900 focus:bg-white focus:outline-none focus:border-[#001f44]"
+                        className="w-full text-center tracking-widest bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-base font-mono font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-blue-500"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={otpLoading}
-                      className="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-medium py-2.5 rounded-xl transition cursor-pointer"
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-xs"
                     >
                       {otpLoading ? "Verifying..." : "View My Statement →"}
                     </button>
@@ -683,7 +707,7 @@ export default function GivingPage() {
                       <button
                         type="button"
                         onClick={() => setOtpStage("phone")}
-                        className="text-[11px] text-stone-500 hover:underline cursor-pointer"
+                        className="text-[11px] text-slate-500 hover:underline cursor-pointer"
                       >
                         ← Change Phone Number
                       </button>
@@ -692,12 +716,12 @@ export default function GivingPage() {
                 )}
 
                 {otpNotice && (
-                  <p className="text-[11px] text-stone-500 font-serif bg-stone-50 p-2.5 rounded border border-stone-200">
+                  <p className="text-[11px] text-slate-600 bg-blue-50 p-2.5 rounded-xl border border-blue-100">
                     {otpNotice}
                   </p>
                 )}
                 {otpError && (
-                  <p className="text-xs text-rose-600 bg-rose-50 p-2 rounded border border-rose-200">
+                  <p className="text-xs text-rose-600 bg-rose-50 p-2.5 rounded-xl border border-rose-200">
                     {otpError}
                   </p>
                 )}
@@ -705,16 +729,16 @@ export default function GivingPage() {
             ) : (
               /* VERIFIED STATEMENT VIEW */
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                   <div>
-                    <span className="text-xs uppercase tracking-wider font-semibold text-amber-800 block">
+                    <span className="text-xs uppercase tracking-wider font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100 block w-fit mb-1">
                       Official Church Statement
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-serif text-[#001f44]">
+                    <h3 className="text-xl sm:text-2xl font-serif text-blue-950 font-normal">
                       Stewardship Contributions
                     </h3>
-                    <p className="text-xs text-stone-500 font-serif">
-                      Account Number: <strong className="font-mono text-stone-800">+{statementData?.phone}</strong>
+                    <p className="text-xs text-slate-500">
+                      Account Number: <strong className="font-mono text-slate-800">+{statementData?.phone}</strong>
                     </p>
                   </div>
 
@@ -722,9 +746,10 @@ export default function GivingPage() {
                     <button
                       type="button"
                       onClick={() => window.print()}
-                      className="bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-medium px-3.5 py-2 rounded-lg border border-stone-300 transition cursor-pointer"
+                      className="bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold px-3.5 py-2 rounded-xl border border-slate-200 transition cursor-pointer flex items-center gap-1.5 shadow-2xs"
                     >
-                      Print
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Print</span>
                     </button>
                     <button
                       type="button"
@@ -733,7 +758,7 @@ export default function GivingPage() {
                         setStatementData(null);
                         setOtpCode("");
                       }}
-                      className="text-stone-500 hover:text-stone-900 text-xs px-2 py-2 cursor-pointer"
+                      className="text-slate-500 hover:text-slate-900 text-xs px-2 py-2 cursor-pointer"
                     >
                       Exit
                     </button>
@@ -742,35 +767,35 @@ export default function GivingPage() {
 
                 {/* Summary Metrics */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-                    <span className="text-[10px] uppercase font-semibold text-stone-500 tracking-wider block">
+                  <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+                    <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider block">
                       Total Contributed
                     </span>
-                    <span className="text-lg font-bold font-mono text-[#001f44]">
+                    <span className="text-lg font-bold font-mono text-slate-900">
                       KES {statementData?.totals.total.toLocaleString()}
                     </span>
                   </div>
-                  <div className="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-                    <span className="text-[10px] uppercase font-semibold text-amber-800 tracking-wider block">
+                  <div className="bg-blue-50/60 p-3.5 rounded-2xl border border-blue-100">
+                    <span className="text-[10px] uppercase font-bold text-blue-800 tracking-wider block">
                       Tithe
                     </span>
-                    <span className="text-lg font-bold font-mono text-amber-900">
+                    <span className="text-lg font-bold font-mono text-blue-900">
                       KES {statementData?.totals.tithe.toLocaleString()}
                     </span>
                   </div>
-                  <div className="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-                    <span className="text-[10px] uppercase font-semibold text-emerald-800 tracking-wider block">
+                  <div className="bg-emerald-50/60 p-3.5 rounded-2xl border border-emerald-100">
+                    <span className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider block">
                       Church Budget
                     </span>
                     <span className="text-lg font-bold font-mono text-emerald-900">
                       KES {statementData?.totals.combinedOffering.toLocaleString()}
                     </span>
                   </div>
-                  <div className="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-                    <span className="text-[10px] uppercase font-semibold text-blue-800 tracking-wider block">
+                  <div className="bg-indigo-50/60 p-3.5 rounded-2xl border border-indigo-100">
+                    <span className="text-[10px] uppercase font-bold text-indigo-800 tracking-wider block">
                       Building
                     </span>
-                    <span className="text-lg font-bold font-mono text-blue-900">
+                    <span className="text-lg font-bold font-mono text-indigo-900">
                       KES {statementData?.totals.buildingFund.toLocaleString()}
                     </span>
                   </div>
@@ -778,25 +803,25 @@ export default function GivingPage() {
 
                 {/* Visual Proportion Breakdown Bar */}
                 {statementData && statementData.totals.total > 0 && (
-                  <div className="space-y-2 bg-stone-50 p-3.5 rounded-xl border border-stone-200">
+                  <div className="space-y-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-stone-700">Giving Allocation Distribution</span>
-                      <span className="text-stone-500 font-mono text-[11px]">100% Accounted</span>
+                      <span className="font-semibold text-slate-700">Giving Allocation Distribution</span>
+                      <span className="text-slate-500 font-mono text-[11px]">100% Accounted</span>
                     </div>
 
-                    <div className="w-full h-3 rounded-full bg-stone-200 flex overflow-hidden">
+                    <div className="w-full h-3 rounded-full bg-slate-200 flex overflow-hidden">
                       <div
                         style={{
                           width: `${(statementData.totals.tithe / statementData.totals.total) * 100}%`,
                         }}
-                        className="bg-amber-600 h-full"
+                        className="bg-amber-500 h-full"
                         title="Tithe"
                       />
                       <div
                         style={{
                           width: `${(statementData.totals.combinedOffering / statementData.totals.total) * 100}%`,
                         }}
-                        className="bg-emerald-600 h-full"
+                        className="bg-emerald-500 h-full"
                         title="Combined Offering"
                       />
                       <div
@@ -812,36 +837,36 @@ export default function GivingPage() {
 
                 {/* Transactions Table */}
                 <div className="space-y-2">
-                  <h4 className="text-sm font-serif text-[#001f44]">
+                  <h4 className="text-sm font-bold text-slate-900">
                     Recorded Remittances
                   </h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="border-b border-stone-200 text-[10px] font-semibold uppercase tracking-wider text-stone-500 bg-stone-50">
-                          <th className="py-2 px-3">Date</th>
-                          <th className="py-2 px-3">Receipt Code</th>
-                          <th className="py-2 px-3">Allocation Tag</th>
-                          <th className="py-2 px-3 text-right">Amount (KES)</th>
+                        <tr className="border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/60">
+                          <th className="py-2.5 px-3">Date</th>
+                          <th className="py-2.5 px-3">Receipt Code</th>
+                          <th className="py-2.5 px-3">Allocation Tag</th>
+                          <th className="py-2.5 px-3 text-right">Amount (KES)</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-stone-100 font-serif">
+                      <tbody className="divide-y divide-slate-100">
                         {statementData?.records.map((r) => (
-                          <tr key={r.id} className="hover:bg-stone-50/60">
-                            <td className="py-2.5 px-3 text-stone-600">
+                          <tr key={r.id} className="hover:bg-blue-50/40">
+                            <td className="py-2.5 px-3 text-slate-600">
                               {new Date(r.timestamp).toLocaleDateString("en-GB", {
                                 day: "numeric",
                                 month: "short",
                                 year: "numeric",
                               })}
                             </td>
-                            <td className="py-2.5 px-3 font-mono font-medium text-stone-900">
+                            <td className="py-2.5 px-3 font-mono font-bold text-slate-900">
                               {r.receiptNumber}
                             </td>
-                            <td className="py-2.5 px-3 text-stone-600">
+                            <td className="py-2.5 px-3 text-slate-600">
                               {r.accountReference}
                             </td>
-                            <td className="py-2.5 px-3 font-mono text-right font-medium text-[#001f44]">
+                            <td className="py-2.5 px-3 font-mono text-right font-bold text-blue-900">
                               {r.amount.toLocaleString()}
                             </td>
                           </tr>

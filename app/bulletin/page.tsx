@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getLatestBulletin, BulletinData } from "@/lib/bulletin";
-import AdventistLogo from "../components/AdventistLogo";
+import AdventistLogo from "../../components/AdventistLogo";
 
 export default function BulletinPage() {
   const [bulletin, setBulletin] = useState<BulletinData | null>(null);

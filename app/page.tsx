@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import AdventistLogo from "./components/AdventistLogo";
-import FloatingAnnouncementBanner from "./components/FloatingAnnouncementBanner";
+import AdventistLogo from "../components/AdventistLogo";
+import FloatingAnnouncementBanner from "../components/FloatingAnnouncementBanner";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { currentAnnouncement } from "@/data/announcements";
 import {
@@ -15,6 +15,7 @@ import {
   campMeetingPoster,
   campMeetingPdf,
 } from "@/data/campMeeting";
+import { ArrowRight, Download } from "lucide-react";
 
 export default function HomePage() {
   const { bulletinUrl, liveStreamUrl } = useSiteSettings();
@@ -26,8 +27,10 @@ export default function HomePage() {
 
   // Helper to extract a YouTube Video ID reliably from various URL formats
   const extractVideoId = (url: string | null | undefined): string | null => {
-    if (!url || typeof url !== "string" || url.trim() === "" || url === "#") return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    if (!url || typeof url !== "string" || url.trim() === "" || url === "#")
+      return null;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
@@ -91,7 +94,8 @@ export default function HomePage() {
   ];
 
   useEffect(() => {
-    if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length <= 1) return;
+    if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length <= 1)
+      return;
     const timer = setInterval(() => {
       setSlideIdx((prev) => (prev + 1) % campMeetingSlides.length);
     }, 5000);
@@ -99,12 +103,14 @@ export default function HomePage() {
   }, []);
 
   const nextSlide = () => {
-    if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length === 0) return;
+    if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length === 0)
+      return;
     setSlideIdx((prev) => (prev + 1) % campMeetingSlides.length);
   };
 
   const prevSlide = () => {
-    if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length === 0) return;
+    if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length === 0)
+      return;
     setSlideIdx(
       (prev) => (prev - 1 + campMeetingSlides.length) % campMeetingSlides.length
     );
@@ -116,10 +122,17 @@ export default function HomePage() {
       : publications.filter((p) => p.category === pubFilter);
 
   return (
-    <main className="bg-[#fcfbf9] text-stone-900 pb-32">
+    <main
+      style={{
+        background:
+          "linear-gradient(135deg, #ffffff 0%, #e0edff 50%, #bfdbfe 100%)",
+        minHeight: "100vh",
+      }}
+      className="text-slate-800 pb-32 font-sans selection:bg-blue-600 selection:text-white"
+    >
       <FloatingAnnouncementBanner />
 
-      {/* 1. HERO - Warm Navy Sanctuary with Choir Background */}
+      {/* 1. HERO - Deep Navy Sanctuary with Choir Backdrop */}
       <section className="relative bg-[#001f44] text-white pt-36 sm:pt-44 pb-20 px-6 overflow-hidden">
         {/* Background Choir Image with Deep Navy Gradient */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
@@ -141,8 +154,9 @@ export default function HomePage() {
             A Christ-Centered Sanctuary in the Heart of Jericho
           </h1>
 
-          <blockquote className="text-stone-200 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1">
-            &ldquo;Come unto me, all ye that labour and are heavy laden, and I will give you rest.&rdquo;
+          <blockquote className="text-stone-200 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
+            &ldquo;Come unto me, all ye that labour and are heavy laden, and I
+            will give you rest.&rdquo;
             <cite className="block text-xs not-italic font-sans font-medium text-amber-300 mt-1.5">
               &mdash; Matthew 11:28
             </cite>
@@ -171,7 +185,7 @@ export default function HomePage() {
               className="text-stone-200 hover:text-white font-medium text-sm px-3 py-3 transition inline-flex items-center gap-1.5"
             >
               <span>Watch Sermons</span>
-              <span className="text-xs">&rarr;</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
@@ -183,7 +197,9 @@ export default function HomePage() {
               <span className="text-[11px] uppercase tracking-wider text-stone-300 block">
                 Sabbath School
               </span>
-              <p className="text-xl font-medium text-stone-100 mt-0.5">08:00 AM</p>
+              <p className="text-xl font-medium text-stone-100 mt-0.5">
+                08:00 AM
+              </p>
               <p className="text-xs text-stone-300 mt-0.5">Study &amp; Song</p>
             </div>
 
@@ -191,7 +207,9 @@ export default function HomePage() {
               <span className="text-[11px] uppercase tracking-wider text-amber-300 block font-semibold">
                 Divine Service
               </span>
-              <p className="text-xl font-semibold text-amber-300 mt-0.5">11:00 AM</p>
+              <p className="text-xl font-semibold text-amber-300 mt-0.5">
+                11:00 AM
+              </p>
               <p className="text-xs text-stone-300 mt-0.5">Worship Hour</p>
             </div>
 
@@ -199,7 +217,9 @@ export default function HomePage() {
               <span className="text-[11px] uppercase tracking-wider text-stone-300 block">
                 Youth Fellowship
               </span>
-              <p className="text-xl font-medium text-stone-100 mt-0.5">02:00 PM</p>
+              <p className="text-xl font-medium text-stone-100 mt-0.5">
+                02:00 PM
+              </p>
               <p className="text-xs text-stone-300 mt-0.5">AY Ministry</p>
             </div>
 
@@ -207,44 +227,52 @@ export default function HomePage() {
               <span className="text-[11px] uppercase tracking-wider text-stone-300 block">
                 Missionary Visit
               </span>
-              <p className="text-xl font-medium text-stone-100 mt-0.5">04:00 PM</p>
-              <p className="text-xs text-stone-300 mt-0.5">Community Outreach</p>
+              <p className="text-xl font-medium text-stone-100 mt-0.5">
+                04:00 PM
+              </p>
+              <p className="text-xs text-stone-300 mt-0.5">
+                Community Outreach
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. SANCTUARY MEDIA & BROADCAST - Safe Embed or Choir Standby Card */}
+      {/* 2. SANCTUARY MEDIA & BROADCAST */}
       <section className="max-w-5xl mx-auto px-6 -mt-8 relative z-20">
-        <div className="bg-gradient-to-r from-emerald-950/90 via-slate-900 to-[#001737] border border-emerald-500/25 rounded-3xl p-5 sm:p-7 backdrop-blur-xl shadow-2xl text-white">
+        <div className="bg-slate-900/95 border border-blue-400/30 rounded-3xl p-5 sm:p-7 backdrop-blur-xl shadow-2xl text-white">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2.5">
               <span className="relative flex h-3 w-3">
                 <span
                   className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    activeVideoId ? "bg-red-400" : "bg-emerald-400"
+                    activeVideoId ? "bg-red-400" : "bg-blue-400"
                   }`}
                 />
                 <span
                   className={`relative inline-flex rounded-full h-3 w-3 ${
-                    activeVideoId ? "bg-red-500" : "bg-emerald-500"
+                    activeVideoId ? "bg-red-500" : "bg-blue-500"
                   }`}
                 />
               </span>
               <div>
                 <h2 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2">
-                  <span>{activeVideoId ? "Sanctuary Live Stream" : "Sanctuary Sermons & Broadcasts"}</span>
+                  <span>
+                    {activeVideoId
+                      ? "Sanctuary Live Stream"
+                      : "Sanctuary Sermons & Broadcasts"}
+                  </span>
                   <span
                     className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded ${
                       activeVideoId
                         ? "bg-red-500/20 text-red-300 border border-red-500/30"
-                        : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
                     }`}
                   >
                     {activeVideoId ? "LIVE" : "NEXT SABBATH"}
                   </span>
                 </h2>
-                <p className="text-xs text-stone-300">
+                <p className="text-xs text-blue-200">
                   Jericho SDA Church Official Broadcast ({channelHandle})
                 </p>
               </div>
@@ -254,10 +282,10 @@ export default function HomePage() {
               href={defaultChannelUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-semibold transition border border-red-500/30 w-fit"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-semibold transition border border-red-500/30 w-fit shadow-xs"
             >
               <span>Watch on YouTube</span>
-              <span className="text-xs">&rarr;</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
@@ -273,11 +301,10 @@ export default function HomePage() {
               />
             ) : (
               <div className="relative w-full h-full flex flex-col items-center justify-center text-center p-6">
-                {/* Choir Backdrop for Standby */}
                 <img
                   src="/choir-hero.jpg"
                   alt="Jericho SDA Sanctuary Choir"
-                  className="absolute inset-0 w-full h-full object-cover object-top opacity-30"
+                  className="absolute inset-0 w-full h-full object-cover object-top opacity-25"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-900/60" />
 
@@ -289,10 +316,12 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="text-base sm:text-lg font-serif font-semibold text-white">
-                      Live Broadcast Offline
+                      Live Broadcast Standby
                     </h3>
-                    <p className="text-xs text-stone-300 mt-1 leading-relaxed">
-                      Divine Service streams live every Sabbath from 11:00 AM. Browse previous sermons and divine service choral music on our channel.
+                    <p className="text-xs text-blue-200 mt-1 leading-relaxed">
+                      Divine Service streams live every Sabbath morning from
+                      11:00 AM. Browse previous sermons and choral hymns on our
+                      channel.
                     </p>
                   </div>
                   <a
@@ -302,7 +331,7 @@ export default function HomePage() {
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold transition shadow-md"
                   >
                     <span>Browse Recorded Sermons</span>
-                    <span>&rarr;</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
               </div>
@@ -311,59 +340,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. QUICK ACTION TILES */}
-      <section className="max-w-5xl mx-auto px-6 mt-8 relative z-10">
+      {/* 3. QUICK ACTION TILES - Translucent Frosted Cards */}
+      <section className="max-w-5xl mx-auto px-6 mt-10 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/care"
-            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
+            className="bg-white/85 backdrop-blur-md rounded-2xl p-5 border border-blue-100 hover:border-blue-400/80 hover:bg-white shadow-xs hover:shadow-md transition group flex flex-col justify-between"
           >
-            <span className="text-xs font-semibold text-amber-700 block">Pastoral Care</span>
-            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
-              Request Visit &rarr;
-            </h2>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Home, hospital, or virtual prayer with pastors and elders.
-            </p>
+            <div>
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">
+                Pastoral Care
+              </span>
+              <h2 className="font-bold text-slate-900 group-hover:text-blue-700 mt-1 text-base flex items-center justify-between">
+                Request Visit
+                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-600 transition" />
+              </h2>
+              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                Home, hospital, or virtual prayer with pastors and assigned
+                elders.
+              </p>
+            </div>
           </Link>
 
           <Link
-            href="/estates"
-            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
+            href="/members/cells"
+            className="bg-white/85 backdrop-blur-md rounded-2xl p-5 border border-blue-100 hover:border-blue-400/80 hover:bg-white shadow-xs hover:shadow-md transition group flex flex-col justify-between"
           >
-            <span className="text-xs font-semibold text-amber-700 block">Community</span>
-            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
-              Prayer Cells &rarr;
-            </h2>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Find midweek small groups across Nairobi Eastlands.
-            </p>
+            <div>
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">
+                Zonal Fellowship
+              </span>
+              <h2 className="font-bold text-slate-900 group-hover:text-blue-700 mt-1 text-base flex items-center justify-between">
+                Prayer Cells
+                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-600 transition" />
+              </h2>
+              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                Locate midweek prayer cells across Buruburu, Lumumba, Makadara,
+                and Donholm.
+              </p>
+            </div>
           </Link>
 
           <Link
             href="/leadership"
-            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
+            className="bg-white/85 backdrop-blur-md rounded-2xl p-5 border border-blue-100 hover:border-blue-400/80 hover:bg-white shadow-xs hover:shadow-md transition group flex flex-col justify-between"
           >
-            <span className="text-xs font-semibold text-amber-700 block">Leadership</span>
-            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
-              Officers Directory &rarr;
-            </h2>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Pastoral team, elders, secretariat, and department heads.
-            </p>
+            <div>
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">
+                Church Leadership
+              </span>
+              <h2 className="font-bold text-slate-900 group-hover:text-blue-700 mt-1 text-base flex items-center justify-between">
+                Officers Directory
+                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-600 transition" />
+              </h2>
+              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                Pastoral team, elders council, church clerks, and departmental
+                leaders.
+              </p>
+            </div>
           </Link>
 
           <Link
             href="/camp-meeting"
-            className="bg-white rounded-xl p-5 border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition group"
+            className="bg-white/85 backdrop-blur-md rounded-2xl p-5 border border-blue-100 hover:border-blue-400/80 hover:bg-white shadow-xs hover:shadow-md transition group flex flex-col justify-between"
           >
-            <span className="text-xs font-semibold text-amber-700 block">Annual Feast</span>
-            <h2 className="font-semibold text-stone-900 group-hover:text-[#001f44] mt-1 text-base">
-              Camp Meeting &rarr;
-            </h2>
-            <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-              Theme guides, daily recordings, and camp memories.
-            </p>
+            <div>
+              <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">
+                Spiritual Feast
+              </span>
+              <h2 className="font-bold text-slate-900 group-hover:text-amber-800 mt-1 text-base flex items-center justify-between">
+                Camp Meeting
+                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-amber-600 transition" />
+              </h2>
+              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                Theme guides, audio recordings, song sheets, and camp
+                reflections.
+              </p>
+            </div>
           </Link>
         </div>
       </section>
@@ -371,7 +424,7 @@ export default function HomePage() {
       {/* 4. ANNOUNCEMENT / MISSION SPOTLIGHT */}
       {currentAnnouncement?.active && (
         <section className="max-w-5xl mx-auto px-6 mt-16">
-          <div className="relative rounded-2xl overflow-hidden shadow-lg bg-[#001737] text-white">
+          <div className="relative rounded-3xl overflow-hidden shadow-lg bg-blue-950 text-white border border-blue-400/30">
             <div className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
               <video
                 autoPlay
@@ -388,26 +441,26 @@ export default function HomePage() {
 
             <div className="relative z-10 p-8 sm:p-12 max-w-2xl space-y-4">
               <div className="flex items-center gap-3">
-                <span className="bg-amber-400 text-[#001737] font-semibold text-xs uppercase tracking-wider px-2.5 py-1 rounded">
+                <span className="bg-amber-400 text-blue-950 font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-md">
                   {currentAnnouncement.badge}
                 </span>
-                <span className="text-xs text-stone-300">
+                <span className="text-xs text-blue-200">
                   {currentAnnouncement.dateOrQuarter}
                 </span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-normal tracking-tight text-white leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-white leading-tight font-normal">
                 {currentAnnouncement.title}
               </h2>
 
-              <p className="text-sm text-stone-200 font-serif leading-relaxed">
+              <p className="text-sm text-blue-100 font-serif leading-relaxed">
                 {currentAnnouncement.subtitle}
               </p>
 
-              <ul className="space-y-1.5 pt-1 text-xs text-stone-200">
+              <ul className="space-y-1.5 pt-1 text-xs text-blue-100">
                 {currentAnnouncement.highlightPoints?.map((point, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <span className="text-amber-400 font-semibold">&bull;</span>
+                    <span className="text-amber-400 font-bold">&bull;</span>
                     <span>{point}</span>
                   </li>
                 ))}
@@ -415,8 +468,11 @@ export default function HomePage() {
 
               <div className="pt-3 flex flex-wrap gap-3 items-center">
                 <Link
-                  href={currentAnnouncement.ctaLink || "/departments/adventist-youth"}
-                  className="bg-amber-400 hover:bg-amber-300 text-[#001737] font-semibold text-xs uppercase tracking-wider py-3 px-5 rounded-lg transition"
+                  href={
+                    currentAnnouncement.ctaLink ||
+                    "/departments/adventist-youth"
+                  }
+                  className="bg-amber-400 hover:bg-amber-300 text-blue-950 font-bold text-xs uppercase tracking-wider py-3 px-5 rounded-xl transition shadow-md"
                 >
                   {currentAnnouncement.ctaLabel || "Read Mission Plan"} &rarr;
                 </Link>
@@ -424,7 +480,7 @@ export default function HomePage() {
                   href="/one-voice-cover.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white/10 hover:bg-white/20 text-white font-medium text-xs uppercase tracking-wider py-3 px-4 rounded-lg transition"
+                  className="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-wider py-3 px-4 rounded-xl transition border border-white/20"
                 >
                   View Poster
                 </a>
@@ -436,13 +492,14 @@ export default function HomePage() {
 
       {/* 5. PUBLICATIONS SHELF */}
       <section className="max-w-5xl mx-auto px-6 pt-20">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-8 pb-3 border-b border-stone-200 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-8 pb-3 border-b border-blue-200 gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44]">
+            <h2 className="text-2xl sm:text-3xl font-serif text-blue-950 font-normal">
               Publications &amp; Bulletins
             </h2>
-            <p className="text-xs sm:text-sm text-stone-500 mt-1 font-serif">
-              Download weekly service programs, study guides, and church periodicals.
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Download weekly service programs, study guides, and church
+              periodicals.
             </p>
           </div>
 
@@ -452,10 +509,10 @@ export default function HomePage() {
                 key={cat}
                 type="button"
                 onClick={() => setPubFilter(cat)}
-                className={`px-3 py-1 rounded text-xs font-medium transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                   pubFilter === cat
-                    ? "bg-[#001f44] text-white"
-                    : "bg-white text-stone-600 hover:bg-stone-100 border border-stone-200"
+                    ? "bg-blue-600 text-white shadow-xs"
+                    : "bg-white/80 text-slate-600 hover:bg-white hover:text-blue-600 border border-blue-100"
                 }`}
               >
                 {cat}
@@ -468,44 +525,44 @@ export default function HomePage() {
           {filteredPubs.map((pub) => (
             <div
               key={pub.id}
-              className="bg-white rounded-xl overflow-hidden border border-stone-200/80 shadow-sm flex flex-col justify-between"
+              className="bg-white/90 backdrop-blur-xs rounded-2xl overflow-hidden border border-blue-200/70 shadow-xs hover:shadow-md transition flex flex-col justify-between"
             >
               <div>
-                <div className="relative aspect-[3/4] overflow-hidden bg-stone-900">
+                <div className="relative aspect-[3/4] overflow-hidden bg-slate-900">
                   <img
                     src={pub.coverImage}
                     alt={pub.title}
                     className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-2.5 left-2.5 bg-black/75 text-amber-300 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded">
+                  <span className="absolute top-2.5 left-2.5 bg-blue-950/80 backdrop-blur-xs text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-amber-300/30">
                     {pub.category}
                   </span>
                 </div>
 
                 <div className="p-4">
-                  <span className="text-[10px] font-medium text-stone-400 block uppercase">
+                  <span className="text-[10px] font-bold text-blue-600 block uppercase tracking-wider">
                     {pub.issue}
                   </span>
-                  <h3 className="font-serif font-semibold text-stone-900 text-sm mt-1 leading-snug">
+                  <h3 className="font-serif font-bold text-slate-900 text-sm mt-1 leading-snug">
                     {pub.title}
                   </h3>
-                  <p className="text-xs text-stone-500 mt-1.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
                     {pub.description}
                   </p>
                 </div>
               </div>
 
               <div className="p-4 pt-0">
-                <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                   {pub.pageUrl && pub.pageUrl !== "#" ? (
                     <Link
                       href={pub.pageUrl}
-                      className="text-xs font-semibold text-[#001f44] hover:underline"
+                      className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1"
                     >
                       Read More &rarr;
                     </Link>
                   ) : (
-                    <span className="text-[11px] text-stone-400">
+                    <span className="text-[11px] font-mono text-slate-400">
                       {pub.size}
                     </span>
                   )}
@@ -514,9 +571,10 @@ export default function HomePage() {
                     <a
                       href={pub.pdfUrl}
                       download
-                      className="bg-[#001f44] hover:bg-[#001530] text-white text-xs font-medium px-3 py-1.5 rounded transition"
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow-2xs flex items-center gap-1"
                     >
-                      Download PDF
+                      <Download className="w-3 h-3" />
+                      PDF
                     </a>
                   )}
                 </div>
@@ -526,10 +584,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. WORSHIP IN MUSIC SPOTLIGHT (Featuring Choir Portrait) */}
+      {/* 6. WORSHIP IN MUSIC SPOTLIGHT */}
       <section className="max-w-5xl mx-auto px-6 pt-16">
-        <div className="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-sm flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 w-full aspect-[4/3] md:aspect-auto self-stretch relative bg-stone-900">
+        <div className="bg-white/90 backdrop-blur-xs rounded-3xl border border-blue-200/70 overflow-hidden shadow-xs flex flex-col md:flex-row items-center">
+          <div className="md:w-1/2 w-full aspect-[4/3] md:aspect-auto self-stretch relative bg-slate-900">
             <img
               src="/choir-worship.jpg"
               alt="Jericho SDA Sanctuary Choir Singing"
@@ -537,47 +595,49 @@ export default function HomePage() {
             />
           </div>
           <div className="md:w-1/2 p-8 sm:p-10 space-y-3">
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded inline-block">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full inline-block border border-blue-100">
               Music Ministry
             </span>
-            <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44] leading-snug">
+            <h2 className="text-2xl sm:text-3xl font-serif text-blue-950 leading-snug font-normal">
               Worship in Song &amp; Praise
             </h2>
-            <p className="text-xs sm:text-sm text-stone-600 font-serif leading-relaxed">
-              &ldquo;Sing unto him, sing psalms unto him: talk ye of all his wondrous works.&rdquo; 
-              Our sanctuary choirs lead the congregation in hymns of blessed hope each Sabbath morning.
+            <p className="text-xs sm:text-sm text-slate-600 font-serif leading-relaxed">
+              &ldquo;Sing unto him, sing psalms unto him: talk ye of all his
+              wondrous works.&rdquo; Our sanctuary choirs lead the congregation
+              in hymns of blessed hope each Sabbath morning.
             </p>
             <div className="pt-2">
               <a
                 href={defaultChannelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#001f44] hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
               >
                 <span>Listen to Choral Presentations on YouTube</span>
-                <span>&rarr;</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. CAMP RETROSPECTIVE */}
+      {/* 7. CAMP RETROSPECTIVE SLIDER */}
       <section className="max-w-5xl mx-auto px-6 pt-20">
-        <div className="relative rounded-2xl overflow-hidden shadow-md bg-stone-900 text-white min-h-[440px] flex flex-col justify-between p-6 sm:p-8">
+        <div className="relative rounded-3xl overflow-hidden shadow-md bg-slate-950 text-white min-h-[440px] flex flex-col justify-between p-6 sm:p-8 border border-blue-300/30">
           <div className="absolute inset-0 w-full h-full pointer-events-none">
-            {Array.isArray(campMeetingSlides) && campMeetingSlides.length > 0 && (
-              <img
-                src={campMeetingSlides[slideIdx]?.image || "/church-1.jpg"}
-                alt={campMeetingSlides[slideIdx]?.title || "Camp Slide"}
-                className="w-full h-full object-cover object-center"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            {Array.isArray(campMeetingSlides) &&
+              campMeetingSlides.length > 0 && (
+                <img
+                  src={campMeetingSlides[slideIdx]?.image || "/church-1.jpg"}
+                  alt={campMeetingSlides[slideIdx]?.title || "Camp Slide"}
+                  className="w-full h-full object-cover object-center"
+                />
+              )}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
           </div>
 
           <div className="relative z-10 flex items-center justify-between">
-            <span className="text-xs text-amber-300 font-medium tracking-wide uppercase">
+            <span className="text-xs text-amber-300 font-bold tracking-wider uppercase">
               Camp Retrospective &bull; {campMeetingYear}
             </span>
 
@@ -602,21 +662,22 @@ export default function HomePage() {
           </div>
 
           <div className="relative z-10 max-w-xl space-y-2 pt-6">
-            <span className="text-xs text-stone-300 uppercase tracking-wider block">
+            <span className="text-xs text-blue-200 uppercase tracking-wider block font-medium">
               Theme: &ldquo;{campMeetingTheme}&rdquo;
             </span>
-            <h2 className="text-xl sm:text-2xl font-serif text-white">
+            <h2 className="text-xl sm:text-2xl font-serif text-white font-normal">
               {campMeetingSlides[slideIdx]?.title}
             </h2>
-            <p className="text-xs sm:text-sm text-stone-200 font-serif leading-relaxed line-clamp-2">
+            <p className="text-xs sm:text-sm text-slate-200 font-serif leading-relaxed line-clamp-2">
               {campMeetingSlides[slideIdx]?.caption}
             </p>
             <div className="pt-2">
               <Link
                 href="/camp-meeting"
-                className="text-xs text-amber-300 hover:text-amber-200 font-semibold underline underline-offset-4"
+                className="text-xs text-amber-300 hover:text-amber-200 font-semibold underline underline-offset-4 flex items-center gap-1"
               >
-                View Full Story &amp; Photos &rarr;
+                <span>View Full Story &amp; Photos</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
@@ -625,29 +686,32 @@ export default function HomePage() {
 
       {/* 8. FAITH & INQUIRY BANNER */}
       <section id="beliefs" className="max-w-5xl mx-auto px-6 pt-20">
-        <div className="bg-white rounded-2xl border border-stone-200/90 p-8 sm:p-10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-white/90 backdrop-blur-xs rounded-3xl border border-blue-200/70 p-8 sm:p-10 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-xl space-y-2">
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded inline-block">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full inline-block border border-blue-100">
               Faith &amp; Doctrine
             </span>
-            <h2 className="text-2xl sm:text-3xl font-serif text-[#001f44] leading-snug">
+            <h2 className="text-2xl sm:text-3xl font-serif text-blue-950 leading-snug font-normal">
               Questions About Seventh-day Adventists?
             </h2>
-            <p className="text-xs sm:text-sm text-stone-600 font-serif leading-relaxed">
-              Whether you are seeking personal Bible studies, curious about the Sabbath, or exploring Adventist teachings, our pastoral team and elders are ready to walk with you.
+            <p className="text-xs sm:text-sm text-slate-600 font-serif leading-relaxed">
+              Whether you are seeking personal Bible studies, curious about the
+              Sabbath, or exploring Adventist teachings, our pastoral team and
+              elders are ready to walk with you.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <Link
               href="/care"
-              className="text-center bg-[#001f44] hover:bg-[#001633] text-white text-xs sm:text-sm font-semibold px-5 py-3 rounded-xl transition shadow-sm"
+              className="text-center bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-xl transition shadow-xs flex items-center justify-center gap-1.5"
             >
-              Ask a Pastor or Elder &rarr;
+              <span>Ask a Pastor or Elder</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
             <Link
               href="/care"
-              className="text-center bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs sm:text-sm font-medium px-4 py-3 rounded-xl transition border border-stone-200"
+              className="text-center bg-white hover:bg-blue-50 text-blue-900 text-xs sm:text-sm font-semibold px-4 py-3 rounded-xl transition border border-blue-200 shadow-2xs"
             >
               Explore Our Faith
             </Link>

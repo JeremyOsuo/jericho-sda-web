@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import AdventistLogo from "../components/AdventistLogo";
+import AdventistLogo from "../../components/AdventistLogo";
 
 export default function PledgePage() {
   const [formData, setFormData] = useState({

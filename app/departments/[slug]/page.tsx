@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import AdventistLogo from "../../components/AdventistLogo";
+import AdventistLogo from "../../../components/AdventistLogo";
 import { departments, type Department } from "@/data/departments";
 import { churchCalendar2026, type ChurchEvent } from "@/data/events";
 

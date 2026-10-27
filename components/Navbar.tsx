@@ -74,26 +74,25 @@ export default function Navbar() {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
             
-            {/* Church Brand */}
+            {/* Church Brand: Double-click jumps to Treasury on port 3000 */}
             <div
-              onDoubleClick={() => router.push("/admin")}
+              onDoubleClick={() => {
+                window.location.href = "http://localhost:3000";
+              }}
               className="flex items-center gap-2.5 shrink-0 cursor-pointer select-none"
-              title="Jericho SDA Church"
+              title="Double-click for Treasury Desk"
             >
-              <Link
-                href="/"
-                className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center shadow-sm shrink-0"
-              >
+              <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center shadow-sm shrink-0">
                 <AdventistLogo className="w-5 h-5 text-[#001f44]" />
-              </Link>
-              <Link href="/" className="leading-tight">
+              </div>
+              <div className="leading-tight">
                 <span className="text-white font-serif font-semibold text-sm tracking-wide block">
                   Jericho SDA Church
                 </span>
                 <span className="text-[10px] text-amber-300/90 block">
                   Nairobi Eastlands
                 </span>
-              </Link>
+              </div>
             </div>
 
             {/* Desktop Navigation Links */}
@@ -227,9 +226,10 @@ export default function Navbar() {
               <div
                 onDoubleClick={() => {
                   setIsMobileMenuOpen(false);
-                  router.push("/admin");
+                  window.location.href = "http://localhost:3000";
                 }}
                 className="flex items-center gap-2.5 cursor-pointer select-none"
+                title="Double-click for Treasury Desk"
               >
                 <div className="w-7 h-7 rounded bg-amber-400 flex items-center justify-center">
                   <AdventistLogo className="w-4 h-4 text-[#001f44]" />

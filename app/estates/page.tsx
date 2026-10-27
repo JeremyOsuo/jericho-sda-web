@@ -2,6 +2,17 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import {
+  MapPin,
+  Search,
+  MessageCircle,
+  Phone,
+  ShieldCheck,
+  ArrowRight,
+  Home,
+  Users,
+  Clock,
+} from "lucide-react";
 
 interface EstateGroup {
   id: string;
@@ -11,6 +22,7 @@ interface EstateGroup {
   leaderName: string;
   phone: string;
   coverageArea: string;
+  schedule?: string;
 }
 
 const ESTATE_PLACEHOLDERS: EstateGroup[] = [
@@ -19,63 +31,70 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     name: "Jericho Central Fellowship",
     zone: "Jericho",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Elder Otieno",
     phone: "+254700000001",
-    coverageArea: "Jericho Market, Social Hall area, and surrounding courts",
+    coverageArea: "Jericho Market, Social Hall area, and surrounding residential courts",
+    schedule: "Wednesdays &bull; 6:00 PM – 7:15 PM",
   },
   {
     id: "buruburu-phase-1-2",
     name: "Buruburu Phase 1 & 2 Fellowship",
     zone: "Buruburu",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Elder Mwangi",
     phone: "+254700000002",
     coverageArea: "Phase 1 courts, Phase 2, Mesora shopping centre vicinity",
+    schedule: "Wednesdays &bull; 6:30 PM – 7:30 PM",
   },
   {
     id: "buruburu-phase-3-4-5",
     name: "Buruburu Phase 3, 4 & 5 Fellowship",
     zone: "Buruburu",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Elder Mwangi / Eld. Kariuki",
     phone: "+254700000003",
     coverageArea: "Phase 3, Phase 4, Phase 5, and Mumias Road area",
+    schedule: "Wednesdays &bull; 6:30 PM – 7:30 PM",
   },
   {
     id: "maringo-ofafa",
     name: "Maringo & Ofafa Fellowship",
     zone: "Maringo",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Deacon Omondi",
     phone: "+254700000004",
     coverageArea: "Maringo residential blocks, Ofafa 1, and adjacent avenues",
+    schedule: "Wednesdays &bull; 6:00 PM – 7:00 PM",
   },
   {
     id: "lumumba-uhuru",
     name: "Lumumba & Uhuru Estate Fellowship",
     zone: "Lumumba",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Eld. Charles Omollo",
     phone: "+254700000005",
     coverageArea: "Lumumba Dispensary area, Uhuru Estate blocks",
+    schedule: "Wednesdays &bull; 6:00 PM – 7:15 PM",
   },
   {
     id: "bahati-kimathi",
     name: "Bahati & Kimathi Fellowship",
     zone: "Bahati",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Elder Mutua",
     phone: "+254700000006",
     coverageArea: "Bahati, Kimathi Estate, and near Chief's Camp",
+    schedule: "Wednesdays &bull; 6:15 PM – 7:15 PM",
   },
   {
     id: "harambee-rabai",
     name: "Harambee & Rabai Fellowship",
     zone: "Harambee",
     leaderTitle: "Elder in Charge",
-    leaderName: "Elder [Name Placeholder]",
+    leaderName: "Elder Nathan Khamala",
     phone: "+254700000007",
     coverageArea: "Harambee Estate courts, Rabai Road residential corridor",
+    schedule: "Wednesdays &bull; 6:30 PM – 7:30 PM",
   },
 ];
 
@@ -97,63 +116,83 @@ export default function EstatesPage() {
   });
 
   return (
-    <main className="bg-[#fcfbf9] text-stone-900 min-h-screen pb-24 pt-32 sm:pt-40">
-      <div className="max-w-5xl mx-auto px-6 space-y-8">
+    <div
+      style={{
+        background:
+          "linear-gradient(135deg, #ffffff 0%, #e0edff 50%, #bfdbfe 100%)",
+        minHeight: "100vh",
+      }}
+      className="text-slate-800 font-sans pb-32"
+    >
+      {/* 1. HERO BANNER */}
+      <section className="relative bg-[#001f44] text-white pt-36 sm:pt-42 pb-24 px-6 overflow-hidden">
+        <div className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+          <img
+            src="/choir-hero.jpg"
+            alt="Jericho SDA Sanctuary"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#001f44] via-[#001f44]/80 to-[#001f44]" />
+        </div>
 
-        {/* 1. Header Banner */}
-        <section className="bg-[#001f44] text-white rounded-2xl p-6 sm:p-10 shadow-sm relative overflow-hidden">
-          <div className="max-w-2xl space-y-3">
-            <span className="text-[11px] uppercase tracking-wider font-semibold text-amber-300 bg-amber-400/10 border border-amber-300/20 px-3 py-1 rounded-full inline-block">
-              Neighborhood Fellowships
-            </span>
-            <h1 className="text-3xl sm:text-4xl font-serif font-normal tracking-tight text-stone-50 leading-tight">
-              Estate Prayer Groups &amp; Fellowships
-            </h1>
-            <p className="text-stone-300 text-sm sm:text-base font-serif leading-relaxed pt-1">
-              Connect with church members living near you. Midweek fellowships, intercessory prayer sessions, and welfare visits are organized and communicated directly within each estate&apos;s WhatsApp community.
-            </p>
+        <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
+          <div className="inline-flex items-center gap-2 text-stone-200 text-xs tracking-wider uppercase bg-white/10 border border-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-md">
+            <Home className="w-3.5 h-3.5 text-amber-400" />
+            <span className="font-semibold">Neighborhood Fellowships &bull; Jericho SDA Church</span>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-300">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              <span>Coordinated by Personal Ministries &amp; Board of Elders</span>
-            </div>
-            <Link
-              href="/care"
-              className="text-amber-300 hover:text-white font-medium underline underline-offset-4 transition"
-            >
-              Need Direct Pastoral Visit? &rarr;
-            </Link>
-          </div>
-        </section>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white font-normal tracking-tight">
+            Estate Prayer Groups &amp; Fellowships
+          </h1>
 
-        {/* 2. Interactive Area Quick-Picker & Search Bar */}
-        <section className="space-y-4 pb-2 border-b border-stone-200">
+          <p className="text-xs sm:text-sm text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            Connect with church members living near you. Midweek fellowships, intercessory prayer sessions, and welfare visits are organized and communicated directly within each estate&apos;s WhatsApp community.
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto mt-8 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-4 text-xs text-blue-100 relative z-10">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span>Coordinated by Personal Ministries &amp; Board of Elders</span>
+          </div>
+          <Link
+            href="/care"
+            className="text-amber-300 hover:text-white font-medium underline underline-offset-4 transition"
+          >
+            Need Direct Pastoral Visit? &rarr;
+          </Link>
+        </div>
+      </section>
+
+      {/* 2. BODY CONTENT */}
+      <main className="max-w-5xl mx-auto px-6 -mt-8 relative z-20 space-y-8">
+        {/* Interactive Area Quick-Picker & Search Bar */}
+        <section className="bg-white/90 backdrop-blur-md rounded-2xl p-5 border border-blue-200/80 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl sm:text-2xl font-serif text-[#001f44]">
+              <h2 className="text-xl sm:text-2xl font-serif text-blue-950 font-normal">
                 Find Your Local Estate
               </h2>
-              <p className="text-xs sm:text-sm text-stone-500 font-serif mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
                 Select your area chip or search by court to reach the elder in charge.
               </p>
             </div>
 
-            <div className="w-full sm:w-72">
+            <div className="w-full sm:w-72 relative">
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-blue-500" />
               <input
                 type="text"
                 placeholder="Search court, road, or leader..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs sm:text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-[#001f44] transition shadow-sm"
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition shadow-xs"
               />
             </div>
           </div>
 
-          {/* Quick-Picker Pills (Smooth scrollable on mobile) */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            <span className="text-xs text-stone-400 font-medium shrink-0 mr-1">
+          {/* Quick-Picker Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            <span className="text-xs text-slate-400 font-semibold shrink-0 mr-1">
               Filter Zone:
             </span>
             {zones.map((zone) => {
@@ -163,10 +202,10 @@ export default function EstatesPage() {
                   key={zone}
                   type="button"
                   onClick={() => setSelectedZone(zone)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition whitespace-nowrap cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap cursor-pointer ${
                     isActive
-                      ? "bg-[#001f44] text-white shadow-sm"
-                      : "bg-white text-stone-600 hover:bg-stone-100 border border-stone-200"
+                      ? "bg-blue-600 text-white shadow-xs"
+                      : "bg-white/80 text-slate-600 hover:bg-white hover:text-blue-600 border border-blue-100"
                   }`}
                 >
                   {zone}
@@ -188,51 +227,60 @@ export default function EstatesPage() {
             return (
               <div
                 key={estate.id}
-                className="bg-white rounded-xl border border-stone-200/80 shadow-sm hover:border-[#001f44]/40 hover:shadow-md transition p-6 flex flex-col justify-between group"
+                className="bg-white/85 backdrop-blur-md rounded-3xl border border-blue-100 shadow-xs hover:border-blue-300 hover:shadow-md transition p-6 flex flex-col justify-between group space-y-4"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded">
+                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
                       {estate.zone}
                     </span>
-                    <span className="text-[11px] text-stone-400 font-medium">
+                    <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
                       Eastlands Zone
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="font-serif font-semibold text-lg text-stone-900 group-hover:text-[#001f44] transition">
+                    <h3 className="font-serif font-bold text-lg text-slate-900 group-hover:text-blue-700 transition">
                       {estate.name}
                     </h3>
-                    <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                      <span className="font-medium text-stone-700">Coverage: </span>
+                    <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                      <span className="font-semibold text-slate-700">Coverage: </span>
                       {estate.coverageArea}
                     </p>
                   </div>
 
-                  <div className="pt-2 text-xs text-stone-600 space-y-1">
+                  {estate.schedule && (
+                    <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+                      <Clock className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                      <span dangerouslySetInnerHTML={{ __html: estate.schedule }} />
+                    </div>
+                  )}
+
+                  <div className="pt-1 text-xs text-slate-600">
                     <p>
-                      <span className="text-stone-400">{estate.leaderTitle}: </span>
-                      <span className="font-medium text-stone-800">{estate.leaderName}</span>
+                      <span className="text-slate-400">{estate.leaderTitle}: </span>
+                      <strong className="text-slate-800">{estate.leaderName}</strong>
                     </p>
                   </div>
                 </div>
 
                 {/* Direct Connect Buttons */}
-                <div className="pt-5 mt-4 border-t border-stone-100 flex items-center gap-3">
+                <div className="pt-4 border-t border-slate-100 flex items-center gap-2.5">
                   <a
                     href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-center py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition shadow-sm"
+                    className="flex-1 text-center py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition shadow-xs flex items-center justify-center gap-1.5"
                   >
-                    Connect via WhatsApp
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>WhatsApp</span>
                   </a>
                   <a
                     href={`tel:${estate.phone}`}
-                    className="py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg text-xs font-medium transition border border-stone-200"
+                    className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5"
                   >
-                    Call
+                    <Phone className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Call</span>
                   </a>
                 </div>
               </div>
@@ -241,16 +289,16 @@ export default function EstatesPage() {
         </section>
 
         {filteredEstates.length === 0 && (
-          <div className="text-center py-12 bg-white border border-stone-200 rounded-xl p-6">
-            <p className="text-stone-500 text-sm font-serif">
-              No fellowship matches your current selection.
+          <div className="text-center py-12 bg-white/80 border border-blue-100 rounded-2xl p-6">
+            <p className="text-slate-500 text-sm font-medium">
+              No fellowship matches &ldquo;{searchTerm}&rdquo;.
             </p>
             <button
               onClick={() => {
                 setSearchTerm("");
                 setSelectedZone("All");
               }}
-              className="text-xs text-[#001f44] font-semibold mt-2 hover:underline cursor-pointer"
+              className="text-xs text-blue-600 font-bold mt-2 hover:underline cursor-pointer"
             >
               Reset filters
             </button>
@@ -258,24 +306,23 @@ export default function EstatesPage() {
         )}
 
         {/* 4. Fallback for Unlisted Areas */}
-        <section className="bg-stone-100 rounded-xl p-6 border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <section className="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-blue-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="font-serif font-semibold text-stone-900 text-sm">
+            <h3 className="font-serif font-bold text-slate-900 text-base">
               Don&apos;t see your estate listed?
             </h3>
-            <p className="text-xs text-stone-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xl">
               If you reside in outlying areas (such as Donholm, Umoja, Pipeline, or South B/C), get in touch with the Church Secretariat or Personal Ministries team to be mapped to the closest prayer circle.
             </p>
           </div>
           <Link
             href="/care"
-            className="px-5 py-2.5 bg-[#001f44] hover:bg-[#001633] text-white rounded-lg text-xs font-semibold transition whitespace-nowrap self-start sm:self-auto"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition whitespace-nowrap self-start sm:self-auto shadow-xs"
           >
-            Contact Secretariat
+            Contact Secretariat &rarr;
           </Link>
         </section>
-
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

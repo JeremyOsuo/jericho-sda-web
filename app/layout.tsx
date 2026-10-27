@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Cinzel, Merriweather } from "next/font/google";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 import "./globals.css";
 
