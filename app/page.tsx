@@ -15,7 +15,7 @@ import {
   campMeetingPoster,
   campMeetingPdf,
 } from "@/data/campMeeting";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, Download, Sparkles, Calendar } from "lucide-react";
 
 export default function HomePage() {
   const { bulletinUrl, liveStreamUrl } = useSiteSettings();
@@ -418,6 +418,55 @@ export default function HomePage() {
               </p>
             </div>
           </Link>
+        </div>
+      </section>
+
+      {/* STRATEGIC PLAN 2026-2030 SPOTLIGHT CARD */}
+      <section className="max-w-5xl mx-auto px-6 mt-10 relative z-10">
+        <div className="bg-white/90 backdrop-blur-xs rounded-3xl border border-blue-200/70 overflow-hidden shadow-xs flex flex-col md:flex-row items-center">
+          <div className="md:w-5/12 w-full aspect-[16/10] md:aspect-auto self-stretch relative bg-slate-900 min-h-[200px] md:min-h-[240px]">
+            <img
+              src="/church-facade.jpg"
+              alt="Jericho SDA Church Sanctuary"
+              className="w-full h-full object-cover object-center"
+            />
+            <div className="absolute top-3 left-3 bg-[#001f44]/85 backdrop-blur-md text-amber-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 shadow-sm">
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              <span>2026–2030 ROADMAP</span>
+            </div>
+          </div>
+          <div className="md:w-7/12 p-6 sm:p-7 space-y-2.5">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full inline-block border border-blue-100">
+              Strategic Roadmap
+            </span>
+            <h2 className="text-xl sm:text-2xl font-serif text-blue-950 leading-snug font-normal">
+              Anchored in Christ to Grow in Mission
+            </h2>
+            <p className="text-xs text-slate-600 font-serif leading-relaxed line-clamp-3">
+              &ldquo;Where there is no vision, the people perish.&rdquo; (Proverbs 29:18). Explore our five-year spiritual and developmental blueprint guiding discipleship, infrastructure expansion, and mission to Eastlands and beyond.
+            </p>
+
+            <div className="flex items-center gap-3 text-xs text-slate-500 font-mono pt-0.5">
+              <span className="flex items-center gap-1 text-slate-700 font-semibold">
+                <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                Launch: Sabbath, 31 October 2026
+              </span>
+              <span>&bull;</span>
+              <span>Jericho Sanctuary</span>
+            </div>
+
+            <div className="pt-1">
+              <Link
+                href="/strategic-plan"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 transition group"
+              >
+                <span className="group-hover:underline">
+                  View Launch Programme &amp; Strategic Plan
+                </span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
