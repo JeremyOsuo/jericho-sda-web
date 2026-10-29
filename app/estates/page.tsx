@@ -235,7 +235,7 @@ export default function EstatesPage() {
                       {estate.zone}
                     </span>
                     <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                      Eastlands Zone
+                      East Zone
                     </span>
                   </div>
 

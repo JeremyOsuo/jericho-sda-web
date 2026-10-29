@@ -278,7 +278,7 @@ export default function HomePage() {
               Anchored in Christ to Grow in Mission
             </h2>
             <p className="text-xs text-slate-600 font-serif leading-relaxed line-clamp-3">
-              &ldquo;Where there is no vision, the people perish.&rdquo; (Proverbs 29:18). Explore our five-year spiritual and developmental blueprint guiding discipleship, infrastructure expansion, and mission to Eastlands and beyond.
+              &ldquo;Where there is no vision, the people perish.&rdquo; (Proverbs 29:18). Explore our five-year spiritual and developmental blueprint guiding discipleship, infrastructure expansion, and mission.
             </p>
 
             <div className="flex items-center gap-3 text-xs text-slate-500 font-mono pt-0.5">

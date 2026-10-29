@@ -83,7 +83,7 @@ export default function Footer() {
           </h3>
           <p className="text-xs text-stone-300 font-serif leading-relaxed">
             Jericho Estate, Off Jogoo Road &amp; Rabai Road Perimeter,<br />
-            Eastlands, Nairobi, Kenya.
+            Nairobi, Kenya.
           </p>
 
           <div className="space-y-1 pt-1 text-xs font-serif">
