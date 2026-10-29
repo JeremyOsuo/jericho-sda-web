@@ -2,13 +2,12 @@
 
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, FileText, ShieldCheck } from "lucide-react";
+import { ArrowLeft, FileText, ShieldCheck, Sparkles, BookOpen } from "lucide-react";
 
 export default function StrategicPlanPage() {
   const driveFileId = "1d6sU6ueYQz1XzgpjTJfuIkM_F4ISi2QH";
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Automatically focus the iframe so arrow keys work immediately
   useEffect(() => {
     const timer = setTimeout(() => {
       iframeRef.current?.focus();
@@ -48,6 +47,26 @@ export default function StrategicPlanPage() {
           </p>
         </div>
 
+        {/* Official Document Notice / Explanatory Banner */}
+        <div className="bg-gradient-to-r from-blue-900 via-indigo-950 to-blue-950 text-white rounded-xl p-3.5 sm:p-4 shadow-sm border border-blue-800/60 flex items-start sm:items-center gap-3">
+          <div className="p-2 bg-amber-400/20 text-amber-300 rounded-lg shrink-0">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <div className="space-y-0.5 text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-mono">
+                Official Plan
+              </span>
+              <h2 className="text-xs sm:text-sm font-semibold text-white">
+                Five-Year Church Strategic Plan Document
+              </h2>
+            </div>
+            <p className="text-[11px] sm:text-xs text-blue-100/80 leading-relaxed">
+              This is the official 2026–2030 Strategic Roadmap for Jericho SDA Church. Scroll through the pages below or use your keyboard arrow keys to navigate the full document.
+            </p>
+          </div>
+        </div>
+
         {/* Document Viewer Container */}
         <div className="bg-white rounded-2xl border border-slate-300/80 shadow-md p-2 sm:p-4 space-y-2.5">
           <div className="flex items-center justify-between px-2 pt-1">
@@ -58,7 +77,7 @@ export default function StrategicPlanPage() {
               </span>
             </div>
             <span className="text-[10px] text-slate-400">
-              Interactive Viewer &bull; Use Arrow Keys &uarr; &darr;
+              Interactive Viewer &bull; Continuous Scroll
             </span>
           </div>
 
