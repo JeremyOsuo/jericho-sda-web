@@ -133,7 +133,7 @@ export default function HomePage() {
               href="/strategic-plan"
               className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all shadow-md flex items-center gap-2"
             >
-              <Sparkles className="w-4 h-4 text-[#001f44]" />
+            
               <span>Strategic Plan 2026–2030</span>
             </Link>
 
