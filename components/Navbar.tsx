@@ -112,7 +112,7 @@ export default function Navbar() {
                   Jericho SDA Church
                 </span>
                 <span className="text-[10px] text-amber-300/90 block">
-                  Nairobi Eastlands
+                  Nairobi, Kenya
                 </span>
               </div>
             </div>
