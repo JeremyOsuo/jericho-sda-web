@@ -98,12 +98,12 @@ export default function Navbar() {
             
             {/* Church Brand: Double-click jumps to Treasury on port 3000 */}
             <div
-              onDoubleClick={() => {
-                window.location.href = "http://localhost:3000";
-              }}
-              className="flex items-center gap-2.5 shrink-0 cursor-pointer select-none"
-              title="Double-click for Treasury Desk"
-            >
+  onClick={() => {
+    window.location.href = "/";
+  }}
+  className="flex items-center gap-2.5 shrink-0 cursor-pointer select-none"
+  title="Jericho SDA Church Home"
+>
               <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center shadow-sm shrink-0">
                 <AdventistLogo className="w-5 h-5 text-[#001f44]" />
               </div>
