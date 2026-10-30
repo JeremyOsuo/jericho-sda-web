@@ -4,15 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import AdventistLogo from "../../components/AdventistLogo";
 import GivingVerification from "@/components/GivingVerification";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import {
   Smartphone,
   Copy,
-  CheckCircle2,
-  Clock,
   Printer,
-  ArrowRight,
-  ShieldCheck,
-  Send,
   Lock,
 } from "lucide-react";
 
@@ -57,6 +54,16 @@ export default function GivingPage() {
   const [grossIncome, setGrossIncome] = useState<string>("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
+  // Reusable Modal States
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("Notice from Treasury Desk");
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalRetryAction, setModalRetryAction] = useState<(() => void) | undefined>(undefined);
+
+  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
+  const [loadingTitle, setLoadingTitle] = useState("Connecting to Treasury Desk…");
+  const [loadingSubtitle, setLoadingSubtitle] = useState("Please wait a moment while we process your request.");
+
   // M-PESA STK Push States
   const [stkPhone, setStkPhone] = useState<string>("");
   const [stkStatus, setStkStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -66,8 +73,6 @@ export default function GivingPage() {
   const [otpPhone, setOtpPhone] = useState<string>("");
   const [otpCode, setOtpCode] = useState<string>("");
   const [otpStage, setOtpStage] = useState<"phone" | "code" | "verified">("phone");
-  const [otpLoading, setOtpLoading] = useState<boolean>(false);
-  const [otpError, setOtpError] = useState<string>("");
   const [otpNotice, setOtpNotice] = useState<string>("");
   const [statementData, setStatementData] = useState<MemberStatement | null>(null);
 
@@ -90,6 +95,14 @@ export default function GivingPage() {
   const [pledgeStatus, setPledgeStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const churchEmail = "jericho.sda@gmail.com";
+  const treasuryPhone = "254700000000";
+
+  const triggerError = (title: string, message: string, retry?: () => void) => {
+    setModalTitle(title);
+    setModalMessage(message);
+    setModalRetryAction(retry ? () => retry : undefined);
+    setIsErrorModalOpen(true);
+  };
 
   const handleGrossChange = (val: string) => {
     setGrossIncome(val);
@@ -123,26 +136,37 @@ export default function GivingPage() {
   };
 
   // STK Push Trigger
-  const handleStkPush = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!stkPhone || stkPhone.length < 9) {
-      alert("Please enter a valid phone number (e.g., 0712 345 678).");
+  const handleStkPush = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanPhone = stkPhone.replace(/\s+/g, "");
+
+    if (!cleanPhone || cleanPhone.length < 9) {
+      triggerError(
+        "Phone Number Required",
+        "Please provide a valid Safaricom phone number (e.g., 0712 345 678) to dispatch your M-PESA payment prompt."
+      );
       return;
     }
     if (totalGiving <= 0) {
-      alert("Please allocate an amount in your envelope before sending the prompt.");
+      triggerError(
+        "Envelope Amount Unallocated",
+        "Please allocate an amount in your tithe envelope before triggering the automated M-PESA prompt."
+      );
       return;
     }
 
     setStkStatus("sending");
     setStkMessage("");
+    setLoadingTitle("Sending M-PESA Prompt…");
+    setLoadingSubtitle(`Requesting KES ${totalGiving.toLocaleString()} prompt to ${cleanPhone}. Please unlock your phone.`);
+    setIsLoadingModalOpen(true);
 
     try {
       const res = await fetch("/api/mpesa/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          phoneNumber: stkPhone,
+          phoneNumber: cleanPhone,
           amount: totalGiving,
           breakdown: givingItems,
           accountReference: "TitheOffer",
@@ -156,27 +180,41 @@ export default function GivingPage() {
       setStkMessage(data.message || "M-PESA prompt dispatched. Enter your PIN on your phone.");
     } catch (err: unknown) {
       setStkStatus("error");
-      setStkMessage(err instanceof Error ? err.message : "Could not reach Safaricom service.");
+      const errorMsg = err instanceof Error ? err.message : "Could not reach Safaricom service.";
+      setStkMessage(errorMsg);
+      triggerError(
+        "M-PESA Connection Issue",
+        `We could not dispatch the automated payment prompt to ${cleanPhone}. You can remit manually via Paybill 752922 or reach out to the Treasury desk.`,
+        () => handleStkPush()
+      );
+    } finally {
+      setIsLoadingModalOpen(false);
     }
   };
 
   // OTP Request
-  const handleRequestOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpPhone || otpPhone.length < 9) {
-      setOtpError("Please enter a valid M-PESA phone number.");
+  const handleRequestOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanPhone = otpPhone.replace(/\s+/g, "");
+
+    if (!cleanPhone || cleanPhone.length < 9) {
+      triggerError(
+        "Invalid Phone Number",
+        "Please enter a valid M-PESA phone number to receive your secure verification code."
+      );
       return;
     }
 
-    setOtpLoading(true);
-    setOtpError("");
+    setLoadingTitle("Dispatching Security Code…");
+    setLoadingSubtitle("Sending a 4-digit verification code to your mobile phone via SMS.");
+    setIsLoadingModalOpen(true);
     setOtpNotice("");
 
     try {
       const res = await fetch("/api/auth/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: otpPhone }),
+        body: JSON.stringify({ phoneNumber: cleanPhone }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to dispatch verification code");
@@ -184,28 +222,38 @@ export default function GivingPage() {
       setOtpStage("code");
       setOtpNotice(data.testCodeNotice || "A 4-digit verification code has been sent to your phone.");
     } catch (err: unknown) {
-      setOtpError(err instanceof Error ? err.message : "Error dispatching verification code.");
+      triggerError(
+        "Verification Code Not Sent",
+        err instanceof Error ? err.message : "Error dispatching verification code. Please verify your phone number and try again.",
+        () => handleRequestOtp()
+      );
     } finally {
-      setOtpLoading(false);
+      setIsLoadingModalOpen(false);
     }
   };
 
   // OTP Verification
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpCode || otpCode.length !== 4) {
-      setOtpError("Enter the 4-digit verification code.");
+  const handleVerifyOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanPhone = otpPhone.replace(/\s+/g, "");
+
+    if (!otpCode || otpCode.trim().length !== 4) {
+      triggerError(
+        "Invalid Verification Code",
+        "Please enter the complete 4-digit code sent to your phone."
+      );
       return;
     }
 
-    setOtpLoading(true);
-    setOtpError("");
+    setLoadingTitle("Authenticating Statement Access…");
+    setLoadingSubtitle("Verifying your security credentials against church treasury audit records.");
+    setIsLoadingModalOpen(true);
 
     try {
       const res = await fetch("/api/auth/otp", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: otpPhone, code: otpCode }),
+        body: JSON.stringify({ phoneNumber: cleanPhone, code: otpCode.trim() }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Invalid or expired verification code");
@@ -213,27 +261,45 @@ export default function GivingPage() {
       setStatementData(data);
       setOtpStage("verified");
     } catch (err: unknown) {
-      setOtpError(err instanceof Error ? err.message : "Failed to verify code.");
+      triggerError(
+        "Authentication Notice",
+        err instanceof Error ? err.message : "Failed to verify code. Please confirm the digits or request a new code.",
+        () => handleVerifyOtp()
+      );
     } finally {
-      setOtpLoading(false);
+      setIsLoadingModalOpen(false);
     }
   };
 
-  const handlePledgeSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handlePledgeSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setPledgeStatus("submitting");
+    setLoadingTitle("Registering Commitment…");
+    setLoadingSubtitle("Logging your sacrificial pledge into the church stewardship record.");
+    setIsLoadingModalOpen(true);
 
     try {
       const res = await fetch("/api/pledges", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pledgeData),
+        body: JSON.stringify({
+          ...pledgeData,
+          phoneNumber: pledgeData.phoneNumber.replace(/\s+/g, ""),
+          amount: Number(pledgeData.amount),
+        }),
       });
 
-      if (!res.ok) throw new Error("Pledge submission failed");
+      if (!res.ok) throw new Error("Pledge submission could not be verified by server");
       setPledgeStatus("success");
     } catch {
-      setPledgeStatus("error");
+      setPledgeStatus("idle");
+      triggerError(
+        "Pledge Registration Notice",
+        "We could not record your commitment card at this moment due to a connection drop. You can try again or message the Treasury desk directly on WhatsApp.",
+        () => handlePledgeSubmit()
+      );
+    } finally {
+      setIsLoadingModalOpen(false);
     }
   };
 
@@ -511,11 +577,6 @@ export default function GivingPage() {
                           ✓ {stkMessage}
                         </div>
                       )}
-                      {stkStatus === "error" && (
-                        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
-                          {stkMessage}
-                        </div>
-                      )}
                     </div>
                   )}
 
@@ -674,10 +735,9 @@ export default function GivingPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={otpLoading}
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-xl transition cursor-pointer shadow-xs"
                     >
-                      {otpLoading ? "Sending SMS Code..." : "Send Verification Code →"}
+                      Send Verification Code →
                     </button>
                   </form>
                 ) : (
@@ -698,10 +758,9 @@ export default function GivingPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={otpLoading}
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-xs"
                     >
-                      {otpLoading ? "Verifying..." : "View My Statement →"}
+                      View My Statement →
                     </button>
                     <div className="text-center pt-2">
                       <button
@@ -718,11 +777,6 @@ export default function GivingPage() {
                 {otpNotice && (
                   <p className="text-[11px] text-slate-600 bg-blue-50 p-2.5 rounded-xl border border-blue-100">
                     {otpNotice}
-                  </p>
-                )}
-                {otpError && (
-                  <p className="text-xs text-rose-600 bg-rose-50 p-2.5 rounded-xl border border-rose-200">
-                    {otpError}
                   </p>
                 )}
               </div>
@@ -880,6 +934,23 @@ export default function GivingPage() {
           </div>
         )}
       </div>
+
+      {/* Reusable Loading Modal */}
+      <LoadingModal
+        isOpen={isLoadingModalOpen}
+        title={loadingTitle}
+        subtitle={loadingSubtitle}
+      />
+
+      {/* Reusable Human Error Modal */}
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+        title={modalTitle}
+        message={modalMessage}
+        supportPhone={treasuryPhone}
+        onRetry={modalRetryAction}
+      />
     </main>
   );
 }

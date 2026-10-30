@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import {
   MapPin,
   Search,
@@ -12,6 +14,7 @@ import {
   Home,
   Users,
   Clock,
+  X,
 } from "lucide-react";
 
 interface EstateGroup {
@@ -34,7 +37,7 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Elder Otieno",
     phone: "+254700000001",
     coverageArea: "Jericho Market, Social Hall area, and surrounding residential courts",
-    schedule: "Wednesdays &bull; 6:00 PM – 7:15 PM",
+    schedule: "Wednesdays • 6:00 PM – 7:15 PM",
   },
   {
     id: "buruburu-phase-1-2",
@@ -44,7 +47,7 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Elder Mwangi",
     phone: "+254700000002",
     coverageArea: "Phase 1 courts, Phase 2, Mesora shopping centre vicinity",
-    schedule: "Wednesdays &bull; 6:30 PM – 7:30 PM",
+    schedule: "Wednesdays • 6:30 PM – 7:30 PM",
   },
   {
     id: "buruburu-phase-3-4-5",
@@ -54,7 +57,7 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Elder Mwangi / Eld. Kariuki",
     phone: "+254700000003",
     coverageArea: "Phase 3, Phase 4, Phase 5, and Mumias Road area",
-    schedule: "Wednesdays &bull; 6:30 PM – 7:30 PM",
+    schedule: "Wednesdays • 6:30 PM – 7:30 PM",
   },
   {
     id: "maringo-ofafa",
@@ -64,7 +67,7 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Deacon Omondi",
     phone: "+254700000004",
     coverageArea: "Maringo residential blocks, Ofafa 1, and adjacent avenues",
-    schedule: "Wednesdays &bull; 6:00 PM – 7:00 PM",
+    schedule: "Wednesdays • 6:00 PM – 7:00 PM",
   },
   {
     id: "lumumba-uhuru",
@@ -74,7 +77,7 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Eld. Charles Omollo",
     phone: "+254700000005",
     coverageArea: "Lumumba Dispensary area, Uhuru Estate blocks",
-    schedule: "Wednesdays &bull; 6:00 PM – 7:15 PM",
+    schedule: "Wednesdays • 6:00 PM – 7:15 PM",
   },
   {
     id: "bahati-kimathi",
@@ -84,7 +87,7 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Elder Mutua",
     phone: "+254700000006",
     coverageArea: "Bahati, Kimathi Estate, and near Chief's Camp",
-    schedule: "Wednesdays &bull; 6:15 PM – 7:15 PM",
+    schedule: "Wednesdays • 6:15 PM – 7:15 PM",
   },
   {
     id: "harambee-rabai",
@@ -94,13 +97,20 @@ const ESTATE_PLACEHOLDERS: EstateGroup[] = [
     leaderName: "Elder Nathan Khamala",
     phone: "+254700000007",
     coverageArea: "Harambee Estate courts, Rabai Road residential corridor",
-    schedule: "Wednesdays &bull; 6:30 PM – 7:30 PM",
+    schedule: "Wednesdays • 6:30 PM – 7:30 PM",
   },
 ];
 
 export default function EstatesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedZone, setSelectedZone] = useState("All");
+
+  // Modal Feedback States
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectingTitle, setConnectingTitle] = useState("Connecting to Fellowship Desk…");
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [noticeTitle, setNoticeTitle] = useState("Fellowship Notice");
+  const [noticeMessage, setNoticeMessage] = useState("");
 
   const zones = ["All", "Jericho", "Buruburu", "Maringo", "Lumumba", "Bahati", "Harambee"];
 
@@ -114,6 +124,31 @@ export default function EstatesPage() {
       estate.leaderName.toLowerCase().includes(query);
     return matchesZone && matchesSearch;
   });
+
+  const handleLaunchWhatsApp = (e: React.MouseEvent, estate: EstateGroup) => {
+    e.preventDefault();
+    setConnectingTitle(`Opening ${estate.name} WhatsApp…`);
+    setIsConnecting(true);
+
+    const rawPhone = estate.phone.replace("+", "");
+    const prefilledMessage = encodeURIComponent(
+      `Praise God ${estate.leaderName}, I reside in ${estate.zone} and would like to connect with the estate fellowship and be added to the WhatsApp group.`
+    );
+    const whatsappLink = `https://api.whatsapp.com/send?phone=${rawPhone}&text=${prefilledMessage}`;
+
+    setTimeout(() => {
+      setIsConnecting(false);
+      window.open(whatsappLink, "_blank", "noopener,noreferrer");
+    }, 500);
+  };
+
+  const handleInquireUnlisted = () => {
+    setNoticeTitle("Unlisted Estate Allocation");
+    setNoticeMessage(
+      `Living outside our primary zones (such as Donholm, Umoja, Pipeline, or South B/C)? Reach out to the Personal Ministries Secretariat to be mapped to the closest neighborhood prayer circle.`
+    );
+    setIsNoticeOpen(true);
+  };
 
   return (
     <div
@@ -185,8 +220,17 @@ export default function EstatesPage() {
                 placeholder="Search court, road, or leader..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition shadow-xs"
+                className="w-full pl-9 pr-9 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition shadow-xs"
               />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -218,12 +262,6 @@ export default function EstatesPage() {
         {/* 3. Estate Directory Cards */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {filteredEstates.map((estate) => {
-            const rawPhone = estate.phone.replace("+", "");
-            const prefilledMessage = encodeURIComponent(
-              `Praise God ${estate.leaderName}, I reside in ${estate.zone} and would like to connect with the estate fellowship and be added to the WhatsApp group.`
-            );
-            const whatsappLink = `https://api.whatsapp.com/send?phone=${rawPhone}&text=${prefilledMessage}`;
-
             return (
               <div
                 key={estate.id}
@@ -235,7 +273,7 @@ export default function EstatesPage() {
                       {estate.zone}
                     </span>
                     <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                      East Zone
+                      Eastlands Zone
                     </span>
                   </div>
 
@@ -252,7 +290,7 @@ export default function EstatesPage() {
                   {estate.schedule && (
                     <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
                       <Clock className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                      <span dangerouslySetInnerHTML={{ __html: estate.schedule }} />
+                      <span>{estate.schedule}</span>
                     </div>
                   )}
 
@@ -266,15 +304,14 @@ export default function EstatesPage() {
 
                 {/* Direct Connect Buttons */}
                 <div className="pt-4 border-t border-slate-100 flex items-center gap-2.5">
-                  <a
-                    href={whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition shadow-xs flex items-center justify-center gap-1.5"
+                  <button
+                    type="button"
+                    onClick={(e) => handleLaunchWhatsApp(e, estate)}
+                    className="flex-1 text-center py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
                     <span>WhatsApp</span>
-                  </a>
+                  </button>
                   <a
                     href={`tel:${estate.phone}`}
                     className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5"
@@ -289,19 +326,30 @@ export default function EstatesPage() {
         </section>
 
         {filteredEstates.length === 0 && (
-          <div className="text-center py-12 bg-white/80 border border-blue-100 rounded-2xl p-6">
-            <p className="text-slate-500 text-sm font-medium">
+          <div className="text-center py-12 bg-white/80 border border-blue-100 rounded-2xl p-6 space-y-3">
+            <p className="text-slate-600 text-sm font-medium">
               No fellowship matches &ldquo;{searchTerm}&rdquo;.
             </p>
-            <button
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedZone("All");
-              }}
-              className="text-xs text-blue-600 font-bold mt-2 hover:underline cursor-pointer"
-            >
-              Reset filters
-            </button>
+            <div className="flex items-center justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedZone("All");
+                }}
+                className="text-xs text-blue-600 font-bold hover:underline cursor-pointer"
+              >
+                Reset filters
+              </button>
+              <span className="text-slate-300">&bull;</span>
+              <button
+                type="button"
+                onClick={handleInquireUnlisted}
+                className="text-xs font-semibold text-emerald-700 hover:underline cursor-pointer"
+              >
+                Inquire via Secretariat
+              </button>
+            </div>
           </div>
         )}
 
@@ -315,14 +363,31 @@ export default function EstatesPage() {
               If you reside in outlying areas (such as Donholm, Umoja, Pipeline, or South B/C), get in touch with the Church Secretariat or Personal Ministries team to be mapped to the closest prayer circle.
             </p>
           </div>
-          <Link
-            href="/care"
-            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition whitespace-nowrap self-start sm:self-auto shadow-xs"
+          <button
+            type="button"
+            onClick={handleInquireUnlisted}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition whitespace-nowrap self-start sm:self-auto shadow-xs cursor-pointer"
           >
             Contact Secretariat &rarr;
-          </Link>
+          </button>
         </section>
       </main>
+
+      {/* Loading Modal */}
+      <LoadingModal
+        isOpen={isConnecting}
+        title={connectingTitle}
+        subtitle="Opening direct communication with the fellowship elder in charge."
+      />
+
+      {/* Human Notice Modal */}
+      <ErrorModal
+        isOpen={isNoticeOpen}
+        onClose={() => setIsNoticeOpen(false)}
+        title={noticeTitle}
+        message={noticeMessage}
+        supportPhone="254700000000"
+      />
     </div>
   );
 }

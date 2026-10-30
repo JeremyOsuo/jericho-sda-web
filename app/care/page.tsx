@@ -3,17 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import AdventistLogo from "../../components/AdventistLogo";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import {
-  HeartHandshake,
   CheckCircle2,
   Copy,
   Mail,
   MapPin,
-  Calendar,
-  Clock,
   ArrowRight,
-  ShieldCheck,
   Send,
+  MessageCircle,
 } from "lucide-react";
 
 interface PastoralDutyRoster {
@@ -66,44 +65,74 @@ export default function PastoralCarePage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Official church correspondence inbox
+  // Official church correspondence credentials
   const activeChurchInbox = "jericho.sda@gmail.com";
+  const pastoralDeskPhone = "254700000000"; // Replace with Church Clerk / Pastor WhatsApp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.phoneNumber) {
-      alert("Please provide your name and phone number so the pastoral team can reach you.");
+
+    if (!formData.fullName.trim() || !formData.phoneNumber.trim()) {
+      setErrorMessage(
+        "Please provide both your full name and phone number so the pastoral secretariat can reach you promptly."
+      );
+      setIsErrorModalOpen(true);
       return;
     }
 
-    const emailSubject = encodeURIComponent(
-      `[Pastoral Care Request] ${requestType} - ${formData.fullName}`
-    );
-    const emailBody = encodeURIComponent(
-      `JERICHO SDA CHURCH - PASTORAL CARE REQUEST\n\n` +
-        `Category: ${requestType}\n` +
-        `Full Name: ${formData.fullName}\n` +
-        `Phone Number: ${formData.phoneNumber}\n` +
-        `Residential Estate / Location: ${formData.estateLocation || "Not specified"}\n` +
-        `Confidentiality: ${
-          formData.confidentiality === "pastoral-only"
-            ? "Pastoral Team & Head Elder Only"
-            : "Share with Church Prayer Band"
-        }\n` +
-        `Preferred Day / Date: ${formData.preferredDate || "Earliest Available"}\n\n` +
-        `Details / Prayer Need:\n${formData.notes || "None provided"}\n\n` +
-        `Submitted via Jericho SDA Church Portal`
-    );
+    setIsLoading(true);
 
-    window.location.href = `mailto:${activeChurchInbox}?subject=${emailSubject}&body=${emailBody}`;
-    setSubmitted(true);
+    try {
+      const emailSubject = encodeURIComponent(
+        `[Pastoral Care Request] ${requestType} - ${formData.fullName.trim()}`
+      );
+      const emailBody = encodeURIComponent(
+        `JERICHO SDA CHURCH - PASTORAL CARE REQUEST\n\n` +
+          `Category: ${requestType}\n` +
+          `Full Name: ${formData.fullName.trim()}\n` +
+          `Phone Number: ${formData.phoneNumber.trim()}\n` +
+          `Residential Estate / Location: ${formData.estateLocation.trim() || "Not specified"}\n` +
+          `Confidentiality: ${
+            formData.confidentiality === "pastoral-only"
+              ? "Pastoral Team & Head Elder Only"
+              : "Share with Church Prayer Band"
+          }\n` +
+          `Preferred Day / Date: ${formData.preferredDate.trim() || "Earliest Available"}\n\n` +
+          `Details / Prayer Need:\n${formData.notes.trim() || "None provided"}\n\n` +
+          `Submitted via Jericho SDA Church Portal`
+      );
+
+      setTimeout(() => {
+        window.location.href = `mailto:${activeChurchInbox}?subject=${emailSubject}&body=${emailBody}`;
+        setIsLoading(false);
+        setSubmitted(true);
+      }, 500);
+    } catch {
+      setIsLoading(false);
+      setErrorMessage(
+        "Could not automatically open your email application. You can copy the pastoral desk email directly or reach out via WhatsApp below."
+      );
+      setIsErrorModalOpen(true);
+    }
   };
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(activeChurchInbox);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const getWhatsAppCareUrl = () => {
+    const text = `*Jericho SDA Pastoral Care Request*%0A%0A*Category:* ${requestType}%0A*Name:* ${
+      formData.fullName || "Member"
+    }%0A*Phone:* ${formData.phoneNumber || "Not provided"}%0A*Estate:* ${
+      formData.estateLocation || "Eastlands"
+    }%0A*Notes:* ${formData.notes || "Pastoral guidance requested"}`;
+    return `https://wa.me/${pastoralDeskPhone}?text=${text}`;
   };
 
   return (
@@ -115,7 +144,7 @@ export default function PastoralCarePage() {
       }}
       className="text-slate-800 font-sans pb-32"
     >
-      {/* 1. HERO - Dignified, deep navy, clear scripture */}
+      {/* 1. HERO */}
       <section className="relative bg-[#001f44] text-white pt-36 sm:pt-42 pb-20 px-6 overflow-hidden">
         <div className="absolute inset-0 w-full h-full pointer-events-none opacity-25">
           <img
@@ -165,7 +194,7 @@ export default function PastoralCarePage() {
             </div>
 
             {submitted ? (
-              <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-6 text-center space-y-3">
+              <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-6 text-center space-y-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
@@ -174,7 +203,7 @@ export default function PastoralCarePage() {
                     Email Prepared
                   </h3>
                   <p className="text-xs text-slate-600 mt-1 max-w-md mx-auto leading-relaxed">
-                    Your request has been composed for the pastoral secretariat. If your email application did not open automatically, you can copy our address below.
+                    Your request has been composed for the pastoral secretariat. If your email application did not launch automatically, you can copy our address or message the secretariat directly.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
@@ -186,6 +215,17 @@ export default function PastoralCarePage() {
                     <Copy className="w-3.5 h-3.5" />
                     <span>{copiedEmail ? "Copied! ✓" : `Copy ${activeChurchInbox}`}</span>
                   </button>
+
+                  <a
+                    href={getWhatsAppCareUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-xs"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>WhatsApp Secretariat</span>
+                  </a>
+
                   <button
                     type="button"
                     onClick={() => {
@@ -201,7 +241,7 @@ export default function PastoralCarePage() {
                     }}
                     className="text-slate-600 hover:text-slate-900 bg-white border border-slate-200 text-xs font-semibold px-4 py-2 rounded-xl transition cursor-pointer"
                   >
-                    Reset Form
+                    New Request
                   </button>
                 </div>
               </div>
@@ -380,13 +420,30 @@ export default function PastoralCarePage() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Send Request to Pastoral Desk</span>
-                </button>
+                <div className="pt-2 space-y-2.5">
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Send Request to Pastoral Desk</span>
+                  </button>
+
+                  <div className="text-center">
+                    <span className="text-[11px] text-slate-500">
+                      Emergency hospital or bereavement need?{" "}
+                      <a
+                        href={getWhatsAppCareUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
+                      >
+                        <MessageCircle className="w-3 h-3 text-emerald-600" />
+                        <span>Chat via WhatsApp</span>
+                      </a>
+                    </span>
+                  </div>
+                </div>
               </form>
             )}
           </div>
@@ -467,7 +524,7 @@ export default function PastoralCarePage() {
               </p>
               <div className="pt-1">
                 <Link
-                  href="/members/cells"
+                  href="/estates"
                   className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition"
                 >
                   <span>View Estate Cell Directory</span>
@@ -478,6 +535,22 @@ export default function PastoralCarePage() {
           </div>
         </div>
       </div>
+
+      {/* Loading Modal Overlay */}
+      <LoadingModal
+        isOpen={isLoading}
+        title="Preparing Pastoral Request…"
+        subtitle="Formatting your ministry request for the pastoral secretariat."
+      />
+
+      {/* Reusable Human Error Modal */}
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+        title="Ministry Request Notice"
+        message={errorMessage}
+        supportPhone={pastoralDeskPhone}
+      />
     </main>
   );
 }

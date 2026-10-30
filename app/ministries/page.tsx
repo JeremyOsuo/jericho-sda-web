@@ -2,16 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
+import AdventistLogo from "../../components/AdventistLogo";
 import {
   Users,
   Search,
   Clock,
   ArrowRight,
-  Sparkles,
-  HeartHandshake,
-  BookOpen,
-  Music,
-  Compass,
+  MessageCircle,
   X,
 } from "lucide-react";
 
@@ -148,10 +147,10 @@ const MINISTRIES_DATA: Ministry[] = [
       "Neighborhood welfare checks and family visits",
       "Estate WhatsApp communication channels",
     ],
-    schedule: "Midweek Wednesdays &bull; 6:00 PM (Rotating Homes)",
+    schedule: "Midweek Wednesdays • 6:00 PM (Rotating Homes)",
     contactAction: {
       label: "Open Estate Directory",
-      href: "/members/cells",
+      href: "/estates",
     },
     badge: "5 Active Zones",
   },
@@ -171,7 +170,7 @@ const MINISTRIES_DATA: Ministry[] = [
       "Hospital and home visitation ministries",
       "Women's prayer breakfast, parenting, and empowerment sessions",
     ],
-    schedule: "2nd Sunday of the month &bull; 2:00 PM",
+    schedule: "2nd Sunday of the month • 2:00 PM",
     contactAction: {
       label: "Request or Offer Welfare Aid",
       href: "/care",
@@ -193,7 +192,7 @@ const MINISTRIES_DATA: Ministry[] = [
       "Church maintenance, infrastructure, and community work bees",
       "Fatherhood, financial management, and family leadership forums",
     ],
-    schedule: "3rd Sunday of the month &bull; 8:00 AM",
+    schedule: "3rd Sunday of the month • 8:00 AM",
     contactAction: {
       label: "Connect with AMO Leadership",
       href: "/care",
@@ -258,6 +257,14 @@ export default function MinistriesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeMinistry, setActiveMinistry] = useState<Ministry | null>(null);
 
+  // Modal Feedback States
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [noticeTitle, setNoticeTitle] = useState("Ministry Directory Notice");
+  const [noticeMessage, setNoticeMessage] = useState("");
+
+  const churchPhone = "254700000000";
+
   // Close modal when pressing Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -290,6 +297,23 @@ export default function MinistriesPage() {
       m.leaderName.toLowerCase().includes(query);
     return matchesCat && matchesQuery;
   });
+
+  const handleInquireMinistry = (ministryName?: string) => {
+    setNoticeTitle("Ministry Involvement Inquiry");
+    setNoticeMessage(
+      ministryName
+        ? `Would you like to connect directly with the ${ministryName} leadership team? You can message the Secretariat desk on WhatsApp.`
+        : `Looking for a specialized fellowship or committee not appearing for "${searchQuery}"? Reach out to the Church Secretariat on WhatsApp.`
+    );
+    setIsNoticeOpen(true);
+  };
+
+  const handleActionClick = (e: React.MouseEvent, href: string) => {
+    setIsConnecting(true);
+    setTimeout(() => {
+      setIsConnecting(false);
+    }, 400);
+  };
 
   return (
     <main
@@ -349,8 +373,17 @@ export default function MinistriesPage() {
                 placeholder="Search ministries or leaders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-white/90 border border-blue-200/80 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition shadow-xs"
+                className="w-full pl-9 pr-9 py-2 bg-white/90 border border-blue-200/80 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition shadow-xs"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -432,19 +465,31 @@ export default function MinistriesPage() {
         </section>
 
         {filteredMinistries.length === 0 && (
-          <div className="text-center py-12 bg-white/80 border border-blue-100 rounded-2xl p-6">
-            <p className="text-slate-500 text-sm font-medium">
+          <div className="text-center py-12 bg-white/80 border border-blue-100 rounded-2xl p-6 space-y-3">
+            <p className="text-slate-600 text-sm font-medium">
               No ministry found matching &ldquo;{searchQuery}&rdquo;.
             </p>
-            <button
-              onClick={() => {
-                setSelectedCategory("All");
-                setSearchQuery("");
-              }}
-              className="text-xs text-blue-600 font-bold mt-2 hover:underline cursor-pointer"
-            >
-              Reset filters
-            </button>
+            <div className="flex items-center justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory("All");
+                  setSearchQuery("");
+                }}
+                className="text-xs text-blue-600 font-bold hover:underline cursor-pointer"
+              >
+                Reset filters
+              </button>
+              <span className="text-slate-300">&bull;</span>
+              <button
+                type="button"
+                onClick={() => handleInquireMinistry()}
+                className="text-xs font-semibold text-emerald-700 hover:underline cursor-pointer inline-flex items-center gap-1"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Inquire via Secretariat</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -454,7 +499,7 @@ export default function MinistriesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-blue-950/70 backdrop-blur-sm transition-opacity"
+            className="absolute inset-0 bg-blue-950/70 backdrop-blur-xs transition-opacity"
             onClick={() => setActiveMinistry(null)}
           />
 
@@ -553,7 +598,10 @@ export default function MinistriesPage() {
               <div className="pt-3 flex items-center gap-3">
                 <Link
                   href={activeMinistry.contactAction.href}
-                  onClick={() => setActiveMinistry(null)}
+                  onClick={(e) => {
+                    handleActionClick(e, activeMinistry.contactAction.href);
+                    setActiveMinistry(null);
+                  }}
                   className="flex-1 text-center py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition shadow-xs"
                 >
                   {activeMinistry.contactAction.label} &rarr;
@@ -571,6 +619,22 @@ export default function MinistriesPage() {
           </div>
         </div>
       )}
+
+      {/* Loading Modal */}
+      <LoadingModal
+        isOpen={isConnecting}
+        title="Opening Ministry Page…"
+        subtitle="Navigating to the requested ministry or department portal."
+      />
+
+      {/* Human Notice Modal */}
+      <ErrorModal
+        isOpen={isNoticeOpen}
+        onClose={() => setIsNoticeOpen(false)}
+        title={noticeTitle}
+        message={noticeMessage}
+        supportPhone={churchPhone}
+      />
     </main>
   );
 }

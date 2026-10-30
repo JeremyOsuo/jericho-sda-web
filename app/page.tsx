@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import AdventistLogo from "../components/AdventistLogo";
 import FloatingAnnouncementBanner from "../components/FloatingAnnouncementBanner";
+import ErrorModal from "../components/ErrorModal";
+import LoadingModal from "../components/LoadingModal";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { currentAnnouncement } from "@/data/announcements";
 import {
@@ -16,6 +18,13 @@ import {
 export default function HomePage() {
   const { bulletinUrl, liveStreamUrl } = useSiteSettings();
   const [pubFilter, setPubFilter] = useState("All");
+
+  // Modal Feedback States
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadTitle, setDownloadTitle] = useState("Preparing Document…");
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [noticeTitle, setNoticeTitle] = useState("Publication Notice");
+  const [noticeMessage, setNoticeMessage] = useState("");
 
   const channelHandle = "@JerichoSDANairobi";
   const defaultChannelUrl = `https://www.youtube.com/${channelHandle}`;
@@ -55,7 +64,7 @@ export default function HomePage() {
       category: "Weekly Bulletin",
       size: "1.1 MB",
       pdfUrl: bulletinUrl || "#",
-      pageUrl: "#",
+      pageUrl: "/bulletin",
     },
     {
       id: "camp-guide-2026",
@@ -79,9 +88,35 @@ export default function HomePage() {
       category: "Magazine",
       size: "2.7 MB",
       pdfUrl: "#",
-      pageUrl: "/departments/adventist-youth",
+      pageUrl: "/departments",
     },
   ];
+
+  const handleDownloadClick = (e: React.MouseEvent, pub: (typeof publications)[0]) => {
+    e.preventDefault();
+
+    if (!pub.pdfUrl || pub.pdfUrl === "#") {
+      setNoticeTitle(`${pub.category} In Preparation`);
+      setNoticeMessage(
+        `"${pub.title}" is currently being compiled or reviewed by the church editorial desk. You can view the online summary or contact the Secretariat on WhatsApp.`
+      );
+      setIsNoticeOpen(true);
+      return;
+    }
+
+    setDownloadTitle(`Preparing ${pub.title}…`);
+    setIsDownloading(true);
+
+    setTimeout(() => {
+      setIsDownloading(false);
+      const link = document.createElement("a");
+      link.href = pub.pdfUrl;
+      link.download = `${pub.id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, 700);
+  };
 
   const filteredPubs =
     pubFilter === "All"
@@ -133,7 +168,6 @@ export default function HomePage() {
               href="/strategic-plan"
               className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all shadow-md flex items-center gap-2"
             >
-            
               <span>Strategic Plan 2026–2030</span>
             </Link>
 
@@ -256,7 +290,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. STRATEGIC PLAN 2026-2030 SPOTLIGHT CARD */}
+      {/* 3. STRATEGIC PLAN SPOTLIGHT */}
       <section className="max-w-5xl mx-auto px-6 mt-12 relative z-10">
         <div className="bg-white/90 backdrop-blur-xs rounded-3xl border border-blue-200/70 overflow-hidden shadow-xs flex flex-col md:flex-row items-center">
           <div className="md:w-5/12 w-full aspect-[16/10] md:aspect-auto self-stretch relative bg-slate-900 min-h-[200px] md:min-h-[240px]">
@@ -305,7 +339,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. ANNOUNCEMENT / MISSION SPOTLIGHT */}
+      {/* 4. ANNOUNCEMENT SPOTLIGHT */}
       {currentAnnouncement?.active && (
         <section className="max-w-5xl mx-auto px-6 mt-12">
           <div className="relative rounded-3xl overflow-hidden shadow-lg bg-blue-950 text-white border border-blue-400/30">
@@ -354,7 +388,7 @@ export default function HomePage() {
                 <Link
                   href={
                     currentAnnouncement.ctaLink ||
-                    "/departments/adventist-youth"
+                    "/departments"
                   }
                   className="bg-amber-400 hover:bg-amber-300 text-blue-950 font-bold text-xs uppercase tracking-wider py-2.5 px-4 rounded-xl transition shadow-md"
                 >
@@ -374,7 +408,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* 5. PUBLICATIONS SHELF - Compact Horizontal Cards */}
+      {/* 5. PUBLICATIONS SHELF */}
       <section className="max-w-5xl mx-auto px-6 pt-16">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-6 pb-2.5 border-b border-blue-200 gap-3">
           <div>
@@ -443,16 +477,14 @@ export default function HomePage() {
                       Read &rarr;
                     </Link>
                   )}
-                  {pub.pdfUrl && pub.pdfUrl !== "#" && (
-                    <a
-                      href={pub.pdfUrl}
-                      download
-                      className="text-[11px] font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded transition"
-                    >
-                      <Download className="w-3 h-3 text-blue-600" />
-                      <span>Download</span>
-                    </a>
-                  )}
+                  <button
+                    type="button"
+                    onClick={(e) => handleDownloadClick(e, pub)}
+                    className="text-[11px] font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded transition cursor-pointer"
+                  >
+                    <Download className="w-3 h-3 text-blue-600" />
+                    <span>Download</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -527,6 +559,22 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Loading Modal */}
+      <LoadingModal
+        isOpen={isDownloading}
+        title={downloadTitle}
+        subtitle="Retrieving and streaming publication file from server."
+      />
+
+      {/* Human Error / Notice Modal */}
+      <ErrorModal
+        isOpen={isNoticeOpen}
+        onClose={() => setIsNoticeOpen(false)}
+        title={noticeTitle}
+        message={noticeMessage}
+        supportPhone="254700000000"
+      />
     </main>
   );
 }

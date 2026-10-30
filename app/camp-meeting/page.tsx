@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import AdventistLogo from "../../components/AdventistLogo";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import {
   campMeetingTheme,
   campMeetingYear,
@@ -26,13 +28,22 @@ import {
 } from "@/data/campMeeting";
 
 export default function CampMeetingPage() {
-  const [activeTab, setActiveTab] = useState<"schedule" | "speakers" | "hymns" | "gallery">("schedule");
+  const [activeTab, setActiveTab] = useState<
+    "schedule" | "speakers" | "hymns" | "gallery"
+  >("schedule");
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
   const [hymnLang, setHymnLang] = useState<"en" | "sw">("en");
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [slideIdx, setSlideIdx] = useState<number>(0);
 
-  const selectedDay: DaySchedule = campDailyRecap[selectedDayIndex] || campDailyRecap[0];
+  // Modal Feedback States
+  const [isLoadingPdf, setIsLoadingPdf] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorModalTitle, setErrorModalTitle] = useState("Notice from Camp Desk");
+  const [errorModalMessage, setErrorModalMessage] = useState("");
+
+  const selectedDay: DaySchedule =
+    campDailyRecap[selectedDayIndex] || campDailyRecap[0];
 
   useEffect(() => {
     if (!Array.isArray(campMeetingSlides) || campMeetingSlides.length <= 1)
@@ -57,6 +68,29 @@ export default function CampMeetingPage() {
     );
   };
 
+  const handleDownloadPdf = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!campMeetingPdf || campMeetingPdf === "#") {
+      setErrorModalTitle("Brochure In Final Preparation");
+      setErrorModalMessage(
+        "The complete Camp Meeting Souvenir Brochure is currently being finalized by the church publishing committee. Please check back shortly or request a copy from the Secretariat."
+      );
+      setIsErrorModalOpen(true);
+      return;
+    }
+
+    setIsLoadingPdf(true);
+    setTimeout(() => {
+      setIsLoadingPdf(false);
+      const link = document.createElement("a");
+      link.href = campMeetingPdf;
+      link.download = `Jericho-SDA-Camp-Meeting-${campMeetingYear}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, 800);
+  };
+
   return (
     <main
       style={{
@@ -66,7 +100,7 @@ export default function CampMeetingPage() {
       }}
       className="text-slate-800 pb-32 font-sans selection:bg-blue-600 selection:text-white"
     >
-      {/* 1. HERO - Deep Navy with Camp Meeting Archive Photo Backdrop */}
+      {/* 1. HERO */}
       <section className="relative bg-[#001f44] text-white pt-36 sm:pt-42 pb-20 px-6 overflow-hidden">
         {/* Camp Archive Photo Layer */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
@@ -96,15 +130,15 @@ export default function CampMeetingPage() {
           </blockquote>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-            {campMeetingPdf && (
-              <a
-                href={campMeetingPdf}
-                download
-                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-bold text-xs px-5 py-2.5 rounded-xl transition shadow-md"
-              >
-                Download Souvenir Guide (PDF) &rarr;
-              </a>
-            )}
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-bold text-xs px-5 py-2.5 rounded-xl transition shadow-md cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <span>Download Souvenir Guide (PDF)</span>
+              <span>&rarr;</span>
+            </button>
+
             <Link
               href="/giving"
               className="bg-white/10 hover:bg-white/20 text-stone-100 border border-white/30 backdrop-blur-md font-medium text-xs px-5 py-2.5 rounded-xl transition"
@@ -146,10 +180,18 @@ export default function CampMeetingPage() {
             </p>
 
             <div className="text-xs text-slate-600 pt-1 flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1 font-serif">
-              <span>Host Pastor: <strong className="text-slate-900">{campMeetingHostPastor}</strong></span>
-              <span>Associate: <strong className="text-slate-900">{campMeetingAssocPastor}</strong></span>
-              <span>First Elder: <strong className="text-slate-900">{campMeetingFirstElder}</strong></span>
-              <span>Camp Chair: <strong className="text-slate-900">{campMeetingCampChair}</strong></span>
+              <span>
+                Host Pastor: <strong className="text-slate-900">{campMeetingHostPastor}</strong>
+              </span>
+              <span>
+                Associate: <strong className="text-slate-900">{campMeetingAssocPastor}</strong>
+              </span>
+              <span>
+                First Elder: <strong className="text-slate-900">{campMeetingFirstElder}</strong>
+              </span>
+              <span>
+                Camp Chair: <strong className="text-slate-900">{campMeetingCampChair}</strong>
+              </span>
             </div>
           </div>
         </div>
@@ -374,7 +416,7 @@ export default function CampMeetingPage() {
                   Theme Song Stanzas &amp; Refrain
                 </h3>
                 <p className="text-xs text-slate-500 font-serif mt-0.5">
-                  Official hymnal selections for the 2026 convocation.
+                  Official hymnal selections for the {campMeetingYear} convocation.
                 </p>
               </div>
 
@@ -526,7 +568,10 @@ export default function CampMeetingPage() {
           onClick={() => setLightboxImg(null)}
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
         >
-          <div className="relative max-w-4xl max-h-[85vh]">
+          <div
+            className="relative max-w-4xl max-h-[85vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={lightboxImg}
               alt="Enlarged Camp Photo"
@@ -542,6 +587,22 @@ export default function CampMeetingPage() {
           </div>
         </div>
       )}
+
+      {/* PDF Download Loading Modal */}
+      <LoadingModal
+        isOpen={isLoadingPdf}
+        title="Preparing Souvenir Brochure…"
+        subtitle="Generating and streaming your Camp Meeting PDF publication."
+      />
+
+      {/* Reusable Human Error Notice Modal */}
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+        title={errorModalTitle}
+        message={errorModalMessage}
+        supportPhone="254700000000"
+      />
     </main>
   );
 }

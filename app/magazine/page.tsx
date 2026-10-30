@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AdventistLogo from "../../components/AdventistLogo";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import {
   ArrowRight,
   Feather,
@@ -10,7 +12,6 @@ import {
   X,
   FileEdit,
   Eye,
-  Clock,
 } from "lucide-react";
 
 interface MagazineIssue {
@@ -135,10 +136,25 @@ export default function MagazinePage() {
   // Modal states
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+  const [isFormLoading, setIsFormLoading] = useState(true);
   const [selectedIssueTitle, setSelectedIssueTitle] = useState("");
 
+  const churchPhone = "254700000000";
   const googleFormEmbedUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLSdPHq8QDy291U6-PaWsVGm0CXwq1_YLV1sB4Fnpn6_XuSPU4Q/viewform?embedded=true";
+
+  // Prevent background scroll when submission modal is active
+  useEffect(() => {
+    if (isFormModalOpen) {
+      document.body.style.overflow = "hidden";
+      setIsFormLoading(true);
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isFormModalOpen]);
 
   const handleOpenNotice = (issueTitle?: string) => {
     setSelectedIssueTitle(issueTitle || currentIssue.title);
@@ -420,81 +436,20 @@ export default function MagazinePage() {
         </section>
       </div>
 
-      {/* =========================================================
-          5. "NO LATEST ISSUE YET" NOTIFICATION MODAL
-         ========================================================= */}
-      {isNoticeModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-fade-in"
-          onClick={() => setIsNoticeModalOpen(false)}
-        >
-          <div
-            className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative text-center space-y-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={() => setIsNoticeModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
+      {/* 5. EDITORIAL PREPARATION NOTICE MODAL */}
+      <ErrorModal
+        isOpen={isNoticeModalOpen}
+        onClose={() => setIsNoticeModalOpen(false)}
+        title="Issue In Preparation"
+        message={`There is no published issue available for online reading at this moment. The editorial committee is currently compiling and laying out articles for "${selectedIssueTitle}". Article submissions and testimonies are still actively being received.`}
+        supportPhone={churchPhone}
+        onRetry={() => {
+          setIsNoticeModalOpen(false);
+          setIsFormModalOpen(true);
+        }}
+      />
 
-            {/* Status Icon */}
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600">
-              <Clock className="w-7 h-7 text-slate-700" />
-            </div>
-
-            <div className="space-y-2">
-              <span className="inline-block px-3 py-1 rounded-md bg-slate-100 text-slate-700 text-[11px] font-mono font-semibold uppercase tracking-wider border border-slate-200">
-                Editorial Desk Notice
-              </span>
-              <h3 className="text-xl sm:text-2xl font-serif font-black text-slate-950">
-                Issue In Preparation
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-serif">
-                There is no published issue available for online reading at this moment. The editorial committee is currently compiling and laying out articles for <strong>&ldquo;{selectedIssueTitle}&rdquo;</strong>.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1">
-              <p className="font-semibold text-slate-800">
-                Are you writing for this edition?
-              </p>
-              <p className="text-[11px] text-slate-500">
-                Article submissions and testimonies are still actively being received.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsNoticeModalOpen(false);
-                  setIsFormModalOpen(true);
-                }}
-                className="flex-1 bg-[#001f44] hover:bg-slate-900 text-white font-semibold text-xs py-2.5 px-4 rounded-xl transition inline-flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-              >
-                <FileEdit className="w-4 h-4 text-amber-400" />
-                <span>Submit an Article</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsNoticeModalOpen(false)}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-xl transition cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================
-          6. ARTICLE SUBMISSION MODAL (LIVE GOOGLE FORM EMBED)
-         ========================================================= */}
+      {/* 6. ARTICLE SUBMISSION MODAL (LIVE GOOGLE FORM EMBED) */}
       {isFormModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-sm animate-fade-in"
@@ -535,9 +490,14 @@ export default function MagazinePage() {
                 height="100%"
                 className="w-full h-full border-none block"
                 title="Jericho Herald Article Submission Form"
-              >
-                Loading submission form…
-              </iframe>
+                onLoad={() => setIsFormLoading(false)}
+              />
+              {isFormLoading && (
+                <div className="absolute inset-0 bg-white flex flex-col items-center justify-center space-y-2 text-stone-500 font-serif text-xs">
+                  <div className="w-6 h-6 border-2 border-[#001f44] border-t-transparent rounded-full animate-spin" />
+                  <span>Loading article submission form…</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

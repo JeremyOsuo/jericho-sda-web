@@ -4,12 +4,21 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import AdventistLogo from "../../components/AdventistLogo";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import { churchLeadership } from "@/data/leadership";
-import { Search, ArrowRight, Mail, Calendar, ShieldCheck } from "lucide-react";
+import { Search, ArrowRight, Mail, MessageCircle, X } from "lucide-react";
 
 export default function LeadershipPage() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string>("" );
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Modal Feedback States
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [noticeTitle, setNoticeTitle] = useState("Leadership Directory Notice");
+  const [noticeMessage, setNoticeMessage] = useState("");
+
+  const churchPhone = "254700000000";
 
   const categories = [
     "All",
@@ -20,8 +29,10 @@ export default function LeadershipPage() {
     "Departmental",
   ];
 
+  const leadersList = Array.isArray(churchLeadership) ? churchLeadership : [];
+
   const filteredLeaders = useMemo(() => {
-    return churchLeadership.filter((leader) => {
+    return leadersList.filter((leader) => {
       const matchesCategory =
         activeCategory === "All" || leader.category === activeCategory;
       const q = searchQuery.toLowerCase().trim();
@@ -32,7 +43,15 @@ export default function LeadershipPage() {
 
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [leadersList, activeCategory, searchQuery]);
+
+  const handleInquireLeader = () => {
+    setNoticeTitle("Church Officer Inquiry");
+    setNoticeMessage(
+      `Looking for an associate elder, committee member, or department coordinator not appearing for "${searchQuery}"? You can reach the Church Secretariat desk directly on WhatsApp.`
+    );
+    setIsNoticeOpen(true);
+  };
 
   return (
     <main
@@ -67,7 +86,9 @@ export default function LeadershipPage() {
           </h1>
 
           <blockquote className="text-blue-100 text-sm md:text-base font-serif italic max-w-xl mx-auto pt-1 leading-relaxed">
-            &ldquo;He who is greatest among you shall be your servant. And whoever exalts himself will be humbled, and he who humbles himself will be exalted.&rdquo;
+            &ldquo;He who is greatest among you shall be your servant. And whoever
+            exalts himself will be humbled, and he who humbles himself will be
+            exalated.&rdquo;
             <cite className="block not-italic text-xs font-sans font-semibold text-amber-300 mt-1.5">
               &mdash; Matthew 23:11-12
             </cite>
@@ -128,8 +149,29 @@ export default function LeadershipPage() {
       {/* 3. LEADERSHIP DIRECTORY GRID */}
       <section className="max-w-5xl mx-auto px-6 pt-10">
         {filteredLeaders.length === 0 ? (
-          <div className="bg-white/80 rounded-2xl p-12 text-center text-slate-400 text-xs font-serif border border-blue-100">
-            No church officers found matching &ldquo;{searchQuery}&rdquo;.
+          <div className="bg-white/80 rounded-2xl p-12 text-center text-slate-500 text-xs font-serif border border-blue-100 space-y-3">
+            <p>No church officers found matching &ldquo;{searchQuery}&rdquo;.</p>
+            <div className="flex items-center justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveCategory("All");
+                  setSearchQuery("");
+                }}
+                className="text-xs text-blue-600 font-bold hover:underline cursor-pointer"
+              >
+                Reset filters
+              </button>
+              <span className="text-slate-300">&bull;</span>
+              <button
+                type="button"
+                onClick={handleInquireLeader}
+                className="text-xs font-semibold text-emerald-700 hover:underline cursor-pointer inline-flex items-center gap-1"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Inquire via Secretariat</span>
+              </button>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
@@ -228,7 +270,9 @@ export default function LeadershipPage() {
               Need Spiritual Counsel or Home Dedication?
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
-              Our pastors and elders are available for home and hospital visitations, child dedications, pre-marital counseling, and spiritual encouragement.
+              Our pastors and elders are available for home and hospital
+              visitations, child dedications, pre-marital counseling, and
+              spiritual encouragement.
             </p>
           </div>
 
@@ -241,6 +285,15 @@ export default function LeadershipPage() {
           </Link>
         </div>
       </section>
+
+      {/* Human Inquiry Notice Modal */}
+      <ErrorModal
+        isOpen={isNoticeOpen}
+        onClose={() => setIsNoticeOpen(false)}
+        title={noticeTitle}
+        message={noticeMessage}
+        supportPhone={churchPhone}
+      />
     </main>
   );
 }

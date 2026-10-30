@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import ErrorModal from "../../components/ErrorModal";
+import LoadingModal from "../../components/LoadingModal";
 import {
   ArrowLeft,
   FileText,
@@ -16,6 +18,8 @@ type Language = "en" | "sw";
 export default function StrategicPlanPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("full-plan");
   const [language, setLanguage] = useState<Language>("en");
+  const [isLoadingDocument, setIsLoadingDocument] = useState<boolean>(true);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
   const fullPlanDriveId = "1d6sU6ueYQz1XzgpjTJfuIkM_F4ISi2QH";
   const flyerEnglishDriveId = "1pPvpKHja6Jw6pCxtf_U8LBOLL8tJdgb0";
@@ -37,12 +41,43 @@ export default function StrategicPlanPage() {
       ? "Jericho SDA Strategic Plan Summary Flyer (English)"
       : "Mpango Mkakati wa Kanisa la Jericho SDA 2026–2030 (Kiswahili)";
 
+  const reloadDocument = useCallback(() => {
+    setIsLoadingDocument(true);
+    setIsErrorModalOpen(false);
+    if (iframeRef.current) {
+      iframeRef.current.src = `https://drive.google.com/file/d/${activeFileId}/preview`;
+    }
+  }, [activeFileId]);
+
+  // Handle document switch & auto-focus
   useEffect(() => {
-    const timer = setTimeout(() => {
+    setIsLoadingDocument(true);
+    setIsErrorModalOpen(false);
+
+    // Timeout safety net if Drive hangs or fails to reach the browser within 15 seconds
+    const safetyTimeout = setTimeout(() => {
+      setIsLoadingDocument((loading) => {
+        if (loading) {
+          setIsErrorModalOpen(true);
+          return false;
+        }
+        return false;
+      });
+    }, 15000);
+
+    const focusTimer = setTimeout(() => {
       iframeRef.current?.focus();
     }, 400);
-    return () => clearTimeout(timer);
-  }, [viewMode, language]);
+
+    return () => {
+      clearTimeout(safetyTimeout);
+      clearTimeout(focusTimer);
+    };
+  }, [viewMode, language, activeFileId]);
+
+  const handleIframeLoad = () => {
+    setIsLoadingDocument(false);
+  };
 
   return (
     <div className="min-h-screen bg-slate-100/90 text-slate-800 font-sans py-6 sm:py-8 px-3 sm:px-6">
@@ -82,7 +117,7 @@ export default function StrategicPlanPage() {
               <button
                 type="button"
                 onClick={() => setViewMode("full-plan")}
-                className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition ${
+                className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition cursor-pointer ${
                   viewMode === "full-plan"
                     ? "bg-[#001f44] text-white shadow-sm"
                     : "text-slate-600 hover:text-slate-950"
@@ -95,7 +130,7 @@ export default function StrategicPlanPage() {
               <button
                 type="button"
                 onClick={() => setViewMode("flyer")}
-                className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition ${
+                className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition cursor-pointer ${
                   viewMode === "flyer"
                     ? "bg-[#001f44] text-white shadow-sm"
                     : "text-slate-600 hover:text-slate-950"
@@ -112,7 +147,7 @@ export default function StrategicPlanPage() {
                 <button
                   type="button"
                   onClick={() => setLanguage("en")}
-                  className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition cursor-pointer ${
                     language === "en"
                       ? "bg-amber-400 text-slate-950 shadow-xs"
                       : "text-slate-600 hover:text-slate-950"
@@ -123,7 +158,7 @@ export default function StrategicPlanPage() {
                 <button
                   type="button"
                   onClick={() => setLanguage("sw")}
-                  className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition cursor-pointer ${
                     language === "sw"
                       ? "bg-amber-400 text-slate-950 shadow-xs"
                       : "text-slate-600 hover:text-slate-950"
@@ -173,11 +208,11 @@ export default function StrategicPlanPage() {
           <div className="flex items-center justify-between px-2 pt-1">
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-blue-700" />
-              <span className="text-xs font-bold text-slate-900">
+              <span className="text-xs font-bold text-slate-900 truncate">
                 {activeTitle}
               </span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <span className="text-[10px] text-slate-400 font-mono shrink-0">
               Continuous Scroll &bull; Read Only
             </span>
           </div>
@@ -193,12 +228,13 @@ export default function StrategicPlanPage() {
               width="100%"
               height="100%"
               title={activeTitle}
+              onLoad={handleIframeLoad}
               className="w-full h-full border-none block"
               allow="autoplay"
               tabIndex={0}
             />
 
-            {/* Click-shield overlay blocking the Google pop-out/download button */}
+            {/* Click-shield overlay blocking Google Drive pop-out/download controls */}
             <div
               className="absolute top-0 right-0 w-14 h-14 bg-transparent z-20 cursor-default"
               aria-hidden="true"
@@ -216,6 +252,23 @@ export default function StrategicPlanPage() {
           </p>
         </div>
       </div>
+
+      {/* Loading Modal Overlay */}
+      <LoadingModal
+        isOpen={isLoadingDocument}
+        title="Loading Strategic Publication…"
+        subtitle="Rendering high-resolution document pages from the cloud repository."
+      />
+
+      {/* Error & Fallback Modal */}
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+        title="Publication Load Notice"
+        message="The strategic publication is taking longer than usual to stream from Google Drive. Please check your internet connection or reload the viewer."
+        supportPhone="254700000000"
+        onRetry={reloadDocument}
+      />
     </div>
   );
 }

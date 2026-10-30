@@ -2,27 +2,38 @@
 
 import { useState, useEffect } from "react";
 import AdventistLogo from "./AdventistLogo";
+import ErrorModal from "./ErrorModal";
+import LoadingModal from "./LoadingModal";
 
 interface LiveStreamCardProps {
   channelHandle?: string;
   channelId?: string;
-  // Put the YouTube video ID of your most recent Sabbath Divine Service here
-  // (e.g. from https://www.youtube.com/watch?v=dQw4w9WgXcQ, the ID is dQw4w9WgXcQ)
   featuredVideoId?: string;
 }
 
 export default function LiveStreamCard({
   channelHandle = "jerichosdanairobi",
   channelId = "UCrcRFa9oS22hMfwMog9zhVA",
-  featuredVideoId = "", // Leave empty or pass a real video ID
+  featuredVideoId = "",
 }: LiveStreamCardProps) {
+  const [mounted, setMounted] = useState(false);
   const [isSabbathServiceTime, setIsSabbathServiceTime] = useState(false);
 
+  // Modal Feedback States
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isOffAirModalOpen, setIsOffAirModalOpen] = useState(false);
+
+  const channelUrl = `https://www.youtube.com/@${channelHandle}`;
+  const liveUrl = `https://www.youtube.com/@${channelHandle}/live`;
+
   useEffect(() => {
+    setMounted(true);
     const checkSabbathTime = () => {
       const now = new Date();
       // Calculate East Africa Time (UTC+3)
-      const eatString = now.toLocaleString("en-US", { timeZone: "Africa/Nairobi" });
+      const eatString = now.toLocaleString("en-US", {
+        timeZone: "Africa/Nairobi",
+      });
       const eatDate = new Date(eatString);
 
       const dayOfWeek = eatDate.getDay(); // 6 = Saturday (Sabbath)
@@ -31,7 +42,8 @@ export default function LiveStreamCard({
       const totalMinutes = hours * 60 + minutes;
 
       // Sabbath Divine Worship window: 08:30 AM (510 min) to 01:00 PM (780 min) EAT
-      const isDuringService = dayOfWeek === 6 && totalMinutes >= 510 && totalMinutes <= 780;
+      const isDuringService =
+        dayOfWeek === 6 && totalMinutes >= 510 && totalMinutes <= 780;
       setIsSabbathServiceTime(isDuringService);
     };
 
@@ -40,15 +52,26 @@ export default function LiveStreamCard({
     return () => clearInterval(interval);
   }, []);
 
-  const channelUrl = `https://www.youtube.com/@${channelHandle}`;
-  const liveUrl = `https://www.youtube.com/@${channelHandle}/live`;
+  const handleJoinStream = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsConnecting(true);
+
+    setTimeout(() => {
+      setIsConnecting(false);
+      if (isSabbathServiceTime) {
+        window.open(liveUrl, "_blank", "noopener,noreferrer");
+      } else {
+        setIsOffAirModalOpen(true);
+      }
+    }, 700);
+  };
 
   return (
     <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden text-stone-900">
       {/* Top Status Header */}
       <div className="px-5 py-3.5 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-stone-50/70">
         <div className="flex items-center gap-2">
-          {isSabbathServiceTime ? (
+          {mounted && isSabbathServiceTime ? (
             <span className="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-sans font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full">
               <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
               Sabbath Divine Service Hours
@@ -61,7 +84,7 @@ export default function LiveStreamCard({
           )}
           <span className="text-stone-300">&bull;</span>
           <span className="text-[11px] text-stone-500 font-serif">
-            @jerichosdanairobi
+            @{channelHandle}
           </span>
         </div>
 
@@ -85,34 +108,41 @@ export default function LiveStreamCard({
         <div className="relative aspect-video sm:aspect-[21/9] bg-[#001f44] text-white flex items-center justify-center p-6 text-center">
           <div className="space-y-3 max-w-lg">
             <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mx-auto text-amber-400">
-              <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 ml-0.5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
 
             <div className="space-y-1">
               <h3 className="font-serif text-lg sm:text-xl text-stone-50">
-                {isSabbathServiceTime
+                {mounted && isSabbathServiceTime
                   ? "Sabbath Divine Worship Broadcast"
                   : "Jericho SDA Sanctuary Broadcasts"}
               </h3>
               <p className="text-xs text-stone-300 font-serif leading-relaxed">
-                {isSabbathServiceTime
+                {mounted && isSabbathServiceTime
                   ? "Divine service is currently in session. Join the congregation online via our official YouTube live feed."
                   : "Join our Sabbath services live every Saturday morning, or watch sermon replays and choir presentations on YouTube."}
               </p>
             </div>
 
             <div className="pt-2 flex flex-wrap items-center justify-center gap-2.5">
-              <a
-                href={liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-4 py-2 rounded-lg transition shadow-xs inline-flex items-center gap-1.5"
+              <button
+                type="button"
+                onClick={handleJoinStream}
+                className="bg-amber-400 hover:bg-amber-300 text-[#001f44] font-semibold text-xs px-4 py-2 rounded-lg transition shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
               >
-                <span>{isSabbathServiceTime ? "Join Live Stream Now" : "Go to YouTube Live Feed"}</span>
+                <span>
+                  {mounted && isSabbathServiceTime
+                    ? "Join Live Stream Now"
+                    : "Go to YouTube Live Feed"}
+                </span>
                 <span>&rarr;</span>
-              </a>
+              </button>
 
               <a
                 href={channelUrl}
@@ -156,6 +186,23 @@ export default function LiveStreamCard({
           </a>
         </div>
       </div>
+
+      {/* Loading Overlay */}
+      <LoadingModal
+        isOpen={isConnecting}
+        title="Checking Live Broadcast…"
+        subtitle="Connecting to the church sanctuary media stream."
+      />
+
+      {/* Broadcast Notice Modal */}
+      <ErrorModal
+        isOpen={isOffAirModalOpen}
+        onClose={() => setIsOffAirModalOpen(false)}
+        title="Broadcast Notice"
+        message="There is no active divine service broadcast at this moment. Our Sabbath worship streams live every Saturday from 08:30 AM to 01:00 PM EAT. You can explore recorded sermons and choir presentations in our video archives."
+        supportPhone="254700000000"
+        onRetry={() => window.open(channelUrl, "_blank", "noopener,noreferrer")}
+      />
     </div>
   );
 }
